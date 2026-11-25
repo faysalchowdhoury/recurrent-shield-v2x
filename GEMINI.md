@@ -1,13 +1,9 @@
-# RecurrentShield-V2X — IEEE T-ITS Standards
+# RecurrentShield-V2X Workspace Rules (IEEE T-ITS Standards)
 
-## Manuscript & Prose Constraints
-- Never use spaced em-dashes (` --- `). Only `IEEEtran` built-in `Abstract---` and `Index Terms---` use unspaced em-dashes; use colons or periods for list headers.
-- Always use `siunitx` (`\SI{200}{\hertz}`, `\SI{82.6}{\kilo\byte}`) or non-breaking thin spaces (`16\,s`, `100\,ms`) between numbers and units so justified columns never stretch spaces before units.
-- Never put `\texttt{...}`, bold-italics, or raw ASCII code strings (`->`, `>=`, `y_hat`) inside `\begin{abstract}` or figure labels.
-- Keep ESP32-S3 cycle, latency, and energy figures explicitly labeled as analytical/projected per Rank 3.
+When editing or verifying files inside this repository, strictly follow these rules:
 
-## Architecture Figure Constraints
-- Never generate system architecture block diagrams with Matplotlib.
-- Build architecture figures with standalone LaTeX TikZ (`\documentclass[border=6pt]{standalone}`) using `newtxtext` and `newtxmath` on a pure `#FFFFFF` background.
-- Route external untrusted signals (`y_{\text{ext}}`) orthogonally (`-|`) along clean tracks without crossing node boxes or colliding with other arrows.
-- Export to vector `.pdf` / `.svg` and 400 DPI `.png` without embedding figure captions or page numbers inside the diagram image.
+1. **Method & Provenance Honesty:** Never describe supervised multi-task behavior cloning (`RecurrentShieldBC` / `StatelessBC`) as PPO; never claim physical radar/IMU or raw RF SPMD logs when evaluating trajectory-grounded USDOT NGSIM data mapped to SAE J2735 BSM fields; always distinguish 10\,Hz outer policy updates from 200\,Hz substepped nonlinear DT-CBF checks and analytical ESP32-S3 estimates.
+2. **Prose & Punctuation Hygiene:** Never place spaced em-dashes (` --- `) or unspaced `---` inside English prose or list-item headings. Convert `Rank 1 --- ...:` / `Rank 1 — ...:` headers cleanly to `\textit{Title:}` inside `\begin{enumerate}`. Keep `--` strictly for numeric ranges (`0.1--1.5`).
+3. **SI & Compute Unit Spacing:** Use non-breaking thin spaces (`\,`) between numbers and units across prose, equations, tables, and captions (e.g., `10\,Hz`, `200\,Hz`, `82.6\,KB`, `107.1\,KB`, `1.70\,ms`, `16.0\,\mu\text{s}`).
+4. **Abstract Cleanliness:** Keep `\begin{abstract}` plain roman text—zero `\texttt{...}`, `\textbf{...}`, or `\emph{...}` macros.
+5. **Architecture Diagram Standards:** Compile [results/figures/fig1_architecture_cbf_loop.tex](file:///C:/Users/sheel/Downloads/recurrent-shield-v2x/results/figures/fig1_architecture_cbf_loop.tex) via standalone TikZ (`newtxtext`, `newtxmath`), pure white `#FFFFFF` backdrop, zero line crossings, and proper math-mode symbols.

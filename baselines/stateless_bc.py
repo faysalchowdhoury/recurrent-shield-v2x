@@ -1,5 +1,5 @@
 """
-Baseline 2: Stateless Feedforward PPO (No LSTM Temporal Hidden State).
+Baseline 2: Stateless Feedforward Multi-Task BC (No LSTM Temporal Hidden State).
 """
 
 from __future__ import annotations
@@ -8,11 +8,11 @@ from typing import Dict
 import torch
 import torch.nn as nn
 
-from models.recurrent_shield_ppo import ACT_DIM, KIN_DIM, OBS_DIM
+from models.recurrent_shield_bc import ACT_DIM, KIN_DIM, OBS_DIM
 
 
-class StatelessPPO(nn.Module):
-    """Feedforward MLP actor-critic + single-frame kinematic predictor without LSTM memory."""
+class StatelessBC(nn.Module):
+    """Feedforward MLP actor + single-frame kinematic predictor without LSTM memory."""
 
     def __init__(self, obs_dim: int = OBS_DIM, hidden_dim: int = 128) -> None:
         super().__init__()

@@ -1,31 +1,36 @@
 \begin{table*}[t]
 \centering
-\caption{Zero-Shot Corridor Transfer \& Threat Resilience Across 5 Seeds and 6 Attacks (Trained on Real USDOT US-101 NGSIM)}
+\caption{Zero-Shot Trajectory-Grounded Evaluation Across 5 Seeds $\times$ 5 Trials/Attack ($N=150$ Attack Episodes/Corridor; Trained on US-101)}
 \label{tab:benchmark_results}
-\begin{tabular}{llccccc}
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{llccccccc}
 \toprule
-Corridor (Split) & Method & AUROC $\uparrow$ & Det. Delay (ms) $\downarrow$ & Limp-Home (\%) $\uparrow$ & Collision (\%) $\downarrow$ & RMS Jerk ($\text{m/s}^3$) $\downarrow$ \\
+Corridor & Method & AUROC $\uparrow$ & Delay (ms) $\downarrow$ & Surv. (\%) $\uparrow$ & Quar.+Surv. (\%) $\uparrow$ & Coll. (\%) $\downarrow$ & Dist. (m) $\uparrow$ & Jerk ($\text{m/s}^3$) $\downarrow$ \\
 \midrule
-US-101 (In-Dist.) & RecurrentShield-V2X & 0.964$\pm$0.027 & 552.6$\pm$27.9 & 96.7$\pm$6.7 & 3.3$\pm$6.7 & 5.56$\pm$0.95 \\
- & Ablation (No DT-CBF) & 0.984$\pm$0.009 & 552.6$\pm$27.9 & 80.0$\pm$26.7 & 20.0$\pm$26.7 & 1.82$\pm$0.10 \\
- & TCN-Residual IDS & 0.982$\pm$0.010 & 725.9$\pm$40.3 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 5.54$\pm$2.82 \\
- & Tiny-Transformer IDS & 0.990$\pm$0.006 & 702.6$\pm$10.5 & 96.7$\pm$6.7 & 3.3$\pm$6.7 & 6.43$\pm$2.60 \\
- & Stateless PPO & 0.986$\pm$0.003 & 739.3$\pm$41.4 & 96.7$\pm$6.7 & 3.3$\pm$6.7 & 2.48$\pm$0.27 \\
- & EKF-CUSUM + DT-CBF & 0.984$\pm$0.001 & 212.6$\pm$20.0 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 7.87$\pm$0.33 \\
+US-101 (Train) & RecurrentShield-BC & 0.967$\pm$0.007 & 547$\pm$271 & 96.0 & 96.0$\pm$3.9 & 4.0 & 168.1 & 6.36 \\
+ & Ablation (No DT-CBF) & 0.960$\pm$0.008 & 540$\pm$164 & 92.7 & 92.7$\pm$6.8 & 7.3 & 214.4 & 1.58 \\
+ & TCN-Residual IDS & 0.963$\pm$0.008 & 655$\pm$273 & 94.0 & 94.0$\pm$3.3 & 6.0 & 207.6 & 8.73 \\
+ & Tiny-Transformer IDS & 0.968$\pm$0.006 & 639$\pm$158 & 94.7 & 94.7$\pm$3.4 & 5.3 & 214.6 & 9.71 \\
+ & Stateless BC & 0.967$\pm$0.005 & 1007$\pm$398 & 90.0 & 90.0$\pm$4.7 & 10.0 & 85.1 & 5.04 \\
+ & EKF-CUSUM + BC & 0.936$\pm$0.020 & 167$\pm$149 & 96.7 & 96.7$\pm$4.2 & 3.3 & 174.9 & 5.93 \\
+ & Emergency-Stop & 0.967$\pm$0.010 & 595$\pm$109 & 93.3 & 93.3$\pm$3.0 & 6.7 & 93.2 & 7.60 \\
 \midrule
-I-80 (Zero-Shot) & RecurrentShield-V2X & 0.934$\pm$0.008 & 1565.9$\pm$40.0 & 93.3$\pm$8.2 & 6.7$\pm$8.2 & 3.32$\pm$1.36 \\
- & Ablation (No DT-CBF) & 0.923$\pm$0.008 & 2382.3$\pm$290.7 & 83.3$\pm$10.5 & 3.3$\pm$6.7 & 1.15$\pm$0.31 \\
- & TCN-Residual IDS & 0.932$\pm$0.007 & 1825.9$\pm$52.3 & 93.3$\pm$8.2 & 6.7$\pm$8.2 & 3.43$\pm$1.47 \\
- & Tiny-Transformer IDS & 0.934$\pm$0.008 & 1969.2$\pm$397.6 & 83.3$\pm$10.5 & 16.7$\pm$10.5 & 3.83$\pm$1.70 \\
- & Stateless PPO & 0.929$\pm$0.004 & 2362.4$\pm$514.3 & 86.7$\pm$12.5 & 6.7$\pm$8.2 & 2.12$\pm$0.36 \\
- & EKF-CUSUM + DT-CBF & 0.940$\pm$0.005 & 1435.9$\pm$10.5 & 93.3$\pm$8.2 & 6.7$\pm$8.2 & 3.40$\pm$0.32 \\
+I-80 (Zero-Shot) & RecurrentShield-BC & 0.953$\pm$0.010 & 1477$\pm$371 & 85.3 & 85.3$\pm$4.0 & 14.7 & 72.3 & 4.66 \\
+ & Ablation (No DT-CBF) & 0.954$\pm$0.009 & 1969$\pm$540 & 54.7 & 54.0$\pm$23.2 & 45.3 & 87.2 & 1.38 \\
+ & TCN-Residual IDS & 0.960$\pm$0.004 & 2140$\pm$308 & 80.0 & 80.0$\pm$3.0 & 20.0 & 78.6 & 5.33 \\
+ & Tiny-Transformer IDS & 0.951$\pm$0.020 & 1944$\pm$504 & 79.3 & 79.3$\pm$6.5 & 20.7 & 79.9 & 5.60 \\
+ & Stateless BC & 0.964$\pm$0.012 & 2363$\pm$352 & 74.0 & 74.0$\pm$3.9 & 26.0 & 40.4 & 4.01 \\
+ & EKF-CUSUM + BC & 0.892$\pm$0.013 & 1133$\pm$559 & 88.0 & 88.0$\pm$3.4 & 12.0 & 74.8 & 4.37 \\
+ & Emergency-Stop & 0.943$\pm$0.009 & 1438$\pm$349 & 80.0 & 80.0$\pm$7.0 & 20.0 & 48.8 & 6.02 \\
 \midrule
-Lankershim (Zero-Shot) & RecurrentShield-V2X & 0.996$\pm$0.001 & 552.6$\pm$27.9 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 1.35$\pm$0.30 \\
- & Ablation (No DT-CBF) & 0.996$\pm$0.001 & 552.6$\pm$27.9 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 0.89$\pm$0.09 \\
- & TCN-Residual IDS & 0.996$\pm$0.001 & 705.9$\pm$12.5 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 1.24$\pm$0.52 \\
- & Tiny-Transformer IDS & 0.997$\pm$0.002 & 682.6$\pm$32.3 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 0.92$\pm$0.23 \\
- & Stateless PPO & 0.998$\pm$0.002 & 739.3$\pm$41.4 & 96.7$\pm$6.7 & 3.3$\pm$6.7 & 2.11$\pm$0.54 \\
- & EKF-CUSUM + DT-CBF & 1.000$\pm$0.000 & 245.9$\pm$20.0 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 4.24$\pm$0.05 \\
+Lankershim (ZS) & RecurrentShield-BC & 0.965$\pm$0.005 & 980$\pm$401 & 92.7 & 90.7$\pm$5.7 & 7.3 & 68.2 & 4.18 \\
+ & Ablation (No DT-CBF) & 0.979$\pm$0.007 & 1642$\pm$684 & 70.7 & 70.7$\pm$11.2 & 29.3 & 74.8 & 1.46 \\
+ & TCN-Residual IDS & 0.963$\pm$0.013 & 1345$\pm$218 & 90.7 & 86.0$\pm$3.9 & 9.3 & 82.8 & 4.63 \\
+ & Tiny-Transformer IDS & 0.959$\pm$0.013 & 1063$\pm$171 & 90.7 & 87.3$\pm$2.5 & 9.3 & 90.0 & 4.74 \\
+ & Stateless BC & 0.953$\pm$0.013 & 899$\pm$312 & 92.7 & 90.0$\pm$4.2 & 7.3 & 50.7 & 3.58 \\
+ & EKF-CUSUM + BC & 0.930$\pm$0.019 & 789$\pm$346 & 93.3 & 92.0$\pm$4.5 & 6.7 & 69.7 & 3.55 \\
+ & Emergency-Stop & 0.968$\pm$0.011 & 1062$\pm$169 & 90.0 & 88.7$\pm$2.7 & 10.0 & 54.2 & 6.30 \\
 \bottomrule
 \end{tabular}
 \end{table*}

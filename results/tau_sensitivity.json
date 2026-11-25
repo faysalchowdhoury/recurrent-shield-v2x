@@ -1,0 +1,44 @@
+{
+  "tau=1.60,p=2": {
+    "pre_onset_fpr_pct": 27.78,
+    "quarantine_tpr_pct": 100.0,
+    "delay_ms": 227.8,
+    "success_pct": 94.44,
+    "distance_m": 96.6
+  },
+  "tau=1.90,p=1": {
+    "pre_onset_fpr_pct": 22.22,
+    "quarantine_tpr_pct": 100.0,
+    "delay_ms": 505.6,
+    "success_pct": 94.44,
+    "distance_m": 94.6
+  },
+  "tau=1.90,p=2": {
+    "pre_onset_fpr_pct": 5.56,
+    "quarantine_tpr_pct": 94.44,
+    "delay_ms": 1327.8,
+    "success_pct": 88.89,
+    "distance_m": 93.3
+  },
+  "tau=1.90,p=3": {
+    "pre_onset_fpr_pct": 5.56,
+    "quarantine_tpr_pct": 88.89,
+    "delay_ms": 1805.6,
+    "success_pct": 83.33,
+    "distance_m": 92.0
+  },
+  "tau=2.35,p=2": {
+    "pre_onset_fpr_pct": 0.0,
+    "quarantine_tpr_pct": 83.33,
+    "delay_ms": 2516.7,
+    "success_pct": 77.78,
+    "distance_m": 89.3
+  },
+  "tau=2.85,p=2": {
+    "pre_onset_fpr_pct": 0.0,
+    "quarantine_tpr_pct": 83.33,
+    "delay_ms": 2688.9,
+    "success_pct": 77.78,
+    "distance_m": 87.4
+  }
+}

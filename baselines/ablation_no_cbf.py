@@ -1,5 +1,5 @@
 """
-Baseline 4: Ablation Variant — RecurrentShield-V2X without the 200 Hz DT-CBF Shield.
+Baseline 4: Ablation Variant — RecurrentShield-BC without the DT-CBF Safety Shield.
 """
 
 from __future__ import annotations
@@ -8,16 +8,16 @@ from typing import Tuple
 import numpy as np
 import torch
 
-from models.recurrent_shield_ppo import KinematicResidualQuarantineMonitor, RecurrentShieldPPO
+from models.recurrent_shield_bc import KinematicResidualQuarantineMonitor, RecurrentShieldBC
 
 
 class AblationNoCbfAgent:
     """
-    Identical dual-head 128-unit LSTM RecurrentPPO + Mahalanobis quarantine,
-    but passes raw policy actions directly to actuators without the 200 Hz DT-CBF QP filter.
+    Identical dual-head 128-unit LSTM RecurrentShieldBC + Mahalanobis quarantine,
+    but passes raw policy actions directly to actuators without the DT-CBF safety filter.
     """
 
-    def __init__(self, policy: RecurrentShieldPPO) -> None:
+    def __init__(self, policy: RecurrentShieldBC) -> None:
         self.policy = policy
         self.monitor = KinematicResidualQuarantineMonitor()
         self.hidden = self.policy.init_hidden(1)

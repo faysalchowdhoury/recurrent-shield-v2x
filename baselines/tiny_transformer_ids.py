@@ -8,7 +8,7 @@ from typing import Dict
 import torch
 import torch.nn as nn
 
-from models.recurrent_shield_ppo import ACT_DIM, KIN_DIM, OBS_DIM
+from models.recurrent_shield_bc import ACT_DIM, KIN_DIM, OBS_DIM
 
 
 class TinyTransformerIDS(nn.Module):

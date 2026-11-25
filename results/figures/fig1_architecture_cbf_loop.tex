@@ -48,43 +48,43 @@
     }
 ]
 
-% Left column: Trusted local proprioception (top-left) & Untrusted external V2X/GNSS (bottom-left)
+% Left column: Local sensor feeds (top-left) & Untrusted external V2X/GNSS (bottom-left)
 \node[box=SlateBorder, fill=SlateFill, minimum width=4.0cm, minimum height=1.75cm] (local) at (-6.0, 2.5) {%
     \textbf{\small Local Proprioception}\\[3pt]
-    \footnotesize\color{TextSub}6-Sector $120\text{ m}$ Radar + Curb\\[-1pt]
-    \footnotesize\color{TextSub}Wheel Enc. + 3-Axis IMU
+    \footnotesize\color{TextSub}6-Sector $120\,\text{m}$ Sim.\ Radar + Curb\\[-1pt]
+    \footnotesize\color{TextSub}Wheel Enc.\ + 3-Axis IMU
 };
 
 \node[box=AmberBorder, fill=AmberFill, minimum width=4.0cm, minimum height=1.75cm] (external) at (-6.0, -2.9) {%
     \textbf{\small External V2X / GNSS}\\[-1pt]
     \textbf{\scriptsize\color{AmberBorder}(Untrusted Channel)}\\[2pt]
-    \footnotesize\color{TextSub}SAE J2735 BSM + GNSS + SPaT
+    \footnotesize\color{TextSub}SAE J2735-Fmt.\ BSM + GNSS + SPaT
 };
 
 % Onboard blocks: Top track (Backbone -> Head 1) and Middle track (Head 2 -> DT-CBF)
 \node[box=BackboneBorder, fill=BackboneFill, minimum width=4.4cm, minimum height=1.85cm] (backbone) at (0.0, 2.5) {%
-    \textbf{\small Recurrent Backbone}\\[3pt]
+    \textbf{\small Recurrent Backbone (BC)}\\[3pt]
     \footnotesize\color{TextSub}Topological Enc.\ ($26 \to 24$)\\[-1pt]
     \footnotesize\color{TextSub}$+$\ 128-Unit LSTM\\[-1pt]
-    \scriptsize\color{TextSub}$330.1\text{ KB}$ FP32 / $82.6\text{ KB}$ INT8
+    \scriptsize\color{TextSub}$330.1\,\text{KB}$ FP32 / $82.6\,\text{KB}$ INT8
 };
 
-\node[box=Head1Border, fill=Head1Fill, minimum width=4.1cm, minimum height=1.75cm] (head1) at (7.8, 2.5) {%
+\node[box=Head1Border, fill=Head1Fill, minimum width=4.1cm, minimum height=1.75cm] (head1) at (8.3, 2.5) {%
     \textbf{\small Head 1: Residual IDS}\\[3pt]
-    \footnotesize\color{TextSub}Mahalanobis $r_t > \tau_t$\\[-1pt]
-    \footnotesize\color{TextSub}Autonomous Quarantine Gate
+    \footnotesize\color{TextSub}Calibrated Mahalanobis $r_t > \tau_t$\\[-1pt]
+    \footnotesize\color{TextSub}Non-Oracle Quarantine Gate
 };
 
 \node[box=Head2Border, fill=Head2Fill, minimum width=4.1cm, minimum height=1.65cm] (head2) at (0.0, -0.25) {%
-    \textbf{\small Head 2: MRM Policy}\\[3pt]
-    \footnotesize\color{TextSub}Tactical Limp-Home Actor\\[-1pt]
+    \textbf{\small Head 2: BC MRM Policy}\\[3pt]
+    \footnotesize\color{TextSub}Multi-Task Limp-Home Actor\\[-1pt]
     \footnotesize\color{TextSub}$u_{\text{nom}} = [a_{\text{long}},\, v_{\text{lat}}]^\top$
 };
 
-\node[box=CbfBorder, fill=CbfFill, minimum width=4.1cm, minimum height=1.65cm] (cbf) at (4.85, -0.25) {%
-    \textbf{\small 200 Hz DT-CBF QP Shield}\\[3pt]
-    \footnotesize\color{TextSub}$h(x^+) \ge (1-\alpha)h(x)$\\[-1pt]
-    \footnotesize\color{TextSub}Bounded $\epsilon_{\text{radar}}$ + Fallback
+\node[box=CbfBorder, fill=CbfFill, minimum width=4.5cm, minimum height=1.65cm] (cbf) at (5.75, -0.25) {%
+    \textbf{\small Nonlinear DT-CBF Shield}\\[3pt]
+    \footnotesize\color{TextSub}$h(x^+) \ge (1-\alpha)h(x)$ (200\,Hz Check)\\[-1pt]
+    \footnotesize\color{TextSub}Bounded $\epsilon_{\text{radar}}+\epsilon_{\text{disc}}$ + Fallback
 };
 
 % Subtle dashed embedded controller container separating onboard execution from untrusted external feeds
@@ -100,7 +100,7 @@
         inner xsep=13pt,
         inner ysep=13pt,
         yshift=4pt,
-        label={[anchor=north west, font=\footnotesize\bfseries, text=ContainerBorder, xshift=4pt, yshift=-2pt]north west:Onboard Real-Time Embedded Controller (INT8 / 200 Hz)}
+        label={[anchor=north west, font=\footnotesize\bfseries, text=ContainerBorder, xshift=4pt, yshift=-2pt]north west:Onboard Control \& Safety Pipeline (10\,Hz Policy / 200\,Hz Substepped; INT8 Analytical)}
     ] (controller) {};
 \end{scope}
 

@@ -26,11 +26,11 @@ import onnx
 import torch
 
 from control.dt_cbf_safety_shield import DtCbfSafetyShield
-from models.recurrent_shield_ppo import (
+from models.recurrent_shield_bc import (
     LSTM_HIDDEN,
     OBS_DIM,
     REL_DIM,
-    RecurrentShieldPPO,
+    RecurrentShieldBC,
 )
 
 
@@ -54,7 +54,7 @@ def format_c_int8_array(name: str, arr: np.ndarray, cols: int = 16) -> str:
 
 def export_and_profile(project_root: Path) -> Dict[str, Any]:
     ckpt_path = project_root / "results" / "trained_shield_weights.pt"
-    model = RecurrentShieldPPO()
+    model = RecurrentShieldBC()
     if ckpt_path.exists():
         state = torch.load(ckpt_path, map_location="cpu")
         model.load_state_dict(state)
@@ -62,7 +62,7 @@ def export_and_profile(project_root: Path) -> Dict[str, Any]:
 
     # 1. Export FP32 ONNX (single-step wrapper for static edge inference graph)
     class SingleStepEdgeWrapper(torch.nn.Module):
-        def __init__(self, core: RecurrentShieldPPO) -> None:
+        def __init__(self, core: RecurrentShieldBC) -> None:
             super().__init__()
             self.core = core
 
@@ -186,8 +186,8 @@ def export_and_profile(project_root: Path) -> Dict[str, Any]:
     esp32_clk_hz = 240e6
     fp32_cycles = int(macs_per_step * 11.8 + 45000)
     int8_cycles = int(macs_per_step * 3.6 + 22000)
-    dt_cbf_cycles = 480  # closed-form KKT 2D projection + 20-step 200Hz barrier verification
-    fp32_latency_ms = (fp32_cycles / esp32_clk_hz) * 1000.0 + 0.42  # + 200Hz QP step overhead
+    dt_cbf_cycles = 3840  # Analytical worst-case budget: 18-iter monotonic 200 Hz Euler check (~16 us @ 240 MHz)
+    fp32_latency_ms = (fp32_cycles / esp32_clk_hz) * 1000.0 + 0.42
     int8_latency_ms = (int8_cycles / esp32_clk_hz) * 1000.0 + 0.36
 
     # Peak SRAM = TFLite Micro tensor arena + LSTM hidden states + activation scratch + DT-CBF workspace
@@ -201,10 +201,11 @@ def export_and_profile(project_root: Path) -> Dict[str, Any]:
 
     profile = {
         "target_mcu": "ESP32-S3 (Dual-Core Xtensa LX7 @ 240 MHz, 512 KB SRAM)",
+        "profiling_methodology": "Analytical Xtensa LX7 / ESP-NN cycle model anchored by measured host PyTorch & ONNX latency (not physical HIL current probes)",
         "total_parameters": total_params,
         "macs_per_step": macs_per_step,
         "dt_cbf_solver": {
-            "method": "Closed-form 2D box-constrained KKT projection + 20-substep 200 Hz verifier",
+            "method": "Exact monotonic nonlinear 2D DT-CBF projection + 200 Hz substepping (analytical)",
             "esp32_cycles": dt_cbf_cycles,
             "esp32_latency_us": round((dt_cbf_cycles / esp32_clk_hz) * 1e6, 2),
             "host_cpu_median_ms": round(dt_cbf_host_median_ms, 4),

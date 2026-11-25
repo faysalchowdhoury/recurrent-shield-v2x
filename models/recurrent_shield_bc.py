@@ -1,12 +1,12 @@
 """
-RecurrentShield-V2X: Compact Dual-Head RecurrentPPO + 128-Unit LSTM.
+RecurrentShield-BC: Compact Dual-Head Multi-Task Behavior Cloning + 128-Unit LSTM.
 
 Architecture budget:
-  - Total parameters: ~84.5k (< 350 KB FP32 / < 100 KB INT8)
+  - Total parameters: 84,505 (~330.1 KB FP32 / ~82.6 KB INT8 weights)
   - Topological Relational Encoder (26 -> 24) for zero-shot corridor transfer
   - 128-unit LSTM temporal memory backbone
-  - Head 1: Kinematic Residual Anomaly Detector (Mahalanobis distance r_t)
-  - Head 2: Topological Relational Actor-Critic Policy for Tactical MRM / Limp-Home
+  - Head 1: Heteroscedastic Kinematic Residual Anomaly Detector (Mahalanobis r_t)
+  - Head 2: Topological Relational Policy & Value Predictor for Tactical MRM / Limp-Home
 """
 
 from __future__ import annotations
@@ -33,12 +33,13 @@ class RecurrentShieldConfig:
     lstm_hidden: int = LSTM_HIDDEN
     kin_dim: int = KIN_DIM
     act_dim: int = ACT_DIM
-    base_tau: float = 3.20
+    base_tau: float = 1.90
     adaptive_k: float = 0.35
+    persistence_steps: int = 2
 
 
-class RecurrentShieldPPO(nn.Module):
-    """Dual-head RecurrentPPO with 128-unit LSTM (<350 KB FP32 / <100 KB INT8)."""
+class RecurrentShieldBC(nn.Module):
+    """Dual-head 128-unit LSTM multi-task BC policy and kinematic envelope predictor."""
 
     def __init__(self, cfg: Optional[RecurrentShieldConfig] = None) -> None:
         super().__init__()
@@ -59,11 +60,11 @@ class RecurrentShieldPPO(nn.Module):
             batch_first=True,
         )
 
-        # Head 1: Kinematic Residual Anomaly Detector (predicts 6D external kinematic vector)
+        # Head 1: Heteroscedastic Kinematic Residual Anomaly Detector (6D discrepancy envelope)
         self.kinematic_head = nn.Linear(self.cfg.lstm_hidden, self.cfg.kin_dim)
         self.kin_log_var = nn.Parameter(torch.zeros(self.cfg.kin_dim))
 
-        # Head 2: Topological Relational Policy & Value
+        # Head 2: Topological Relational Actor & Value Predictor
         self.actor_head = nn.Sequential(
             nn.Linear(self.cfg.lstm_hidden, 16),
             nn.Tanh(),
@@ -163,9 +164,16 @@ class RecurrentShieldPPO(nn.Module):
 class KinematicResidualQuarantineMonitor:
     """Online adaptive Mahalanobis residual monitor with quarantine latch."""
 
-    def __init__(self, base_tau: float = 3.20, adaptive_k: float = 0.35, ema_alpha: float = 0.08) -> None:
+    def __init__(
+        self,
+        base_tau: float = 1.90,
+        adaptive_k: float = 0.35,
+        persistence_steps: int = 2,
+        ema_alpha: float = 0.08,
+    ) -> None:
         self.base_tau = base_tau
         self.adaptive_k = adaptive_k
+        self.persistence_steps = max(1, int(persistence_steps))
         self.ema_alpha = ema_alpha
         self.ema_mean: float = 0.85
         self.ema_var: float = 0.15
@@ -182,7 +190,7 @@ class KinematicResidualQuarantineMonitor:
         tau_adaptive = self.base_tau + self.adaptive_k * float(np.sqrt(max(self.ema_var, 0.02)))
         if residual > tau_adaptive:
             self.consecutive_hits += 1
-            if self.consecutive_hits >= 2:
+            if self.consecutive_hits >= self.persistence_steps:
                 self.quarantined = True
         else:
             self.consecutive_hits = max(0, self.consecutive_hits - 1)

@@ -1,23 +1,29 @@
 {
   "0.20": {
-    "success_pct": 83.33,
-    "collision_pct": 16.67,
-    "qp_feasible_pct": 93.45,
-    "cbf_satisfied_pct": 98.7,
-    "rms_jerk": 4.235
+    "success_pct": 76.67,
+    "collision_pct": 23.33,
+    "qp_feasible_pct": 94.73,
+    "cbf_feasible_sat_pct": 100.0,
+    "fallback_pct": 5.27,
+    "rms_jerk": 4.387,
+    "distance_m": 91.8
   },
   "0.35": {
-    "success_pct": 83.33,
-    "collision_pct": 16.67,
-    "qp_feasible_pct": 92.97,
-    "cbf_satisfied_pct": 98.2,
-    "rms_jerk": 4.452
+    "success_pct": 76.67,
+    "collision_pct": 23.33,
+    "qp_feasible_pct": 93.86,
+    "cbf_feasible_sat_pct": 100.0,
+    "fallback_pct": 6.14,
+    "rms_jerk": 4.564,
+    "distance_m": 91.9
   },
   "0.50": {
-    "success_pct": 83.33,
-    "collision_pct": 16.67,
-    "qp_feasible_pct": 92.69,
-    "cbf_satisfied_pct": 97.89,
-    "rms_jerk": 4.524
+    "success_pct": 70.0,
+    "collision_pct": 30.0,
+    "qp_feasible_pct": 90.17,
+    "cbf_feasible_sat_pct": 100.0,
+    "fallback_pct": 9.83,
+    "rms_jerk": 5.908,
+    "distance_m": 84.0
   }
 }

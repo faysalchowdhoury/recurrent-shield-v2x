@@ -69,11 +69,25 @@ class NgsimCorridorEnv:
         self.seg_length_m = max(300.0, self.y_max - self.y_min)
         self.is_arterial = self.cfg.corridor == "lankershim"
 
-        # Pre-index frames for O(1) deterministic replay
+        # Pre-index frames and NumPy arrays + BSM templates for O(1) replay without Pandas row overhead
         self.frame_ids = sorted(df["frame_id"].unique().tolist())
         self.frames: List[pd.DataFrame] = [
             df[df["frame_id"] == fid].reset_index(drop=True) for fid in self.frame_ids
         ]
+        bsm_cols = ["msgCnt", "id", "vehicle_id", "x_m", "y_m", "speed", "heading", "accelSet_long", "accelSet_lat"]
+        self._frame_arrays: List[Dict[str, Any]] = []
+        for fdf in self.frames:
+            self._frame_arrays.append(
+                {
+                    "vehicle_id": fdf["vehicle_id"].to_numpy(dtype=np.int64),
+                    "x_m": fdf["x_m"].to_numpy(dtype=np.float64),
+                    "y_m": fdf["y_m"].to_numpy(dtype=np.float64),
+                    "speed": fdf["speed"].to_numpy(dtype=np.float64),
+                    "width_m": fdf["width_m"].to_numpy(dtype=np.float64),
+                    "length_m": fdf["length_m"].to_numpy(dtype=np.float64),
+                    "bsms": fdf[bsm_cols].to_dict(orient="records"),
+                }
+            )
 
         # Episode state
         self.step_idx: int = 0
@@ -87,6 +101,9 @@ class NgsimCorridorEnv:
         self.distance_traveled_m: float = 0.0
         self.threat_injector: Optional[SaeJ2735ThreatInjector] = None
         self.last_spat: str = "GREEN"
+        self._phase_steps: int = 0
+        self._spat_fault_latch: bool = False
+        self._frame_offset: int = 0
         self.quarantined: bool = False
         self.collision_count: int = 0
         self.offroad_count: int = 0
@@ -97,11 +114,13 @@ class NgsimCorridorEnv:
         self,
         threat_config: Optional[ThreatConfig] = None,
         seed: Optional[int] = None,
+        frame_offset: int = 0,
     ) -> Tuple[np.ndarray, Dict[str, Any]]:
         if seed is not None:
             self.rng = np.random.default_rng(seed)
 
         self.step_idx = 0
+        self._frame_offset = int(frame_offset) % max(1, len(self.frames))
         self.threat_injector = SaeJ2735ThreatInjector(threat_config or ThreatConfig(attack_type="none"))
         self.quarantined = False
         self.collision_count = 0
@@ -111,14 +130,16 @@ class NgsimCorridorEnv:
         self.ego_ax = 0.0
         self.ego_prev_ax = 0.0
 
-        # Spawn ego in a clear gap inside the real median of Lane 3
-        lane3_df = self.frames[0][self.frames[0]["lane_id"] == 3]
-        mid_x = float(np.median(lane3_df["x_m"].values)) if len(lane3_df) > 0 else 0.5 * (self.x_left_curb + self.x_right_curb)
+        # Spawn ego in a clear gap inside the real mainline frame
+        init_frame = self.frames[self._frame_offset]
+        lane_cand = int(self.rng.choice([2, 3, 4])) if self._frame_offset > 0 else 3
+        lane_df = init_frame[init_frame["lane_id"] == lane_cand]
+        if len(lane_df) < 2:
+            lane_df = init_frame[init_frame["lane_id"] == 3]
+        mid_x = float(np.median(lane_df["x_m"].values)) if len(lane_df) > 0 else 0.5 * (self.x_left_curb + self.x_right_curb)
         self.target_lane_x = mid_x
-        init_frame = self.frames[0]
-        # Find largest longitudinal gap in Lane 3
         y_spawn = self.y_min + 25.0
-        init_spd = float(np.median(lane3_df["speed"].values)) if len(lane3_df) > 0 else (11.5 if self.is_arterial else 15.5)
+        init_spd = float(np.median(lane_df["speed"].values)) if len(lane_df) > 0 else (11.5 if self.is_arterial else 15.5)
         init_spd = float(np.clip(init_spd, 7.0, 22.0))
         near = init_frame[(np.abs(init_frame["x_m"] - mid_x) < 2.2)]
         if len(near) > 0:
@@ -135,7 +156,9 @@ class NgsimCorridorEnv:
         self.ego_vel = np.array([0.0, init_spd], dtype=float)
         self.ego_heading_rad = 0.0
         self.dr_pos = self.ego_pos.copy()
-        self.last_spat = "GREEN"
+        self.last_spat = self._true_spat_phase()
+        self._phase_steps = 1
+        self._spat_fault_latch = False
 
         # Keep track of reactive trailing offsets and previous positions (prevents camera-entry pop-in & recycled-ID teleports)
         self._trail_offsets: Dict[int, float] = {}
@@ -143,53 +166,46 @@ class NgsimCorridorEnv:
         self._prev_veh_pos: Dict[int, Tuple[float, float]] = {}
         return self._observe()
 
-    def _get_surrounding_vehicles(self) -> pd.DataFrame:
+    def _get_surrounding_vehicles(self) -> Dict[str, Any]:
         """
-        Retrieves real NGSIM vehicles at current frame without artificial camera-wrap
-        teleports, filtering camera-entry pop-ins / recycled-ID jumps within 25m of ego
-        and maintaining human-driver rear headway during smooth AV cruising.
+        Retrieves NGSIM vehicles at current frame using pre-cached NumPy arrays
+        (zero Pandas copy/row overhead), filtering pop-ins and recycled-ID jumps.
         """
-        f_idx = self.step_idx % len(self.frames)
-        f_df = self.frames[f_idx].copy()
+        f_idx = (self.step_idx + self._frame_offset) % len(self.frames)
+        fc = self._frame_arrays[f_idx]
+        vids = fc["vehicle_id"]
+        xs = fc["x_m"]
+        ys = fc["y_m"].copy()
+        spds = fc["speed"]
+        wids = fc["width_m"]
+        lens = fc["length_m"]
+        bsms = fc["bsms"]
 
+        n = len(vids)
+        keep = np.ones(n, dtype=bool)
         if self.step_idx == 0:
-            too_close = (np.abs(f_df["x_m"] - self.ego_pos[0]) < 2.6) & (
-                np.abs(f_df["y_m"] - self.ego_pos[1]) < 22.0
-            )
-            f_df = f_df[~too_close].reset_index(drop=True)
-            self._prev_vehicle_ids = set(int(v) for v in f_df["vehicle_id"].values)
+            too_close = (np.abs(xs - self.ego_pos[0]) < 2.6) & (np.abs(ys - self.ego_pos[1]) < 22.0)
+            keep = ~too_close
+            self._prev_vehicle_ids = set(int(v) for v in vids[keep])
             self._prev_veh_pos = {
-                int(f_df["vehicle_id"].iloc[i]): (float(f_df["x_m"].iloc[i]), float(f_df["y_m"].iloc[i]))
-                for i in range(len(f_df))
+                int(vids[i]): (float(xs[i]), float(ys[i]))
+                for i in np.where(keep)[0]
             }
         else:
-            vids_arr = f_df["vehicle_id"].values
-            xs_raw = f_df["x_m"].values
-            ys_raw = f_df["y_m"].values
-            pop_in = np.zeros(len(f_df), dtype=bool)
-            for i in range(len(f_df)):
-                v = int(vids_arr[i])
-                x_i, y_i = float(xs_raw[i]), float(ys_raw[i])
-                near_ego = abs(x_i - self.ego_pos[0]) < 2.8 and abs(y_i - self.ego_pos[1]) < 25.0
-                if not near_ego:
-                    continue
-                if v not in self._prev_veh_pos:
-                    pop_in[i] = True
-                else:
-                    px, py = self._prev_veh_pos[v]
-                    if np.hypot(x_i - px, y_i - py) > 8.0:
-                        # Unphysical Socrata cross-section recycled Vehicle_ID jump near ego
-                        pop_in[i] = True
-                        self._trail_offsets.pop(v, None)
-            if np.any(pop_in):
-                f_df = f_df[~pop_in].reset_index(drop=True)
+            for i in range(n):
+                v = int(vids[i])
+                x_i, y_i = float(xs[i]), float(ys[i])
+                if abs(x_i - self.ego_pos[0]) < 2.8 and abs(y_i - self.ego_pos[1]) < 25.0:
+                    if v not in self._prev_veh_pos:
+                        keep[i] = False
+                    else:
+                        px, py = self._prev_veh_pos[v]
+                        if (x_i - px) * (x_i - px) + (y_i - py) * (y_i - py) > 64.0:
+                            keep[i] = False
+                            self._trail_offsets.pop(v, None)
 
-            vids = f_df["vehicle_id"].values
-            xs = f_df["x_m"].values
-            ys = f_df["y_m"].values
-            lens = f_df["length_m"].values
             new_pos: Dict[int, Tuple[float, float]] = {}
-            for i in range(len(f_df)):
+            for i in np.where(keep)[0]:
                 vid = int(vids[i])
                 new_pos[vid] = (float(xs[i]), float(ys[i]))
                 y_cur = ys[i] + self._trail_offsets.get(vid, 0.0)
@@ -201,79 +217,107 @@ class NgsimCorridorEnv:
                             self._trail_offsets[vid] = self._trail_offsets.get(vid, 0.0) - (y_cur - min_safe_y)
                             y_cur = min_safe_y
                 ys[i] = y_cur
-            f_df["y_m"] = ys
-            self._prev_vehicle_ids = set(int(v) for v in vids)
+            self._prev_vehicle_ids = set(new_pos.keys())
             self._prev_veh_pos = new_pos
 
-        self.last_ego_records = f_df
-        return f_df
+        if not np.all(keep):
+            idx_keep = np.where(keep)[0]
+            bsms_out = []
+            for idx in idx_keep:
+                b = dict(bsms[idx])
+                b["y_m"] = float(ys[idx])
+                bsms_out.append(b)
+            return {
+                "vehicle_id": vids[idx_keep],
+                "x_m": xs[idx_keep],
+                "y_m": ys[idx_keep],
+                "speed": spds[idx_keep],
+                "width_m": wids[idx_keep],
+                "length_m": lens[idx_keep],
+                "bsms": bsms_out,
+            }
+        return {
+            "vehicle_id": vids,
+            "x_m": xs,
+            "y_m": ys,
+            "speed": spds,
+            "width_m": wids,
+            "length_m": lens,
+            "bsms": bsms,
+        }
 
     def _compute_6_sector_radar(
-        self, vehicles_df: pd.DataFrame
-    ) -> Tuple[np.ndarray, np.ndarray, float, float, float, float]:
+        self, vehicles_df: Dict[str, Any]
+    ) -> Tuple[np.ndarray, np.ndarray, float, float, float, float, List[Tuple[int, float, float, float]]]:
         """
-        6-sector 120 m automotive radar/LiDAR raycasts around ego:
+        6-sector 120 m simulated automotive radar raycasts around ego:
           Sector 0: Front (-30..+30 deg wrt +y travel axis)
           Sector 1: Front-Right (+30..+90 deg)
           Sector 2: Rear-Right (+90..+150 deg)
           Sector 3: Rear (150..-150 deg)
           Sector 4: Rear-Left (-150..-90 deg)
           Sector 5: Front-Left (-90..-30 deg)
-        Also computes exact forward swept-corridor distance (|dx| < 2.3 m, dy > 0)
-        for DT-CBF longitudinal safety against close cut-ins.
         """
         R = self.cfg.radar_range_m
         sector_dist = np.full(6, R, dtype=float)
         sector_rel_vel = np.zeros(6, dtype=float)
         swept_front_dist = R
         swept_front_rel_vel = 0.0
+        raw_tracks: List[Tuple[int, float, float, float]] = []
 
-        dx = vehicles_df["x_m"].values - self.ego_pos[0]
-        dy = vehicles_df["y_m"].values - self.ego_pos[1]
+        xs_v = vehicles_df["x_m"]
+        ys_v = vehicles_df["y_m"]
+        vy_other = vehicles_df["speed"]
+        dx = xs_v - self.ego_pos[0]
+        dy = ys_v - self.ego_pos[1]
+        vx_other = np.zeros_like(dx)
         dist_center = np.hypot(dx, dy)
         dist_edge = np.maximum(0.2, dist_center - 2.3)
 
         az_deg = np.degrees(np.arctan2(dx, dy))
-        vx_other = np.zeros_like(dx)
-        vy_other = vehicles_df["speed"].values
         rel_vx = vx_other - self.ego_vel[0]
         rel_vy = vy_other - self.ego_vel[1]
 
-        in_range = dist_edge < R
-        for i in np.where(in_range)[0]:
-            a = az_deg[i]
-            if -30.0 <= a < 30.0:
-                s = 0
-            elif 30.0 <= a < 90.0:
-                s = 1
-            elif 90.0 <= a < 150.0:
-                s = 2
-            elif a >= 150.0 or a < -150.0:
-                s = 3
-            elif -150.0 <= a < -90.0:
-                s = 4
-            else:
-                s = 5
+        in_idx = np.where(dist_edge < R)[0]
+        if len(in_idx) > 0:
+            rx_noise = self.rng.normal(0.0, 0.25, size=len(in_idx))
+            ry_noise = self.rng.normal(0.0, 0.25, size=len(in_idx))
+            rv_noise = self.rng.normal(0.0, 0.15, size=len(in_idx))
+            for k, i in enumerate(in_idx):
+                a = az_deg[i]
+                if -30.0 <= a < 30.0:
+                    s = 0
+                elif 30.0 <= a < 90.0:
+                    s = 1
+                elif 90.0 <= a < 150.0:
+                    s = 2
+                elif a >= 150.0 or a < -150.0:
+                    s = 3
+                elif -150.0 <= a < -90.0:
+                    s = 4
+                else:
+                    s = 5
 
-            d_i = float(dist_edge[i])
-            if d_i < sector_dist[s]:
-                sector_dist[s] = d_i
-                u_vec = np.array([dx[i], dy[i]]) / max(dist_center[i], 1e-3)
-                sector_rel_vel[s] = float(rel_vx[i] * u_vec[0] + rel_vy[i] * u_vec[1])
+                d_i = float(dist_edge[i])
+                raw_tracks.append((s, float(xs_v[i] + rx_noise[k]), float(ys_v[i] + ry_noise[k]), float(vy_other[i] + rv_noise[k])))
+                if d_i < sector_dist[s]:
+                    sector_dist[s] = d_i
+                    u_x = dx[i] / max(dist_center[i], 1e-3)
+                    u_y = dy[i] / max(dist_center[i], 1e-3)
+                    sector_rel_vel[s] = float(rel_vx[i] * u_x + rel_vy[i] * u_y)
 
-            # Swept forward corridor (strictly wider than vehicle collision box |dx| < 2.25 m, dy > 0)
-            if abs(dx[i]) < 2.25 and dy[i] > 0.0:
-                d_sw = max(0.2, float(dy[i]) - 4.7)
-                if d_sw < swept_front_dist:
-                    swept_front_dist = d_sw
-                    swept_front_rel_vel = float(rel_vy[i])
+                if abs(dx[i]) < 2.25 and dy[i] > 0.0:
+                    d_sw = max(0.2, float(dy[i]) - 4.7)
+                    if d_sw < swept_front_dist:
+                        swept_front_dist = d_sw
+                        swept_front_rel_vel = float(rel_vy[i])
 
         radar_noise = self.rng.normal(0.0, 0.20, size=6)
         sector_dist = np.clip(sector_dist + radar_noise, 0.2, R)
 
         left_clear = float(self.ego_pos[0] - self.x_left_curb + self.rng.normal(0.0, 0.08))
         right_clear = float(self.x_right_curb - self.ego_pos[0] + self.rng.normal(0.0, 0.08))
-        return sector_dist, sector_rel_vel, left_clear, right_clear, swept_front_dist, swept_front_rel_vel
+        return sector_dist, sector_rel_vel, left_clear, right_clear, swept_front_dist, swept_front_rel_vel, raw_tracks
 
     def _true_spat_phase(self) -> str:
         if not self.is_arterial:
@@ -295,17 +339,18 @@ class NgsimCorridorEnv:
             right_clear,
             swept_front_dist,
             swept_front_rel_vel,
+            raw_radar_tracks,
         ) = self._compute_6_sector_radar(vehicles_df)
         true_spat = self._true_spat_phase()
 
-        # Build true surrounding BSMs within 150 m
-        dx_all = vehicles_df["x_m"].values - self.ego_pos[0]
-        dy_all = vehicles_df["y_m"].values - self.ego_pos[1]
-        in_comm = np.hypot(dx_all, dy_all) <= 150.0
-        near_df = vehicles_df[in_comm]
-        true_bsms = near_df[
-            ["msgCnt", "id", "vehicle_id", "x_m", "y_m", "speed", "heading", "accelSet_long", "accelSet_lat"]
-        ].to_dict(orient="records")
+        # Build true surrounding BSMs within 150 m from pre-cached dict list
+        dx_all = vehicles_df["x_m"] - self.ego_pos[0]
+        dy_all = vehicles_df["y_m"] - self.ego_pos[1]
+        d_all = np.hypot(dx_all, dy_all)
+        in_comm_idx = np.where(d_all <= 150.0)[0]
+        local_density = int(np.sum(d_all <= 60.0))
+        bsms_cache = vehicles_df["bsms"]
+        true_bsms = [bsms_cache[i] for i in in_comm_idx]
 
         # Apply SAE J2735 / sensor threat model
         corrupted = self.threat_injector.apply(
@@ -334,6 +379,14 @@ class NgsimCorridorEnv:
         blinded = corrupted["blinded_mask"]
         validity = (~blinded).astype(float)
 
+        # Strict non-oracle visible radar targets (only targets inside unblinded sectors)
+        visible_radar = [(rx, ry, rv) for (sec, rx, ry, rv) in raw_radar_tracks if not blinded[sec]]
+        ahead_speeds = [
+            rv
+            for (rx, ry, rv) in visible_radar
+            if 0.0 < (ry - self.ego_pos[1]) < 85.0 and abs(rx - self.ego_pos[0]) < 8.5
+        ]
+
         # 26D Topological Relational Feature Vector
         obs = np.zeros(26, dtype=np.float32)
         obs[0:6] = np.clip(radar_dist / self.cfg.radar_range_m, 0.0, 1.0)
@@ -350,32 +403,76 @@ class NgsimCorridorEnv:
         obs[25] = spat_stop
 
         # 6D External Kinematic Observation Vector for Mahalanobis Residual Head 1
-        # Measures discrepancy between external GNSS/BSM/SPaT feeds and local proprioceptive/radar anchors
+        # Zero oracle leakage: compares untrusted GNSS/BSM/SPaT feeds ONLY against local radar,
+        # curb-anchored DR, wheel encoders, and causal SPaT phase/flow plausibility.
         bsm_front_gap = self.cfg.radar_range_m
-        bsm_near_count = 0
+        bsm_front_rel_v = 0.0
+        unmatched_bsms = 0
+        vis_xy = np.array([(rx, ry) for (rx, ry, _) in visible_radar], dtype=float) if visible_radar else np.empty((0, 2))
+
         for b in corrupted["bsms"]:
             bx = float(b["x_m"]) - self.ego_pos[0]
             by = float(b["y_m"]) - self.ego_pos[1]
-            d_c = np.hypot(bx, by)
-            if d_c <= 120.0:
-                bsm_near_count += 1
-            az = np.degrees(np.arctan2(bx, by))
-            if -30.0 <= az < 30.0 and d_c < 122.3:
-                edge_gap = max(0.2, float(d_c - 2.3))
+            d_c = float(np.hypot(bx, by))
+            az = float(np.degrees(np.arctan2(bx, by)))
+            if -30.0 <= az < 30.0:
+                sec_b = 0
+            elif 30.0 <= az < 90.0:
+                sec_b = 1
+            elif 90.0 <= az < 150.0:
+                sec_b = 2
+            elif az >= 150.0 or az < -150.0:
+                sec_b = 3
+            elif -150.0 <= az < -90.0:
+                sec_b = 4
+            else:
+                sec_b = 5
+
+            # Forward lane-corridor BSM check for ghost FDI impact on unquarantined shield
+            if abs(bx) < 2.25 and by > 0.0 and by < 122.3:
+                edge_gap = max(0.2, float(by) - 4.7)
                 if edge_gap < bsm_front_gap:
                     bsm_front_gap = edge_gap
+                    bsm_front_rel_v = float(b.get("speed", v_wheel)) - v_wheel
+
+            # Cross-check incoming BSM against unblinded onboard radar detections within 118 m
+            if not blinded[sec_b] and d_c <= 118.0:
+                if len(vis_xy) == 0:
+                    unmatched_bsms += 1
+                else:
+                    min_radar_err = float(np.min(np.hypot(vis_xy[:, 0] - float(b["x_m"]), vis_xy[:, 1] - float(b["y_m"]))))
+                    if min_radar_err > 5.5:
+                        unmatched_bsms += 1
 
         radar_front = float(radar_dist[0])
-        front_gap_mismatch = 0.0 if blinded[0] else np.clip((bsm_front_gap - radar_front) / 10.0, -2.5, 2.5)
+        front_gap_mismatch = 0.0 if blinded[0] else float(np.clip((bsm_front_gap - radar_front) / 10.0, -2.5, 2.5))
         if not blinded[0] and bsm_front_gap < 30.0 and radar_front > bsm_front_gap + 4.0:
-            front_gap_mismatch = (radar_front - bsm_front_gap) / 3.5
+            front_gap_mismatch = float((radar_front - bsm_front_gap) / 3.5)
 
-        bsm_density_excess = max(0.0, (bsm_near_count - len(true_bsms)) / 5.0)
+        bsm_radar_anomaly = float(unmatched_bsms) / 3.5 + float(np.sum(blinded)) * 2.5
 
-        # SPaT plausibility check against local corridor phase & traffic flow
+        # Observable SPaT plausibility (zero access to true_spat):
+        # 1) Illegal signal state jump (GREEN -> RED skipping YELLOW, or flickering < 1.5s)
+        # 2) Highway map inconsistency (signal-free highway + moving radar flow contradicting RED)
+        curr_spat = str(corrupted["spat_obs"])
+        if self.step_idx > 0:
+            if (self.last_spat == "GREEN" and curr_spat == "RED") or (
+                curr_spat != self.last_spat and self._phase_steps < 15
+            ):
+                self._spat_fault_latch = True
+            elif curr_spat != self.last_spat:
+                self._phase_steps = 1
+            else:
+                self._phase_steps += 1
+        self.last_spat = curr_spat
+
         spat_inconsistency = 0.0
-        if corrupted["spat_obs"] != true_spat:
-            spat_inconsistency = 4.5
+        if self._spat_fault_latch:
+            spat_inconsistency = 4.2
+        elif (not self.is_arterial) and curr_spat == "RED":
+            flow_v = float(np.median(ahead_speeds)) if ahead_speeds else v_wheel
+            if flow_v > 5.0:
+                spat_inconsistency = min(4.5, 1.5 + 0.45 * flow_v)
 
         gnss_dx = (corrupted["gnss_pos"][0] - self.dr_pos[0]) / 0.85
         gnss_dy = (corrupted["gnss_pos"][1] - self.dr_pos[1]) / 1.15
@@ -387,7 +484,7 @@ class NgsimCorridorEnv:
                 gnss_dy,
                 gnss_dv,
                 front_gap_mismatch,
-                bsm_density_excess + (0.0 if np.sum(blinded) == 0 else float(np.sum(blinded)) * 2.5),
+                bsm_radar_anomaly,
                 spat_inconsistency,
             ],
             dtype=np.float32,
@@ -398,8 +495,8 @@ class NgsimCorridorEnv:
         eff_front_rel_v = float(radar_rel_vel[0]) if blinded[0] else float(swept_front_rel_vel)
 
         # Detect any adjacent-lane encroaching vehicle alongside ego (|dy| < 7.0m, 1.25m <= |dx| < 3.1m)
-        dx_a = vehicles_df["x_m"].values - self.ego_pos[0]
-        dy_a = vehicles_df["y_m"].values - self.ego_pos[1]
+        dx_a = vehicles_df["x_m"] - self.ego_pos[0]
+        dy_a = vehicles_df["y_m"] - self.ego_pos[1]
         alongside = (dy_a > -7.0) & (dy_a < 7.0)
         left_intrude = dx_a[alongside & (dx_a <= -1.25) & (dx_a > -3.1)]
         right_intrude = dx_a[alongside & (dx_a >= 1.25) & (dx_a < 3.1)]
@@ -416,7 +513,9 @@ class NgsimCorridorEnv:
             "dr_pos": self.dr_pos.copy(),
             "gnss_pos": corrupted["gnss_pos"].copy(),
             "bsms": corrupted["bsms"],
-            "true_bsms": true_bsms,
+            "bsm_front_dist": bsm_front_gap,
+            "bsm_front_rel_v": bsm_front_rel_v,
+            "local_density": local_density,
             "radar_dist": radar_dist,
             "radar_rel_vel": radar_rel_vel,
             "eff_front_dist": eff_front_dist,
@@ -468,11 +567,11 @@ class NgsimCorridorEnv:
 
         # Seamless corridor lap transition before exiting real NGSIM camera FOV
         if self.ego_pos[1] > self.y_max - 30.0:
-            f_next = self.frames[(self.step_idx + 1) % len(self.frames)]
-            near_lane = f_next[np.abs(f_next["x_m"] - self.ego_pos[0]) < 2.5].sort_values("y_m")
+            fn = self._frame_arrays[(self.step_idx + 1 + self._frame_offset) % len(self.frames)]
+            mask_l = np.abs(fn["x_m"] - self.ego_pos[0]) < 2.5
             new_y = self.y_min + 35.0
-            if len(near_lane) > 1:
-                ys_l = near_lane["y_m"].values
+            if np.sum(mask_l) > 1:
+                ys_l = np.sort(fn["y_m"][mask_l])
                 gaps_l = np.diff(ys_l)
                 if len(gaps_l) > 0 and np.max(gaps_l) > 16.0:
                     idx_g = int(np.argmax(gaps_l))
@@ -492,10 +591,10 @@ class NgsimCorridorEnv:
 
         # Check physical collisions against REAL surrounding NGSIM vehicles & curbs
         vdf = info["vehicles_df"]
-        dx_v = np.abs(vdf["x_m"].values - self.ego_pos[0])
-        dy_v = np.abs(vdf["y_m"].values - self.ego_pos[1])
-        half_w = 0.5 * vdf["width_m"].values + self.cfg.ego_half_width_m
-        half_l = 0.5 * vdf["length_m"].values + self.cfg.ego_half_length_m
+        dx_v = np.abs(vdf["x_m"] - self.ego_pos[0])
+        dy_v = np.abs(vdf["y_m"] - self.ego_pos[1])
+        half_w = 0.5 * vdf["width_m"] + self.cfg.ego_half_width_m
+        half_l = 0.5 * vdf["length_m"] + self.cfg.ego_half_length_m
         collided = bool(np.any((dx_v < half_w) & (dy_v < half_l)))
         off_road = bool(
             self.ego_pos[0] - self.cfg.ego_half_width_m < self.x_left_curb

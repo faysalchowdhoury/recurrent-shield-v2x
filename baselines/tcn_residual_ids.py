@@ -3,7 +3,7 @@ Baseline 5: Parameter-Matched Causal Dilated TCN Residual IDS + Policy.
 
 Represents modern 1D Temporal Convolutional Network (Bai et al., 2018; 2022-2025
 causal vehicular residual IDS) architectures operating on identical sliding
-context windows (K=16) and parameter budget (<350 KB FP32) as RecurrentShieldPPO.
+context windows (K=16) and parameter budget (<350 KB FP32) as RecurrentShieldBC.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from models.recurrent_shield_ppo import ACT_DIM, KIN_DIM, OBS_DIM
+from models.recurrent_shield_bc import ACT_DIM, KIN_DIM, OBS_DIM
 
 
 class _CausalConvBlock(nn.Module):

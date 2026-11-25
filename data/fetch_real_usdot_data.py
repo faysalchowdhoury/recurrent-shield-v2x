@@ -1,11 +1,13 @@
 """
-Real USDOT NGSIM & SAE J2735 (SPMD Schema) Data Ingestion Script.
+Real USDOT NGSIM Trajectory Ingestion & SAE J2735 BSM Schema Formatting Script.
 
 Queries the live USDOT Socrata REST API (data.transportation.gov) for real
 Next Generation Simulation (NGSIM) vehicle trajectories across US-101, I-80,
 and Lankershim corridors (DOI: 10.21949/1504477), validates schema integrity,
-logs SHA-256 checksums, and maps real kinematics into standardized SAE J2735
-Basic Safety Message (BSM) fields following USDOT SPMD (DOI: 10.21949/1504482).
+logs SHA-256 checksums, and formats vehicle kinematics into standardized
+SAE J2735 Basic Safety Message (BSM) fields following the USDOT SPMD field schema
+(DOI: 10.21949/1504482). This evaluates trajectory-derived BSM messages rather than
+raw RF-captured SPMD packet logs.
 
 Fails loudly if the API is unreachable or returns malformed data; never
 substitutes synthetic baseline trajectories.
