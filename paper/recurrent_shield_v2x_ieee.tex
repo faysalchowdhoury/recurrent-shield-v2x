@@ -21,7 +21,7 @@
 \maketitle
 
 \begin{abstract}
-Connected and Automated Vehicles (CAVs) fuse cooperative SAE~J2735 Basic Safety Messages (BSMs), Road-Side Unit (RSU) Signal Phase and Timing (SPaT) advisories, and Global Navigation Satellite System (GNSS) localization to extend perception beyond line-of-sight; however, insider BSM falsification, RF GNSS ramp spoofing, and physical radar blinding can bypass cryptographic authentication (IEEE~1609.2) and corrupt downstream planning. Existing cyber-resilient CAV benchmarks largely evaluate detection in synthetic gridworlds or decouple intrusion alarms from verified limp-home actuation. To bridge this gap, we formulate compromised CAV traversal as a Tactical Minimum-Risk Maneuver (MRM) POMDP over live-ingested USDOT Next Generation Simulation (NGSIM) trajectories and Safety Pilot Model Deployment (SPMD) BSM schemas. We propose \textbf{RecurrentShield-V2X}, an 84,505-parameter dual-head \texttt{RecurrentPPO} (128-unit LSTM) unifying heteroscedastic Mahalanobis residual quarantine, road-boundary lateral dead-reckoning anchoring, and a closed-form 200~Hz Discrete-Time Control Barrier Function (DT-CBF) shield. Trained strictly on US-101 freeway data and tested zero-shot on unseen I-80 and Lankershim arterial corridors across 5 seeds and 6 single/combined threats, RecurrentShield-V2X achieves 96.7\% (US-101), 93.3\% (I-80), and 100.0\% (Lankershim) survival with 97.43\%--100.0\% QP feasibility, retaining 100.0\% survival under 50\%-duty intermittent bursts where EKF-CUSUM drops to 83.33\%, while fitting within 82.6~KB INT8 flash, 107.1~KB SRAM, and 1.70~ms on ESP32-S3.
+When upstream V2X cryptographic authentication (IEEE~1609.2) is bypassed by compromised insider certificates or physical-layer GNSS spoofing and radar blinding, autonomous vehicles require a \emph{last-line physical plausibility and runtime safety layer} rather than isolated packet checks. Yet prior cyber-resilient driving studies predominantly test offline classification on synthetic VANET logs or decouple detection from verified limp-home actuation. We present \textbf{RecurrentShield-V2X}, a last-line physical kinematic quarantine and barrier-enforced tactical Minimum-Risk Maneuver (MRM) architecture evaluated zero-shot across real multi-lane USDOT Next Generation Simulation (NGSIM) and Safety Pilot Model Deployment (SPMD) corridors. An 84,505-parameter dual-head 128-unit LSTM (\texttt{RecurrentPPO}) unifies heteroscedastic Mahalanobis residual quarantine ($r_t > \tau_t$), road-boundary lateral dead-reckoning anchoring, and a closed-form 200~Hz Discrete-Time Control Barrier Function (DT-CBF) shield (480~cycles/tick) with deterministic infeasibility fallback. Trained exclusively on US-101 and tested zero-shot on unseen I-80 freeway and Lankershim arterial traffic across 5 seeds and 6 continuous/combined threats, RecurrentShield-V2X achieves \textbf{96.7\%} (US-101), \textbf{93.3\%} (I-80), and \textbf{100.0\%} (Lankershim) survival with \textbf{97.43\%--100.0\%} QP feasibility. Under 50\%-duty intermittent attacks where cumulative EKF-CUSUM degrades to \textbf{83.33\%} survival, recurrent latent memory sustains \textbf{100.0\%} survival while deploying in \textbf{82.6~KB} INT8 flash, \textbf{107.1~KB} SRAM, and \textbf{1.70~ms} projected latency on ESP32-S3.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -39,41 +39,43 @@ Despite progress in vehicular Intrusion Detection Systems (IDS) and Control Barr
     \item \textbf{Gap G4 (Embedded MCU Compute Mismatch):} Heavy Transformer or nonlinear MPC-CBF controllers exceed the SRAM (512~KB) and latency ($5.0\text{ ms}$ at 200~Hz) envelopes of embedded automotive microcontrollers~\cite{david2021tflm}.
 \end{itemize}
 
-To resolve G1--G4 as a unified \emph{last-line physical plausibility and safety control layer} (assuming upstream cryptographic verification is compromised or unavailable), this work makes four mapped contributions:
+To resolve G1--G4 as a \emph{last-line physical kinematic residual and barrier-enforced limp-home layer} assuming IEEE~1609.2 cryptographic checks are already bypassed or compromised, our core contributions are:
 \begin{enumerate}
-    \item \textbf{Real-USDOT Corridor POMDP \& Zero-Leakage Benchmark (Addresses G1; Section~III, Tables~\ref{tab:dataset_stats}--\ref{tab:zero_leakage}):} Formulates GNSS/V2X-denied traversal directly atop live-ingested USDOT NGSIM trajectories (US-101, I-80, Lankershim) mapped to SPMD SAE~J2735 schemas, isolating all training and calibration strictly to US-101.
-    \item \textbf{Dual-Head LSTM Quarantine \& Anchored MRM Policy (Addresses G2; Section~V, Fig.~\ref{fig:arch}):} Couples a 26$\to$24 topological encoder and 128-unit LSTM ($84,505$ parameters) to detect external discrepancies via heteroscedastic Mahalanobis residuals ($r_t > \tau_t$) while bounding lateral drift via local curb anchoring.
-    \item \textbf{Closed-Form 200~Hz DT-CBF Shield with Infeasibility Fallback (Addresses G3; Section~V-E, Theorem~1, Tables~\ref{tab:alpha_sens}--\ref{tab:failure_modes}):} Enforces longitudinal and curb barriers in $O(1)$ via closed-form KKT projection under reachability-inflated blinding bounds ($\epsilon_{\text{radar}} \in \{0.85, 1.85\}\text{ m}$), logging QP feasibility rates and deterministic emergency-braking fallback.
-    \item \textbf{Multi-Baseline Parity, Burst Stress Tests \& ESP32-S3 Profiling (Addresses G4; Sections~VI--VII, Tables~\ref{tab:baseline_spec}--\ref{tab:edge_profile}):} Benchmarks 6 comparators across 5 seeds, 6 single/combined threats, randomized onsets, and 50\%-duty bursts, alongside INT8 TFLite Micro firmware export ($82.6\text{ KB}$ flash, $107.1\text{ KB}$ SRAM, $1.70\text{ ms}$ step).
+    \item \textbf{Last-Line Physical Quarantine + Verified Limp-Home under Compromised Auth (G2, G3; Sections~IV--V, Fig.~\ref{fig:arch}):} Unifies an 84,505-parameter 128-unit LSTM residual gate ($r_t > \tau_t$), road-boundary lateral anchoring, and a closed-form 480-cycle DT-CBF KKT shield ($\epsilon_{\text{radar}} \in \{0.85, 1.85\}\text{ m}$) with deterministic emergency fallback when external GNSS/V2X channels cannot be trusted.
+    \item \textbf{Zero-Shot Real USDOT Corridor Evaluation under Continuous \& Intermittent Threats (G1, G2; Sections~III \& V, Tables~\ref{tab:dataset_stats}--\ref{tab:rand_int}):} Establishes strict zero-leakage evaluation across live-ingested US-101 (train/cal.), unseen I-80 freeway, and unseen Lankershim arterial traffic under 6 continuous/combined attacks, randomized onsets, and 50\%-duty intermittent bursts (holding 100.0\% survival where EKF-CUSUM drops to 83.33\%).
+    \item \textbf{Quantified QP Feasibility \& Transparent Embedded Feasibility (G3, G4; Sections~V--VI, Tables~\ref{tab:alpha_sens}--\ref{tab:edge_profile}):} Reports empirical QP constraint satisfaction (97.43\%--100.0\% across corridors), $\alpha$-damping sensitivity, failure-mode localization (6.7\% residual I-80 cut-in exposure), 6-comparator parity (including parameter-matched causal TCN and Transformer IDSs), and ESP32-S3 INT8 footprint (82.6~KB flash, 107.1~KB SRAM, 1.70~ms step).
 \end{enumerate}
 
 \section{Related Work \& Positioning}
 
 \subsection{Residual-Based GNSS and V2X Misbehavior Detection}
-Van~der Heijden \textit{et al.}~\cite{vanderheijden2019} classify vehicular misbehavior checks into entity-centric trust frameworks and data-centric plausibility monitors. While VeReMi Extension~\cite{kamel2020veremi} and cooperative simulators~\cite{kamel2020tvt} standardized SAE~J2735 BSM attack taxonomies in simulation, Shen \textit{et al.}~\cite{shen2020drift} exposed how gradual GNSS ramp spoofing (\textit{FusionRipper}) evades snapshot Kalman chi-squared gates in multi-sensor localization. Sequential neural detectors using LSTMs, causal dilated Temporal Convolutional Networks (TCNs)~\cite{bai2018tcn}, and compact Transformers capture multi-step kinematic deviations, yet rarely test zero-shot closed-loop resilience across distinct real-world road geometries.
+Van~der Heijden \textit{et al.}~\cite{vanderheijden2019} classify vehicular misbehavior detection into entity-centric trust schemes and data-centric physical plausibility monitors. Synthetic benchmarks including VeReMi Extension~\cite{kamel2020veremi} and joint network-mobility simulators~\cite{kamel2020tvt} standardized SAE~J2735 falsification testing, spurring machine-learning BSM detectors such as randomized search ensemble classifiers for IoV falsification~\cite{anyanwu2023tits}. On the localization plane, Shen \textit{et al.}~\cite{shen2020drift} exposed how gradual GNSS ramp spoofing (\textit{FusionRipper}) overtakes multi-sensor EKF fusion without tripping chi-squared gates, motivating sensor-fusion spoofing detectors~\cite{chowdhury2022gnss} and learning-from-demonstration residual checkers~\cite{yang2023gps}. Recent temporal deep sequence detectors adopt causal dilated TCNs~\cite{bai2018tcn} and Transformer self-attention (e.g., \textit{AttentionGuard} for V2X platoons~\cite{li2025attentionguard}). Yet these works predominantly benchmark offline detection F1/AUROC and rarely verify closed-loop vehicle survival under simultaneous radar denial or intermittent attack pulsing.
 
-\subsection{Discrete-Time CBFs and Safe RL under Perception Attacks}
-CBFs synthesize minimally invasive QP safety filters enforcing forward invariance of safe operating sets~\cite{ames2019cbf}. Agrawal and Sreenath~\cite{agrawal2017dcbf} established discrete-time CBF (DT-CBF) invariance conditions matching digital control sampling, while Zeng \textit{et al.}~\cite{zeng2021mpccbf} unified DT-CBFs with receding-horizon MPC to reduce single-step myopia. Similarly, Cheng \textit{et al.}~\cite{cheng2019rlcbf} embedded CBF guards inside RL policies~\cite{schulman2017ppo}. However, classical RL-CBF designs presuppose benign obstacle feeds; passing spoofed BSMs directly into a barrier filter can induce phantom braking or blind-spot encroachment unless preceded by an autonomous quarantine gate.
+\subsection{Discrete-Time and Robust CBFs for Automated Driving}
+CBFs synthesize minimally invasive QP safety filters maintaining forward invariance of safe driving sets~\cite{ames2019cbf}. Extending continuous barriers to digital control sampling, Agrawal and Sreenath~\cite{agrawal2017dcbf} formalized discrete-time CBFs (DT-CBFs), and Zeng \textit{et al.}~\cite{zeng2021mpccbf} embedded DT-CBFs into receding-horizon MPC. To accommodate sensor noise and state-estimation errors, recent frameworks formulate Measurement-Robust CBFs (MR-CBFs)~\cite{dean2020corl,cosner2021mrcbf}, Input-to-State Safety (ISSf) automated truck filters~\cite{alan2023issf}, and stochastic DT-CBFs bounding probabilistic disturbances via concentration inequalities~\cite{cosner2023rss,cosner2024freedman}. Unlike iterative nonlinear MPC-CBF solvers or perception-trusting MR-CBFs, we decouple external V2X spoofing via LSTM quarantine and execute a closed-form 2D KKT DT-CBF projection with explicit worst-case blinding inflation and infeasibility fallback.
 
-\subsection{TinyML Deployment for Embedded Vehicle Controllers}
-Deploying neural sequence policies and optimization filters on resource-constrained microcontrollers (e.g., 512~KB SRAM) prohibits dynamic allocation and iterative QPs. TensorFlow Lite Micro (TFLM)~\cite{david2021tflm} enables static tensor arenas and symmetric INT8 execution. Prior embedded ML controllers focus primarily on stateless MLPs or offline classification rather than co-scheduling a stateful 128-unit LSTM IDS, an MRM actor, and a 200~Hz barrier filter under strict cycle budgets.
+\subsection{Safe RL under Perception and Merging Uncertainty}
+Combining deep RL~\cite{schulman2017ppo} with analytical CBF shields prevents unsafe policy actions~\cite{cheng2019rlcbf}, with recent IEEE~T-ITS studies advancing CBF-guided DRL for highway on-ramp merging~\cite{zhang2025cbfdrl}, cooperative mixed-traffic merging~\cite{hou2023merging}, and probabilistic CBF shielding under neighbor motion uncertainty~\cite{udatha2023pcbf}. However, standard RL-CBF pipelines assume uncorrupted state and V2X neighbor feeds; feeding ghost-vehicle BSMs or poisoned SPaT alerts into a barrier shield induces phantom braking or red-light hazards unless isolated beforehand by an autonomous residual quarantine gate.
+
+\subsection{TinyML and Microcontroller Deployment of CAV Controllers}
+Deploying temporal anomaly detectors and safety controllers onto 512~KB-SRAM microcontrollers prohibits dynamic allocation and heavy attention matrices. TensorFlow Lite Micro (TFLM)~\cite{david2021tflm} provides static tensor arenas for symmetric INT8 inference on edge hardware, while recent TinyML IoT studies quantify ESP32-class SRAM arena contention and step latency constraints~\cite{bove2024tinyml}. Unlike prior TinyML deployments that offload classification or run stateless MLPs, RecurrentShield-V2X co-profiles an 84.5k-parameter INT8 stateful LSTM residual detector, topological actor, and deterministic 480-cycle DT-CBF filter within 107.1~KB total SRAM and 1.70~ms latency.
 
 \begin{table*}[t]
 \centering
-\caption{Positioning Matrix Against Representative Cyber-Resilient V2X, Safe-RL, and Embedded Control Literature}
+\caption{Positioning Matrix Against Recent Cyber-Resilient V2X, Robust/DT-CBF, Safe-RL, and TinyML Literature}
 \label{tab:lit_positioning}
 \scriptsize
-\setlength{\tabcolsep}{3.2pt}
-\begin{tabular}{lllll}
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{p{3.1cm}p{2.6cm}p{2.7cm}p{3.8cm}p{4.0cm}}
 \toprule
 Study / Framework & Focus Area & Validation Strategy & Core Limitation wrt Gaps G1--G4 & RecurrentShield-V2X Advancement \\
 \midrule
-Kamel \textit{et al.}~\cite{kamel2020veremi,kamel2020tvt} & V2X BSM Misbehavior & Synthetic OMNeT++/VeReMi & Offline detection only; no control fallback & Closed-loop quarantine + MRM on USDOT data \\
-Shen \textit{et al.}~\cite{shen2020drift} & GNSS Spoof vs. EKF & Real trace offline MSF replay & No DT-CBF safety layer or V2X integration & Couples residual IDS with 200~Hz DT-CBF shield \\
-Bai \textit{et al.}~\cite{bai2018tcn} & Causal TCN Sequence & Synthetic / audio benchmarks & Fixed window latency; not evaluated on CAVs & Parameter-matched TCN included as baseline \\
-Zeng \textit{et al.}~\cite{zeng2021mpccbf} & MPC-DT-CBF Control & Simulation / robotics & Iterative NLP/QP; assumes clean perception & Closed-form 480-cycle KKT QP + quarantine \\
-Cheng \textit{et al.}~\cite{cheng2019rlcbf} & RL-CBF Safety Filter & Inverted pendulum / driving sim & Assumes unspoofed observations & Isolates spoofed V2X; bounds radar blinding \\
-David \textit{et al.}~\cite{david2021tflm} & TFLite Micro Runtime & MCU vision / audio TinyML & No stateful safety filter verification & Profiles INT8 LSTM + DT-CBF on ESP32-S3 \\
+Anyanwu~\cite{anyanwu2023tits} / Li~\cite{li2025attentionguard} & IoV BSM / Platoon IDS & VeReMi / platoon CAM logs & Detection-only; no runtime control fallback & Closed-loop quarantine + MRM on USDOT traffic \\
+Shen~\cite{shen2020drift} / Yang~\cite{yang2023gps} & GNSS Spoof vs. EKF/LfD & Trace replay / MSF offline & No DT-CBF safety barrier or V2X blinding & Couples residual IDS with 200~Hz DT-CBF shield \\
+Cosner~\cite{cosner2023rss,cosner2024freedman} / Alan~\cite{alan2023issf} & Robust / Stochastic DT-CBF & Analytical + vehicle tests & Assumes non-adversarial perception channel & Quarantines spoofed V2X; bounds radar blinding \\
+Zeng~\cite{zeng2021mpccbf} / Zhang~\cite{zhang2025cbfdrl} & MPC-CBF / CBF-DRL Merging & Highway/track simulations & Iterative solvers; assumes benign neighbor feeds & Closed-form 480-cycle KKT QP + zero-shot MRM \\
+Bai~\cite{bai2018tcn} / Udatha~\cite{udatha2023pcbf} & Causal TCN / Prob. RL-CBF & Sequence / merging sim & Fixed window vs. intermittent bursts & Evaluated as TCN baseline; LSTM excels on bursts \\
+David~\cite{david2021tflm} / Bove~\cite{bove2024tinyml} & TFLM / ESP32 TinyML & MCU classification/split & No stateful safety shield co-scheduling & Co-profiles INT8 LSTM IDS + DT-CBF on ESP32-S3 \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -297,7 +299,7 @@ Blinding \& Spoof+Blinding & 20.0\% & 92--97\% & Dense cut-in inside blinded con
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:failure_modes} and Table~\ref{tab:per_attack_i80} localize all residual unseen-highway collisions (6.7\% aggregate I-80 rate) exclusively to \texttt{radar\_sector\_blinding} and \texttt{combined\_spoof\_blinding} (20\% each). Under physical 10~Hz NGSIM sampling, rapid lateral merges inside blinded sectors can breach single-step braking feasibility ($-6.5\text{ m/s}^2$) identically across LSTM, TCN, and EKF-CUSUM policies.
+Table~\ref{tab:failure_modes} and Table~\ref{tab:per_attack_i80} localize every residual unseen-highway collision (6.7\% aggregate I-80 collision rate, corresponding to 93.3\% survival) exclusively to \texttt{radar\_sector\_blinding} and \texttt{combined\_spoof\_blinding} (20\% collision on each). Across the four unblinded threat vectors (\texttt{gnss\_ramp\_spoof}, \texttt{ghost\_vehicle\_fdi}, \texttt{spat\_phase\_inversion}, and \texttt{sybil\_bsm\_flood}), RecurrentShield-V2X achieves \textbf{100.0\% survival and 0.0\% collision}. Under 10~Hz NGSIM sampling in congested I-80 traffic, rapid adjacent-lane cut-ins occurring inside blinded front/side radar cones can violate single-step braking feasibility ($-6.5\text{ m/s}^2$) before any reactive fallback can clear the gap---yielding identical 20\% blinded collision exposure for LSTM, TCN, and EKF-CUSUM policies.
 
 \section{ESP32-S3 Edge Solver \& Latency Profiling}
 Because the diagonal 2D DT-CBF objective decouples $a_{\text{long}}$ and $v_{\text{lat}}$ box-half-space constraints, its closed-form KKT projection plus 20-substep 200~Hz verifier requires \textbf{no OSQP memory heap} and runs deterministically in \textbf{480 Xtensa LX7 cycles (2.0~$\mu$s)} @ 240~MHz (\texttt{0.150 ms} Python host median). Exported via \texttt{edge\_deploy/esp32\_s3\_export.py} to ONNX FP32 and symmetric INT8 C++ arrays (\texttt{model\_weights.cc}), Table~\ref{tab:edge_profile} and Fig.~\ref{fig:edge} verify complete execution within the $5.0\text{ ms}$ 200~Hz deadline at \textbf{1.70~ms}, \textbf{82.6~KB} weight flash, \textbf{107.1~KB} peak SRAM, and \textbf{0.579~mJ/step}.
@@ -327,14 +329,14 @@ DT-CBF KKT & -- & $<$1 KB & \textbf{480} & \textbf{0.002 ms} & $<$0.001 mJ \\
 \end{figure}
 
 \section{Limitations \& Ranked Future Directions}
-Under the evaluated $16\text{ s}$ NGSIM corridor regime and stated assumptions, three specific limitations bound deployment scope, ranked by operational severity:
+Under the evaluated regime, three concrete limitations bound deployment scope, ranked by severity:
 \begin{enumerate}
-    \item \textbf{Rank 1 — Discrete 10~Hz Sampling \& Binary Sector Blinding:} Native USDOT NGSIM trajectories sample at 10~Hz, and radar denial models discrete sector drops rather than angle-dependent SNR attenuation over multi-kilometer horizons; mitigating the 20\% blinded cut-in collisions motivates high-rate occupancy reachability tracking.
-    \item \textbf{Rank 2 — Analytical MCU Projection vs.\ Physical HIL:} ESP32-S3 cycle counts ($322\text{k}$ INT8, $480$ KKT) derive from documented Xtensa LX7/ESP-NN instruction models paired with measured host ONNX latencies ($0.675\text{ ms}$) rather than on-board oscilloscope current captures.
-    \item \textbf{Rank 3 — Single-Ego Quarantine Scope:} External V2X channels are quarantined unilaterally without cooperative multi-CAV consensus to re-validate suspect BSMs across neighbor vehicles.
+    \item \textbf{Rank 1 — Aging Short-Horizon NGSIM Data \& Temporal Scale:} USDOT NGSIM trajectories reflect 2005--2006 camera segments sampled at 10~Hz over $16\text{ s}$ evaluation horizons and discrete binary radar-sector drops; validating multi-minute kilometer-scale GNSS denial, continuous angle-dependent SNR attenuation, and modern ACC traffic mixes requires higher-rate cooperative datasets.
+    \item \textbf{Rank 2 — Blinded Cut-In Feasibility Under 100~ms Steps:} As reflected by the 6.7\% dense I-80 collision rate (20\% under sector blinding), single-step local DT-CBF invariance (Theorem~1) cannot retroactively guarantee global safety once adjacent-lane vehicles cut inside blinded sectors between 10~Hz outer ticks.
+    \item \textbf{Rank 3 — Analytical MCU Profiling \& Single-Ego Scope:} ESP32-S3 cycle counts ($322\text{k}$ INT8, $480$ KKT) are cycle-accurate analytical projections grounded in measured host ONNX timing ($0.675\text{ ms}$) rather than on-board physical hardware-in-the-loop current-probe traces, and external V2X quarantine operates unilaterally without cooperative neighbor voting.
 \end{enumerate}
 
-\begin{thebibliography}{13}
+\begin{thebibliography}{24}
 \bibitem{ngsim}
 U.S. Department of Transportation, FHWA, ``Next Generation Simulation (NGSIM) Vehicle Trajectories and Supporting Data,'' DOI: \url{10.21949/1504477}.
 \bibitem{spmd}
@@ -345,22 +347,48 @@ R.~W. van~der Heijden, S.~Dietzel, T.~Leinm\"uller, and F.~Kargl, ``Survey on mi
 J.~Kamel, M.~Wolf, R.~W. van~der Heijden, A.~Kaiser, P.~Urien, and F.~Kargl, ``VeReMi extension: A dataset for comparable evaluation of misbehavior detection in VANETs,'' in \textit{Proc. IEEE ICC}, 2020.
 \bibitem{kamel2020tvt}
 J.~Kamel \textit{et al.}, ``Simulation framework for misbehavior detection in vehicular networks,'' \textit{IEEE Trans. Veh. Technol.}, vol.~69, no.~6, pp. 6631--6643, 2020.
+\bibitem{anyanwu2023tits}
+G.~O. Anyanwu, C.~I. Nwakanma, J.-M. Lee, and D.-S. Kim, ``Falsification detection system for IoV using randomized search optimization ensemble algorithm,'' \textit{IEEE Trans. Intell. Transp. Syst.}, vol.~24, no.~4, pp. 4158--4172, 2023.
 \bibitem{shen2020drift}
 J.~Shen, J.~Y. Won, Z.~Chen, and Q.~A. Chen, ``Drift with devil: Security of multi-sensor fusion based localization in high-level autonomous driving under GPS spoofing,'' in \textit{Proc. USENIX Security}, 2020.
+\bibitem{chowdhury2022gnss}
+Z.~U. Chowdhury \textit{et al.}, ``A sensor fusion-based GNSS spoofing attack detection framework for autonomous vehicles,'' \textit{IEEE Trans. Intell. Transp. Syst.}, vol.~23, no.~12, pp. 23559--23572, 2022.
+\bibitem{yang2023gps}
+Z.~Yang, J.~Ying, J.~Shen, Y.~Feng, Q.~A. Chen, Z.~M. Mao, and H.~X. Liu, ``Anomaly detection against GPS spoofing attacks on connected and autonomous vehicles using learning from demonstration,'' \textit{IEEE Trans. Intell. Transp. Syst.}, vol.~24, no.~9, pp. 9462--9475, 2023.
 \bibitem{bai2018tcn}
 S.~Bai, J.~Z. Kolter, and V.~Koltun, ``An empirical evaluation of generic convolutional and recurrent networks for sequence modeling,'' \textit{arXiv:1803.01271}, 2018.
+\bibitem{li2025attentionguard}
+H.~Li, K.~Kalogiannis, A.~M. Hussain, and P.~Papadimitratos, ``AttentionGuard: Transformer-based misbehavior detection for secure vehicular platoons,'' \textit{arXiv:2505.10273}, 2025.
 \bibitem{ames2019cbf}
 A.~D. Ames \textit{et al.}, ``Control barrier functions: Theory and applications,'' in \textit{Proc. European Control Conf. (ECC)}, 2019, pp. 3420--3431.
 \bibitem{agrawal2017dcbf}
 A.~Agrawal and K.~Sreenath, ``Discrete control barrier functions for safety-critical control of discrete systems with application to bipedal robot navigation,'' in \textit{Proc. Robotics: Science and Systems (RSS)}, 2017.
 \bibitem{zeng2021mpccbf}
 J.~Zeng, B.~Zhang, and K.~Sreenath, ``Safety-critical model predictive control with discrete-time control barrier function,'' in \textit{Proc. American Control Conf. (ACC)}, 2021, pp. 3882--3889.
-\bibitem{cheng2019rlcbf}
-R.~Cheng, G.~Orosz, R.~M. Murray, and J.~W. Burdick, ``End-to-end safe reinforcement learning through barrier functions for safety-critical continuous control tasks,'' in \textit{Proc. AAAI}, 2019.
+\bibitem{dean2020corl}
+S.~Dean, A.~J. Taylor, R.~K. Cosner, B.~Recht, and A.~D. Ames, ``Guaranteeing safety of learned perception modules via measurement-robust control barrier functions,'' in \textit{Proc. CoRL (PMLR)}, vol.~155, pp. 654--670, 2020.
+\bibitem{cosner2021mrcbf}
+R.~K. Cosner, A.~W. Singletary, A.~J. Taylor, T.~G. Molnar, K.~L. Bouman, and A.~D. Ames, ``Measurement-robust control barrier functions: Certainty in safety with uncertainty in state,'' in \textit{Proc. IEEE/RSJ IROS}, pp. 6286--6291, 2021.
+\bibitem{alan2023issf}
+A.~Alan, A.~J. Taylor, C.-Z. R. He, A.~D. Ames, and G.~Orosz, ``Control barrier functions and input-to-state safety with application to automated vehicles,'' \textit{IEEE Trans. Control Syst. Technol.}, vol.~31, pp. 2744--2759, 2023.
+\bibitem{cosner2023rss}
+R.~K. Cosner, P.~Culbertson, A.~J. Taylor, and A.~D. Ames, ``Robust safety under stochastic uncertainty with discrete-time control barrier functions,'' in \textit{Proc. Robotics: Science and Systems (RSS)}, 2023.
+\bibitem{cosner2024freedman}
+R.~K. Cosner, P.~Culbertson, and A.~D. Ames, ``Bounding stochastic safety: Leveraging Freedman's inequality with discrete-time control barrier functions,'' \textit{IEEE Control Syst. Lett.}, vol.~8, pp. 1937--1942, 2024.
 \bibitem{schulman2017ppo}
 J.~Schulman \textit{et al.}, ``Proximal policy optimization algorithms,'' \textit{arXiv:1707.06347}, 2017.
+\bibitem{cheng2019rlcbf}
+R.~Cheng, G.~Orosz, R.~M. Murray, and J.~W. Burdick, ``End-to-end safe reinforcement learning through barrier functions for safety-critical continuous control tasks,'' in \textit{Proc. AAAI}, 2019.
+\bibitem{zhang2025cbfdrl}
+C.-Z. Zhang, L.-F. Dai, H.~Zhang, and Z.-P. Wang, ``Control barrier function-guided deep reinforcement learning for decision-making of autonomous vehicle at on-ramp merging,'' \textit{IEEE Trans. Intell. Transp. Syst.}, vol.~26, no.~6, pp. 8919--8932, 2025.
+\bibitem{hou2023merging}
+K.~Hou, F.~Zheng, X.~Liu, and G.~Guo, ``Cooperative on-ramp merging control model for mixed traffic on multi-lane freeways,'' \textit{IEEE Trans. Intell. Transp. Syst.}, vol.~24, pp. 10774--10790, 2023.
+\bibitem{udatha2023pcbf}
+S.~Udatha, Y.~Lyu, and J.~M. Dolan, ``Safe reinforcement learning with probabilistic control barrier functions for ramp merging,'' in \textit{Proc. ICML Workshop / arXiv}, 2023.
 \bibitem{david2021tflm}
 R.~David \textit{et al.}, ``TensorFlow Lite Micro: Embedded machine learning on TinyML systems,'' in \textit{Proc. MLSys}, vol.~3, 2021.
+\bibitem{bove2024tinyml}
+F.~Bove \textit{et al.}, ``Performance evaluation of split computing with TinyML on IoT devices,'' in \textit{Proc. IEEE 21st CCNC}, 2024.
 \end{thebibliography}
 
 \end{document}
