@@ -1,12 +1,12 @@
 {
   "primary_dataset": {
-    "name": "USDOT NGSIM Vehicle Trajectories",
+    "name": "USDOT NGSIM Vehicle Trajectories (Disjoint Non-Overlapping Periods)",
     "endpoint": "https://data.transportation.gov/resource/8ect-6jqj.json",
     "doi": "10.21949/1504477",
     "units_converted": "imperial (ft, ft/s, ft/s^2) -> SI (m, m/s, m/s^2)"
   },
   "secondary_schema": {
-    "name": "USDOT Safety Pilot Model Deployment (SPMD) SAE J2735 BSM Schema",
+    "name": "SAE J2735 BSM Schema (USDOT SPMD Format Reference)",
     "doi": "10.21949/1504482",
     "fields": [
       "msgCnt",
@@ -19,14 +19,15 @@
     ]
   },
   "corridors": {
-    "us-101": {
-      "name": "US-101 (Hollywood Freeway, Los Angeles, CA)",
+    "us-101_train": {
+      "name": "US-101 Period 1 Train (Hollywood Fwy, LA, 7:50-8:05 AM)",
       "type": "highway",
-      "records": 33395,
-      "unique_vehicles": 227,
-      "unique_frames": 171,
+      "records": 274843,
+      "unique_vehicles": 722,
+      "unique_frames": 2301,
       "frame_min": 500,
-      "frame_max": 670,
+      "frame_max": 2800,
+      "duration_s": 230.1,
       "lanes": [
         1,
         2,
@@ -37,17 +38,62 @@
         7,
         8
       ],
-      "raw_sha256": "8da1254ce4ff05b93caf69be9885b9f47dbac5ab61e636b4227c65e87b0465c3",
-      "bsm_csv_sha256": "d411a0a5052620973e8c71e55fd4c6dc124ae4f410d8cf9b9bf2ca1f2d883051"
+      "raw_sha256": "72986b6a4e12a990f64454c3ee10779f574f55ee467b99f0bf4bd35108641229",
+      "bsm_csv_sha256": "53cd13dc2fac43df0d4a494b6ecd2d4c31ef2a0c1ec25e1e14b2e647eac7078f"
+    },
+    "us-101_val": {
+      "name": "US-101 Period 2 Calibration (Hollywood Fwy, LA, 8:05-8:20 AM)",
+      "type": "highway",
+      "records": 288679,
+      "unique_vehicles": 588,
+      "unique_frames": 2163,
+      "frame_min": 500,
+      "frame_max": 2662,
+      "duration_s": 216.3,
+      "lanes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "raw_sha256": "d23f163ad05dad24ac41b4ad1e4bea53b49c12a248e14c3230e01b70c104bc59",
+      "bsm_csv_sha256": "4b01abccf61a4610f0639107e8641b0c6dce47fe9dd22a74c750efb54c70e540"
+    },
+    "us-101_test": {
+      "name": "US-101 Period 3 Held-Out Test (Hollywood Fwy, LA, 8:20-8:35 AM)",
+      "type": "highway",
+      "records": 379364,
+      "unique_vehicles": 564,
+      "unique_frames": 2301,
+      "frame_min": 500,
+      "frame_max": 2800,
+      "duration_s": 230.1,
+      "lanes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "raw_sha256": "23d40b8452390026f7228c73379e266f9c48a769c1b3b48ae73ae4070d04c41a",
+      "bsm_csv_sha256": "3ec6c4c5eb76615854273d55c0b3d2d9fb9e724fce36607641d80a21dd8a7fc9"
     },
     "i-80": {
-      "name": "I-80 (Emeryville, CA)",
+      "name": "I-80 Period 1 Zero-Shot (Emeryville, CA)",
       "type": "highway",
-      "records": 48397,
-      "unique_vehicles": 289,
-      "unique_frames": 222,
+      "records": 281997,
+      "unique_vehicles": 556,
+      "unique_frames": 2301,
       "frame_min": 500,
-      "frame_max": 721,
+      "frame_max": 2800,
+      "duration_s": 230.1,
       "lanes": [
         1,
         2,
@@ -57,17 +103,18 @@
         6,
         7
       ],
-      "raw_sha256": "2c097fac4f5939098a638a3de06542b89e1e1a48c3a98b53b05a0af99c4bcd66",
-      "bsm_csv_sha256": "87c9559d8ea9a018d822e348f13b88386d416a77dd808507f0d4537b2b57234a"
+      "raw_sha256": "37621f42b6c484cf3dd51d1441f1926a70aaf69830c5d978f2513af556530d7a",
+      "bsm_csv_sha256": "8234cec0ba4821138e0fff39a77250b37d23f55df4ec12e4e2f98e56c0264039"
     },
     "lankershim": {
-      "name": "Lankershim Blvd (Universal City, CA)",
+      "name": "Lankershim Blvd Period 1 Zero-Shot (Universal City, CA)",
       "type": "arterial",
-      "records": 43142,
-      "unique_vehicles": 157,
-      "unique_frames": 357,
+      "records": 144415,
+      "unique_vehicles": 327,
+      "unique_frames": 2301,
       "frame_min": 500,
-      "frame_max": 856,
+      "frame_max": 2800,
+      "duration_s": 230.1,
       "lanes": [
         0,
         1,
@@ -79,10 +126,8 @@
         31,
         101
       ],
-      "raw_sha256": "20180d01aae2cc5a456044e5ba6d97bfb0ca1a816d87bd27363c879ec1ec7be9",
-      "bsm_csv_sha256": "23417f9bfa86b21da6a772b2f1c04597dd6e401e6afa0dd6c4fe05c73d5a985a"
+      "raw_sha256": "c453bda36b458730eeb76be31f3d532aa262c7e705e9846977893d24c152606d",
+      "bsm_csv_sha256": "ef80dcba5692644517ab2714f07fe89b2406c1b63ef5b47a589137de4763e36e"
     }
-  },
-  "primary_sample_records": 49949,
-  "primary_sample_sha256": "63633ddc7febbe2a93eac127b617acc08d77665a7f98c0370f7278039f03a9a1"
+  }
 }

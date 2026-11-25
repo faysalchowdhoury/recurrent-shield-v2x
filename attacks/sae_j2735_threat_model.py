@@ -170,23 +170,6 @@ class SaeJ2735ThreatInjector:
                 radar_dist[blinded_mask] = 120.0
                 radar_rel_vel[blinded_mask] = 0.0
 
-            elif atype == "adaptive_stealth_drift":
-                # Adaptive adversary injects slow sub-threshold drift modulated with periodic silent resets
-                # (12-step ramp, 8-step silent cooldown) designed to reset CUSUM accumulators.
-                local_step = step_idx - self.cfg.onset_step
-                phase = local_step % 20
-                if phase < 12:
-                    eff_t = phase * dt_s
-                    rate = float(np.clip(self.cfg.gnss_drift_rate_ms * 0.55, 0.15, 0.55))
-                    ang = self.cfg.gnss_drift_angle_rad
-                    drift_vec = np.array([math_sin(ang), math_cos(ang)]) * (rate * eff_t + 0.6)
-                    vel_bias = np.array([math_sin(ang), math_cos(ang)]) * rate
-                    gnss_pos = gnss_pos + drift_vec
-                    gnss_vel = gnss_vel + vel_bias
-                else:
-                    # During stealth probe phase, inject subtle ghost offset without flooding
-                    gnss_pos = gnss_pos + np.array([0.35, 0.65])
-
             elif atype == "combined_spoof_blinding":
                 rate = float(np.clip(self.cfg.gnss_drift_rate_ms, 0.1, 1.5))
                 ang = self.cfg.gnss_drift_angle_rad

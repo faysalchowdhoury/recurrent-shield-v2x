@@ -1,29 +1,26 @@
 {
   "0.20": {
-    "success_pct": 76.67,
-    "collision_pct": 23.33,
-    "qp_feasible_pct": 94.73,
+    "quar_surv_pct": 91.67,
+    "collision_pct": 8.33,
+    "qp_feasible_pct": 97.32,
     "cbf_feasible_sat_pct": 100.0,
-    "fallback_pct": 5.27,
-    "rms_jerk": 4.387,
-    "distance_m": 91.8
+    "fallback_pct": 2.68,
+    "rms_jerk": 3.37
   },
   "0.35": {
-    "success_pct": 76.67,
-    "collision_pct": 23.33,
-    "qp_feasible_pct": 93.86,
+    "quar_surv_pct": 91.67,
+    "collision_pct": 8.33,
+    "qp_feasible_pct": 97.27,
     "cbf_feasible_sat_pct": 100.0,
-    "fallback_pct": 6.14,
-    "rms_jerk": 4.564,
-    "distance_m": 91.9
+    "fallback_pct": 2.73,
+    "rms_jerk": 3.968
   },
   "0.50": {
-    "success_pct": 70.0,
-    "collision_pct": 30.0,
-    "qp_feasible_pct": 90.17,
+    "quar_surv_pct": 91.67,
+    "collision_pct": 8.33,
+    "qp_feasible_pct": 96.29,
     "cbf_feasible_sat_pct": 100.0,
-    "fallback_pct": 9.83,
-    "rms_jerk": 5.908,
-    "distance_m": 84.0
+    "fallback_pct": 3.71,
+    "rms_jerk": 4.399
   }
 }

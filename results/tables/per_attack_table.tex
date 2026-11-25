@@ -1,18 +1,19 @@
 \begin{table*}[t]
 \centering
-\caption{Per-Attack Zero-Shot Breakdown on Unseen I-80 ($N=25$ Trials/Attack: Delay ms / Quar.+Surv. \% / Coll. \%)}
+\caption{Per-Attack Unseen I-80 Breakdown (Detected Delay ms / Miss \% / Collision \%)}
 \label{tab:per_attack_i80}
 \scriptsize
-\begin{tabular}{lcccc}
+\setlength{\tabcolsep}{3.0pt}
+\begin{tabular}{lccccc}
 \toprule
-Attack Vector & RecurrentShield-BC & TCN-Residual IDS & Tiny-Transformer IDS & EKF-CUSUM + BC \\
+Attack Vector & RecurrentShield-BC & Shield-Only (No IDS) & First-Order CBF + BC & EKF-CUSUM + BC & IDM-ACC + AEB \\
 \midrule
-GNSS Ramp Spoof & 1204 / 100\% / 0\% & 2336 / 96\% / 4\% & 2048 / 92\% / 8\% & 892 / 100\% / 0\% \\
-Ghost BSM FDI & 6920 / 56\% / 44\% & 9288 / 32\% / 68\% & 8516 / 36\% / 64\% & 4800 / 72\% / 28\% \\
-SPaT Phase Inv. & 100 / 100\% / 0\% & 100 / 100\% / 0\% & 100 / 100\% / 0\% & 116 / 100\% / 0\% \\
-Sybil BSM Flood & 444 / 100\% / 0\% & 916 / 96\% / 4\% & 800 / 96\% / 4\% & 520 / 100\% / 0\% \\
-Radar Blinding & 100 / 80\% / 20\% & 100 / 80\% / 20\% & 100 / 76\% / 24\% & 284 / 80\% / 20\% \\
-Spoof + Blinding & 96 / 76\% / 24\% & 100 / 76\% / 24\% & 100 / 76\% / 24\% & 188 / 76\% / 24\% \\
+GNSS Ramp Spoof & 1500 / 0\% / 0\% & -- / 100\% / 0\% & 1500 / 0\% / 0\% & 5910 / 0\% / 0\% & -- / 100\% / 15\% \\
+Ghost BSM FDI & 2187 / 0\% / 5\% & -- / 100\% / 5\% & 1867 / 0\% / 5\% & 6340 / 75\% / 5\% & -- / 100\% / 15\% \\
+SPaT Phase Inv. & 100 / 0\% / 0\% & -- / 100\% / 0\% & 100 / 0\% / 0\% & 3105 / 0\% / 0\% & -- / 100\% / 15\% \\
+Sybil BSM Flood & 433 / 5\% / 5\% & -- / 100\% / 5\% & 433 / 5\% / 5\% & 3287 / 25\% / 5\% & -- / 100\% / 10\% \\
+Radar Blinding & 83 / 0\% / 5\% & -- / 100\% / 5\% & 83 / 0\% / 5\% & 5195 / 5\% / 5\% & -- / 100\% / 20\% \\
+Spoof + Blinding & 100 / 0\% / 10\% & -- / 100\% / 10\% & 100 / 0\% / 10\% & 3390 / 0\% / 10\% & -- / 100\% / 5\% \\
 \bottomrule
 \end{tabular}
 \end{table*}

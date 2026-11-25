@@ -164,65 +164,65 @@ def plot_fig2_roc_and_delay(out_dir: Path, roc_data: dict) -> None:
 
 
 def plot_fig3_zeroshot_corridor(out_dir: Path, summary: dict) -> None:
-    corridors = ["us-101", "i-80", "lankershim"]
-    c_labels = ["US-101\n(Train)", "I-80\n(Zero-Shot)", "Lankershim\n(Zero-Shot)"]
+    corridors = ["us-101_test", "i-80", "lankershim"]
+    c_labels = ["US-101 P3\n(Disjoint Test)", "I-80 P1\n(Zero-Shot)", "Lankershim P1\n(Zero-Shot)"]
     methods = [
         ("RecurrentShield-BC", OKABE_ITO["blue"]),
-        ("TCN-Residual IDS", OKABE_ITO["skyblue"]),
-        ("Tiny-Transformer IDS", OKABE_ITO["green"]),
-        ("Stateless BC", OKABE_ITO["orange"]),
-        ("EKF-CUSUM + BC", OKABE_ITO["purple"]),
-        ("Ablation (No DT-CBF)", OKABE_ITO["vermillion"]),
-        ("Emergency-Stop", OKABE_ITO["grey"]),
+        ("RecurrentShield-INT8", OKABE_ITO["skyblue"]),
+        ("Shield-Only (No IDS)", OKABE_ITO["orange"]),
+        ("First-Order CBF + BC", OKABE_ITO["purple"]),
+        ("EKF-CUSUM + BC", OKABE_ITO["green"]),
+        ("IDM-ACC + AEB", OKABE_ITO["grey"]),
+        ("No-Shield Ablation", OKABE_ITO["vermillion"]),
     ]
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.8, 3.4))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.9, 3.5))
     x = np.arange(len(corridors))
     w = 0.11
 
     for idx, (m, col) in enumerate(methods):
         offset = (idx - 3.0) * w
-        succ_m = [summary[c][m]["success"]["mean"] for c in corridors]
-        succ_s = [summary[c][m]["success"]["std"] for c in corridors]
+        surv_m = [summary[c][m]["survival"]["mean"] for c in corridors]
+        surv_s = [summary[c][m]["survival"]["std"] for c in corridors]
         dist_m = [summary[c][m]["distance_m"]["mean"] for c in corridors]
         dist_s = [summary[c][m]["distance_m"]["std"] for c in corridors]
 
-        ax1.bar(x + offset, succ_m, width=w, yerr=succ_s, capsize=1.8, color=col, edgecolor="#0F172A", linewidth=0.5, label=m)
-        ax2.bar(x + offset, dist_m, width=w, yerr=dist_s, capsize=1.8, color=col, edgecolor="#0F172A", linewidth=0.5, label=m)
+        ax1.bar(x + offset, surv_m, width=w, yerr=surv_s, capsize=1.6, color=col, edgecolor="#0F172A", linewidth=0.5, label=m)
+        ax2.bar(x + offset, dist_m, width=w, yerr=dist_s, capsize=1.6, color=col, edgecolor="#0F172A", linewidth=0.5, label=m)
 
     ax1.set_xticks(x)
     ax1.set_xticklabels(c_labels)
-    ax1.set_ylabel("Quarantine + Survival (%)")
+    ax1.set_ylabel("Crash-Free Survival Rate (%)")
     ax1.set_ylim(0, 114)
-    ax1.set_title("(a) Zero-Shot Safety + Quarantine")
+    ax1.set_title("(a) Attack Survival Across Disjoint Splits")
     ax1.grid(True, axis="y", alpha=0.6)
 
     ax2.set_xticks(x)
     ax2.set_xticklabels(c_labels)
-    ax2.set_ylabel("Mean Limp-Home Distance (m)")
+    ax2.set_ylabel("Mean Corridor Distance (m)")
     ax2.set_ylim(0, max(240.0, ax2.get_ylim()[1] * 1.15))
     ax2.set_title("(b) Retained Corridor Mobility")
     ax2.grid(True, axis="y", alpha=0.6)
 
     handles, labels = ax1.get_legend_handles_labels()
-    fig.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, 1.09), ncol=4, frameon=True, fontsize=7.5)
-    fig.tight_layout(rect=[0, 0, 1, 0.89])
+    fig.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, 1.11), ncol=4, frameon=True, fontsize=7.2)
+    fig.tight_layout(rect=[0, 0, 1, 0.88])
     save_both(fig, out_dir, "fig3_zeroshot_corridor_survival")
 
 
 def plot_fig4_esp32_profiling(out_dir: Path, edge_prof: dict) -> None:
     fig, axes = plt.subplots(1, 3, figsize=(7.4, 2.8))
-    variants = ["FP32\n(ONNX)", "INT8\n(TFLite Micro)"]
+    variants = ["FP32\n(ONNX)", "INT8\n(Quantized)"]
     cols = [OKABE_ITO["blue"], OKABE_ITO["green"]]
 
-    lat = [edge_prof["fp32"]["esp32_latency_ms"], edge_prof["int8"]["esp32_latency_ms"]]
+    weights = [edge_prof["fp32"]["weights_kb"], edge_prof["int8"]["weights_kb"]]
     sram = [edge_prof["fp32"]["peak_sram_kb"], edge_prof["int8"]["peak_sram_kb"]]
-    energy = [edge_prof["fp32"]["energy_mj"], edge_prof["int8"]["energy_mj"]]
+    lat = [edge_prof["fp32"]["esp32_latency_ms"], edge_prof["int8"]["esp32_latency_ms"]]
 
     panels = [
-        (axes[0], lat, "Projected Latency (ms)", "(a) Analytical Step Latency", 5.0, "5 ms Deadline"),
-        (axes[1], sram, "Peak Footprint (KB)", "(b) SRAM + Weights Footprint", 512.0, "512 KB SRAM"),
-        (axes[2], energy, "Projected Energy / Step (mJ)", "(c) Analytical Energy / Step", None, None),
+        (axes[0], weights, "Serialized Weights (KB)", "(a) Exact Model Size", 100.0, "100 KB Target"),
+        (axes[1], sram, "Est. SRAM + Weights (KB)", "(b) Projected SRAM Footprint", 512.0, "512 KB Limit"),
+        (axes[2], lat, "Proj. Step Latency (ms)", "(c) Analytical 240 MHz Est.", 5.0, "5 ms Budget"),
     ]
 
     for ax, vals, ylabel, title, limit, limit_lbl in panels:

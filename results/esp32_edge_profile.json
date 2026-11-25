@@ -1,13 +1,11 @@
 {
-  "target_mcu": "ESP32-S3 (Dual-Core Xtensa LX7 @ 240 MHz, 512 KB SRAM)",
-  "profiling_methodology": "Analytical Xtensa LX7 / ESP-NN cycle model anchored by measured host PyTorch & ONNX latency (not physical HIL current probes)",
+  "note": "ESP32-S3 cycles/latency/energy are analytical spreadsheet estimates; only flash weight byte sizes and host_cpu_median_ms are directly measured.",
   "total_parameters": 84505,
   "macs_per_step": 83360,
-  "dt_cbf_solver": {
-    "method": "Exact monotonic nonlinear 2D DT-CBF projection + 200 Hz substepping (analytical)",
-    "esp32_cycles": 3840,
-    "esp32_latency_us": 16.0,
-    "host_cpu_median_ms": 0.0478
+  "host_measured": {
+    "nn_fp32_median_ms": 0.4202,
+    "dt_cbf_median_ms": 0.0604,
+    "total_control_step_median_ms": 0.4806
   },
   "fp32": {
     "weights_kb": 330.1,
@@ -15,8 +13,7 @@
     "peak_sram_kb": 372.1,
     "esp32_cycles": 1028648,
     "esp32_latency_ms": 4.71,
-    "energy_mj": 1.6,
-    "host_cpu_median_ms": 0.471
+    "energy_mj": 1.6
   },
   "int8": {
     "weights_kb": 82.6,
@@ -25,6 +22,11 @@
     "esp32_cycles": 322096,
     "esp32_latency_ms": 1.7,
     "energy_mj": 0.579
+  },
+  "dt_cbf_solver": {
+    "esp32_cycles": 3840,
+    "esp32_latency_us": 16.0,
+    "host_cpu_median_ms": 0.0604
   },
   "layers": [
     {

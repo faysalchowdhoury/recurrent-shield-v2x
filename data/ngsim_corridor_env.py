@@ -38,19 +38,29 @@ class NgsimCorridorEnv:
     POMDP environment grounded directly in cached USDOT NGSIM + SAE J2735 BSM CSVs.
     """
 
-    def __init__(self, project_root: Path, cfg: Optional[CorridorEnvConfig] = None) -> None:
+    def __init__(
+        self,
+        project_root: Path,
+        cfg: Optional[CorridorEnvConfig] = None,
+        df_override: Optional[pd.DataFrame] = None,
+    ) -> None:
         self.project_root = Path(project_root)
         self.cfg = cfg or CorridorEnvConfig()
         self.rng = np.random.default_rng(self.cfg.seed)
 
-        bsm_path = self.project_root / "data" / "raw" / f"bsm_{self.cfg.corridor}.csv"
-        if not bsm_path.exists():
-            raise FileNotFoundError(
-                f"Real USDOT BSM cache missing at {bsm_path}. "
-                "Run `python data/fetch_real_usdot_data.py` first."
-            )
+        if df_override is not None:
+            df = df_override.copy()
+            source_label = "df_override"
+        else:
+            bsm_path = self.project_root / "data" / "raw" / f"bsm_{self.cfg.corridor}.csv"
+            if not bsm_path.exists():
+                raise FileNotFoundError(
+                    f"Real USDOT BSM cache missing at {bsm_path}. "
+                    "Run `python data/fetch_real_usdot_data.py` first."
+                )
+            df = pd.read_csv(bsm_path)
+            source_label = str(bsm_path)
 
-        df = pd.read_csv(bsm_path)
         # Keep primary unidirectional mainline lanes so corridor boundaries are physically crisp
         if self.cfg.corridor == "lankershim":
             if "direction" in df.columns:
@@ -59,8 +69,9 @@ class NgsimCorridorEnv:
         else:
             df = df[df["lane_id"].isin([1, 2, 3, 4, 5])].copy()
 
-        if len(df) < 200:
-            raise RuntimeError(f"Insufficient mainline records in {bsm_path} after lane filtering.")
+        min_req = 10 if df_override is not None else 200
+        if len(df) < min_req:
+            raise RuntimeError(f"Insufficient mainline records in {source_label} after lane filtering.")
 
         self.x_left_curb = float(np.percentile(df["x_m"].values, 1.0)) - 1.5
         self.x_right_curb = float(np.percentile(df["x_m"].values, 99.0)) + 1.5
@@ -160,29 +171,33 @@ class NgsimCorridorEnv:
         self._phase_steps = 1
         self._spat_fault_latch = False
 
-        # Keep track of reactive trailing offsets and previous positions (prevents camera-entry pop-in & recycled-ID teleports)
-        self._trail_offsets: Dict[int, float] = {}
+        # Keep track of continuous IDM-reactive trailing vehicles (0.2 s human perception lag)
+        self._reactive_veh: Dict[int, Tuple[float, float]] = {}
+        self._ego_hist: List[Tuple[float, float]] = [(float(self.ego_pos[1]), float(self.ego_vel[1]))]
         self._prev_vehicle_ids: set[int] = set()
         self._prev_veh_pos: Dict[int, Tuple[float, float]] = {}
         return self._observe()
 
     def _get_surrounding_vehicles(self) -> Dict[str, Any]:
         """
-        Retrieves NGSIM vehicles at current frame using pre-cached NumPy arrays
-        (zero Pandas copy/row overhead), filtering pop-ins and recycled-ID jumps.
+        Retrieves NGSIM vehicles at current frame using pre-cached NumPy arrays,
+        filtering pop-ins and updating trailing same-lane followers dynamically with
+        continuous IDM car-following (s0=3.5 m, T=1.1 s, 0.2 s reaction lag, [-6.5, 1.8] m/s^2)
+        so behind-ego traffic reacts to ego maneuvers instead of replaying through ego.
         """
         f_idx = (self.step_idx + self._frame_offset) % len(self.frames)
         fc = self._frame_arrays[f_idx]
         vids = fc["vehicle_id"]
         xs = fc["x_m"]
         ys = fc["y_m"].copy()
-        spds = fc["speed"]
+        spds = fc["speed"].copy()
         wids = fc["width_m"]
         lens = fc["length_m"]
         bsms = fc["bsms"]
 
         n = len(vids)
         keep = np.ones(n, dtype=bool)
+        reactive_mod: set[int] = set()
         if self.step_idx == 0:
             too_close = (np.abs(xs - self.ego_pos[0]) < 2.6) & (np.abs(ys - self.ego_pos[1]) < 22.0)
             keep = ~too_close
@@ -202,30 +217,44 @@ class NgsimCorridorEnv:
                         px, py = self._prev_veh_pos[v]
                         if (x_i - px) * (x_i - px) + (y_i - py) * (y_i - py) > 64.0:
                             keep[i] = False
-                            self._trail_offsets.pop(v, None)
+                            self._reactive_veh.pop(v, None)
 
+            lag_y, lag_v = self._ego_hist[max(0, len(self._ego_hist) - 3)]
+            dt = self.cfg.dt_s
             new_pos: Dict[int, Tuple[float, float]] = {}
+            reactive_mod = set()
             for i in np.where(keep)[0]:
                 vid = int(vids[i])
-                new_pos[vid] = (float(xs[i]), float(ys[i]))
-                y_cur = ys[i] + self._trail_offsets.get(vid, 0.0)
-                if abs(xs[i] - self.ego_pos[0]) < 2.1 and (self.ego_pos[1] - 28.0) < y_cur < (self.ego_pos[1] - 0.5):
-                    if self.ego_ax > -5.5:
-                        half_l = 0.5 * float(lens[i]) + self.cfg.ego_half_length_m
-                        min_safe_y = self.ego_pos[1] - (half_l + 3.0)
-                        if y_cur > min_safe_y:
-                            self._trail_offsets[vid] = self._trail_offsets.get(vid, 0.0) - (y_cur - min_safe_y)
-                            y_cur = min_safe_y
-                ys[i] = y_cur
+                x_i = float(xs[i])
+                y_rec = float(ys[i])
+                v_rec = float(spds[i])
+                new_pos[vid] = (x_i, y_rec)
+
+                in_follow_zone = abs(x_i - self.ego_pos[0]) < 1.9 and (self.ego_pos[1] - 48.0) < y_rec < (self.ego_pos[1] - 0.5)
+                if vid in self._reactive_veh or in_follow_zone:
+                    y_r, v_r = self._reactive_veh.get(vid, (y_rec, v_rec))
+                    if y_r < lag_y - 0.5 and abs(x_i - self.ego_pos[0]) < 2.1:
+                        gap = max(0.3, (lag_y - self.cfg.ego_half_length_m) - (y_r + 0.5 * float(lens[i])))
+                        dv = v_r - lag_v
+                        v_des = max(v_rec, 14.0 if not self.is_arterial else 11.0)
+                        s_star = 3.5 + max(0.0, v_r * 1.1 + (v_r * dv) / (2.0 * np.sqrt(1.8 * 3.0)))
+                        a_idm = float(np.clip(1.8 * (1.0 - (v_r / max(v_des, 1.0)) ** 4 - (s_star / gap) ** 2), -6.5, 1.8))
+                        v_next = float(np.clip(v_r + a_idm * dt, 0.0, 32.0))
+                        y_next = y_r + 0.5 * (v_r + v_next) * dt
+                        self._reactive_veh[vid] = (y_next, v_next)
+                        ys[i] = y_next
+                        spds[i] = v_next
+                        reactive_mod.add(int(i))
             self._prev_vehicle_ids = set(new_pos.keys())
             self._prev_veh_pos = new_pos
 
-        if not np.all(keep):
+        if not np.all(keep) or reactive_mod:
             idx_keep = np.where(keep)[0]
             bsms_out = []
             for idx in idx_keep:
                 b = dict(bsms[idx])
                 b["y_m"] = float(ys[idx])
+                b["speed"] = float(spds[idx])
                 bsms_out.append(b)
             return {
                 "vehicle_id": vids[idx_keep],
@@ -579,7 +608,9 @@ class NgsimCorridorEnv:
             shift_y = new_y - self.ego_pos[1]
             self.ego_pos[1] = new_y
             self.dr_pos[1] += shift_y
-            self._trail_offsets.clear()
+            self._reactive_veh.clear()
+
+        self._ego_hist.append((float(self.ego_pos[1]), float(v_new)))
 
         # Update proprioceptive dead-reckoning (with small longitudinal slip error)
         v_dr = v_new + float(self.rng.normal(0.0, 0.05))
