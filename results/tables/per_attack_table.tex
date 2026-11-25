@@ -1,0 +1,18 @@
+\begin{table*}[t]
+\centering
+\caption{Per-Attack Zero-Shot Breakdown on Unseen I-80 Highway (5 Seeds: Delay ms / Limp-Home \% / Collision \%)}
+\label{tab:per_attack_i80}
+\scriptsize
+\begin{tabular}{lcccc}
+\toprule
+Attack Vector & RecurrentShield-V2X & TCN-Residual IDS & Tiny-Transformer IDS & EKF-CUSUM + DT-CBF \\
+\midrule
+GNSS Ramp Spoof & 2803 / 100\% / 0\% & 3903 / 100\% / 0\% & 3583 / 100\% / 0\% & 963 / 100\% / 0\% \\
+Ghost BSM FDI & 6183 / 100\% / 0\% & 6463 / 100\% / 0\% & 7642 / 80\% / 20\% & 6943 / 100\% / 0\% \\
+SPaT Phase Inv. & 103 / 100\% / 0\% & 103 / 100\% / 0\% & 103 / 100\% / 0\% & 103 / 100\% / 0\% \\
+Sybil BSM Flood & 103 / 100\% / 0\% & 283 / 100\% / 0\% & 283 / 100\% / 0\% & 403 / 100\% / 0\% \\
+Radar Blinding & 103 / 80\% / 20\% & 103 / 80\% / 20\% & 103 / 60\% / 40\% & 103 / 80\% / 20\% \\
+Spoof + Blinding & 103 / 80\% / 20\% & 103 / 80\% / 20\% & 103 / 60\% / 40\% & 103 / 80\% / 20\% \\
+\bottomrule
+\end{tabular}
+\end{table*}

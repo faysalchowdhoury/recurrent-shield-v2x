@@ -6,7 +6,8 @@ Implements 5 parameterized cyber-physical attacks:
   2. ghost_vehicle_fdi    : Kinematically plausible ghost-vehicle BSM false-data injection
   3. spat_phase_inversion : RSU SPaT phase-inversion / phantom red-light DoS
   4. sybil_bsm_flood      : Sybil BSM flood (10 to 50 forged neighbor BSMs)
-  5. radar_sector_blinding: Partial automotive radar/LiDAR sector blinding (1-2 of 6 sectors)
+  5. radar_sector_blinding  : Partial automotive radar/LiDAR sector blinding (1-2 of 6 sectors)
+  6. combined_spoof_blinding: Simultaneous gradual GNSS ramp drift + partial radar sector blinding
 """
 
 from __future__ import annotations
@@ -23,6 +24,7 @@ AttackName = Literal[
     "spat_phase_inversion",
     "sybil_bsm_flood",
     "radar_sector_blinding",
+    "combined_spoof_blinding",
 ]
 
 ALL_ATTACKS: Tuple[AttackName, ...] = (
@@ -31,6 +33,7 @@ ALL_ATTACKS: Tuple[AttackName, ...] = (
     "spat_phase_inversion",
     "sybil_bsm_flood",
     "radar_sector_blinding",
+    "combined_spoof_blinding",
 )
 
 
@@ -43,6 +46,8 @@ class ThreatConfig:
     ghost_gap_m: float = 14.0
     sybil_count: int = 25  # 10 - 50 forged neighbors
     blinded_sector_count: int = 2  # 1 - 2 of 6 sectors dropped
+    intermittent_duty: float = 1.0  # 1.0 = continuous; <1.0 = bursty/intermittent injection
+    intermittent_period_steps: int = 20
     seed: int = 0
 
 
@@ -56,8 +61,8 @@ class SaeJ2735ThreatInjector:
 
     def _select_blinded_sectors(self) -> np.ndarray:
         mask = np.zeros(6, dtype=bool)
-        if self.cfg.attack_type == "radar_sector_blinding":
-            # Drop 1-2 sectors (e.g., front-left or side-adjacent sector, keeping at least 4)
+        if self.cfg.attack_type in ("radar_sector_blinding", "combined_spoof_blinding"):
+            # Drop 1-2 sectors (keeping at least 4 physical sectors active)
             k = int(np.clip(self.cfg.blinded_sector_count, 1, 2))
             chosen = self.rng.choice(6, size=k, replace=False)
             mask[chosen] = True
@@ -75,8 +80,14 @@ class SaeJ2735ThreatInjector:
         true_radar_dist: np.ndarray,
         true_radar_rel_vel: np.ndarray,
     ) -> Dict[str, Any]:
-        active = self.cfg.attack_type != "none" and step_idx >= self.cfg.onset_step
-        elapsed_s = max(0.0, (step_idx - self.cfg.onset_step) * dt_s) if active else 0.0
+        in_window = self.cfg.attack_type != "none" and step_idx >= self.cfg.onset_step
+        if in_window and self.cfg.intermittent_duty < 1.0:
+            period = max(2, int(self.cfg.intermittent_period_steps))
+            on_len = max(1, int(round(period * self.cfg.intermittent_duty)))
+            active = ((step_idx - self.cfg.onset_step) % period) < on_len
+        else:
+            active = in_window
+        elapsed_s = max(0.0, (step_idx - self.cfg.onset_step) * dt_s) if in_window else 0.0
 
         # Nominal GNSS measurements (small zero-mean Gaussian CEP noise)
         gnss_pos = true_ego_pos.copy() + self.rng.normal(0.0, 0.35, size=2)
@@ -153,6 +164,17 @@ class SaeJ2735ThreatInjector:
                     )
 
             elif atype == "radar_sector_blinding":
+                blinded_mask = self._blinded_sectors.copy()
+                radar_dist[blinded_mask] = 120.0
+                radar_rel_vel[blinded_mask] = 0.0
+
+            elif atype == "combined_spoof_blinding":
+                rate = float(np.clip(self.cfg.gnss_drift_rate_ms, 0.1, 1.5))
+                ang = self.cfg.gnss_drift_angle_rad
+                drift_vec = np.array([math_sin(ang), math_cos(ang)]) * (rate * elapsed_s)
+                vel_bias = np.array([math_sin(ang), math_cos(ang)]) * rate
+                gnss_pos = gnss_pos + drift_vec
+                gnss_vel = gnss_vel + vel_bias
                 blinded_mask = self._blinded_sectors.copy()
                 radar_dist[blinded_mask] = 120.0
                 radar_rel_vel[blinded_mask] = 0.0

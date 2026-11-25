@@ -1,28 +1,31 @@
 \begin{table*}[t]
 \centering
-\caption{Zero-Shot Corridor Transfer & Threat Resilience Across 5 Seeds (Trained on Real USDOT US-101 NGSIM)}
+\caption{Zero-Shot Corridor Transfer \& Threat Resilience Across 5 Seeds and 6 Attacks (Trained on Real USDOT US-101 NGSIM)}
 \label{tab:benchmark_results}
 \begin{tabular}{llccccc}
 \toprule
 Corridor (Split) & Method & AUROC $\uparrow$ & Det. Delay (ms) $\downarrow$ & Limp-Home (\%) $\uparrow$ & Collision (\%) $\downarrow$ & RMS Jerk ($\text{m/s}^3$) $\downarrow$ \\
 \midrule
-US-101 (In-Dist.) & RecurrentShield-V2X & 0.957$\pm$0.033 & 642.6$\pm$33.5 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 5.76$\pm$0.82 \\
- & Ablation (No DT-CBF) & 0.980$\pm$0.011 & 642.6$\pm$33.5 & 76.0$\pm$32.0 & 24.0$\pm$32.0 & 1.82$\pm$0.10 \\
- & Tiny-Transformer IDS & 0.988$\pm$0.008 & 822.6$\pm$12.6 & 96.0$\pm$8.0 & 4.0$\pm$8.0 & 6.60$\pm$2.17 \\
- & Stateless PPO & 0.983$\pm$0.004 & 866.6$\pm$49.6 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 2.49$\pm$0.33 \\
- & EKF-CUSUM + DT-CBF & 0.980$\pm$0.002 & 234.6$\pm$24.0 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 7.89$\pm$0.33 \\
+US-101 (In-Dist.) & RecurrentShield-V2X & 0.964$\pm$0.027 & 552.6$\pm$27.9 & 96.7$\pm$6.7 & 3.3$\pm$6.7 & 5.56$\pm$0.95 \\
+ & Ablation (No DT-CBF) & 0.984$\pm$0.009 & 552.6$\pm$27.9 & 80.0$\pm$26.7 & 20.0$\pm$26.7 & 1.82$\pm$0.10 \\
+ & TCN-Residual IDS & 0.982$\pm$0.010 & 725.9$\pm$40.3 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 5.54$\pm$2.82 \\
+ & Tiny-Transformer IDS & 0.990$\pm$0.006 & 702.6$\pm$10.5 & 96.7$\pm$6.7 & 3.3$\pm$6.7 & 6.43$\pm$2.60 \\
+ & Stateless PPO & 0.986$\pm$0.003 & 739.3$\pm$41.4 & 96.7$\pm$6.7 & 3.3$\pm$6.7 & 2.48$\pm$0.27 \\
+ & EKF-CUSUM + DT-CBF & 0.984$\pm$0.001 & 212.6$\pm$20.0 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 7.87$\pm$0.33 \\
 \midrule
-I-80 (Zero-Shot) & RecurrentShield-V2X & 0.923$\pm$0.009 & 1858.6$\pm$48.0 & 96.0$\pm$8.0 & 4.0$\pm$8.0 & 3.67$\pm$1.56 \\
- & Ablation (No DT-CBF) & 0.908$\pm$0.012 & 2838.2$\pm$348.8 & 80.0$\pm$12.6 & 4.0$\pm$8.0 & 1.14$\pm$0.32 \\
- & Tiny-Transformer IDS & 0.922$\pm$0.010 & 2342.5$\pm$477.1 & 88.0$\pm$9.8 & 12.0$\pm$9.8 & 3.86$\pm$1.75 \\
- & Stateless PPO & 0.916$\pm$0.006 & 2814.4$\pm$617.1 & 88.0$\pm$9.8 & 4.0$\pm$8.0 & 2.06$\pm$0.42 \\
- & EKF-CUSUM + DT-CBF & 0.930$\pm$0.005 & 1702.6$\pm$12.6 & 96.0$\pm$8.0 & 4.0$\pm$8.0 & 3.56$\pm$0.32 \\
+I-80 (Zero-Shot) & RecurrentShield-V2X & 0.934$\pm$0.008 & 1565.9$\pm$40.0 & 93.3$\pm$8.2 & 6.7$\pm$8.2 & 3.32$\pm$1.36 \\
+ & Ablation (No DT-CBF) & 0.923$\pm$0.008 & 2382.3$\pm$290.7 & 83.3$\pm$10.5 & 3.3$\pm$6.7 & 1.15$\pm$0.31 \\
+ & TCN-Residual IDS & 0.932$\pm$0.007 & 1825.9$\pm$52.3 & 93.3$\pm$8.2 & 6.7$\pm$8.2 & 3.43$\pm$1.47 \\
+ & Tiny-Transformer IDS & 0.934$\pm$0.008 & 1969.2$\pm$397.6 & 83.3$\pm$10.5 & 16.7$\pm$10.5 & 3.83$\pm$1.70 \\
+ & Stateless PPO & 0.929$\pm$0.004 & 2362.4$\pm$514.3 & 86.7$\pm$12.5 & 6.7$\pm$8.2 & 2.12$\pm$0.36 \\
+ & EKF-CUSUM + DT-CBF & 0.940$\pm$0.005 & 1435.9$\pm$10.5 & 93.3$\pm$8.2 & 6.7$\pm$8.2 & 3.40$\pm$0.32 \\
 \midrule
-Lankershim (Zero-Shot) & RecurrentShield-V2X & 0.996$\pm$0.001 & 642.6$\pm$33.5 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 1.42$\pm$0.36 \\
- & Ablation (No DT-CBF) & 0.995$\pm$0.002 & 642.6$\pm$33.5 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 0.87$\pm$0.10 \\
- & Tiny-Transformer IDS & 0.996$\pm$0.002 & 798.6$\pm$38.8 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 1.07$\pm$0.28 \\
- & Stateless PPO & 0.998$\pm$0.002 & 866.6$\pm$49.6 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 2.20$\pm$0.65 \\
- & EKF-CUSUM + DT-CBF & 1.000$\pm$0.000 & 274.6$\pm$24.0 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 4.57$\pm$0.05 \\
+Lankershim (Zero-Shot) & RecurrentShield-V2X & 0.996$\pm$0.001 & 552.6$\pm$27.9 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 1.35$\pm$0.30 \\
+ & Ablation (No DT-CBF) & 0.996$\pm$0.001 & 552.6$\pm$27.9 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 0.89$\pm$0.09 \\
+ & TCN-Residual IDS & 0.996$\pm$0.001 & 705.9$\pm$12.5 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 1.24$\pm$0.52 \\
+ & Tiny-Transformer IDS & 0.997$\pm$0.002 & 682.6$\pm$32.3 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 0.92$\pm$0.23 \\
+ & Stateless PPO & 0.998$\pm$0.002 & 739.3$\pm$41.4 & 96.7$\pm$6.7 & 3.3$\pm$6.7 & 2.11$\pm$0.54 \\
+ & EKF-CUSUM + DT-CBF & 1.000$\pm$0.000 & 245.9$\pm$20.0 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 4.24$\pm$0.05 \\
 \bottomrule
 \end{tabular}
 \end{table*}

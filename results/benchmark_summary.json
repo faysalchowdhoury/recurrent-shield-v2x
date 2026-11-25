@@ -2,100 +2,162 @@
   "us-101": {
     "RecurrentShield-V2X": {
       "auroc": {
-        "mean": 0.957,
-        "std": 0.033
+        "mean": 0.964,
+        "std": 0.027
       },
       "delay_ms": {
-        "mean": 642.6,
-        "std": 33.466
+        "mean": 552.6,
+        "std": 27.889
       },
       "success": {
-        "mean": 100.0,
-        "std": 0.0
+        "mean": 96.667,
+        "std": 6.667
       },
       "collision": {
-        "mean": 0.0,
-        "std": 0.0
+        "mean": 3.333,
+        "std": 6.667
       },
       "jerk": {
-        "mean": 5.76,
-        "std": 0.819
+        "mean": 5.558,
+        "std": 0.951
+      },
+      "qp_feasible_pct": {
+        "mean": 98.958,
+        "std": 0.597
+      },
+      "cbf_satisfied_pct": {
+        "mean": 94.407,
+        "std": 1.633
       }
     },
     "Ablation (No DT-CBF)": {
       "auroc": {
-        "mean": 0.98,
-        "std": 0.011
+        "mean": 0.984,
+        "std": 0.009
       },
       "delay_ms": {
-        "mean": 642.6,
-        "std": 33.466
+        "mean": 552.6,
+        "std": 27.889
       },
       "success": {
-        "mean": 76.0,
-        "std": 32.0
+        "mean": 80.0,
+        "std": 26.667
       },
       "collision": {
-        "mean": 24.0,
-        "std": 32.0
+        "mean": 20.0,
+        "std": 26.667
       },
       "jerk": {
-        "mean": 1.824,
-        "std": 0.103
+        "mean": 1.822,
+        "std": 0.1
+      },
+      "qp_feasible_pct": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "cbf_satisfied_pct": {
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "TCN-Residual IDS": {
+      "auroc": {
+        "mean": 0.982,
+        "std": 0.01
+      },
+      "delay_ms": {
+        "mean": 725.933,
+        "std": 40.277
+      },
+      "success": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "collision": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "jerk": {
+        "mean": 5.545,
+        "std": 2.818
+      },
+      "qp_feasible_pct": {
+        "mean": 99.187,
+        "std": 0.481
+      },
+      "cbf_satisfied_pct": {
+        "mean": 95.812,
+        "std": 0.996
       }
     },
     "Tiny-Transformer IDS": {
       "auroc": {
-        "mean": 0.988,
-        "std": 0.008
+        "mean": 0.99,
+        "std": 0.006
       },
       "delay_ms": {
-        "mean": 822.6,
-        "std": 12.649
+        "mean": 702.6,
+        "std": 10.541
       },
       "success": {
-        "mean": 96.0,
-        "std": 8.0
+        "mean": 96.667,
+        "std": 6.667
       },
       "collision": {
-        "mean": 4.0,
-        "std": 8.0
+        "mean": 3.333,
+        "std": 6.667
       },
       "jerk": {
-        "mean": 6.602,
-        "std": 2.167
+        "mean": 6.433,
+        "std": 2.602
+      },
+      "qp_feasible_pct": {
+        "mean": 98.667,
+        "std": 1.457
+      },
+      "cbf_satisfied_pct": {
+        "mean": 94.951,
+        "std": 2.831
       }
     },
     "Stateless PPO": {
       "auroc": {
-        "mean": 0.983,
-        "std": 0.004
+        "mean": 0.986,
+        "std": 0.003
       },
       "delay_ms": {
-        "mean": 866.6,
-        "std": 49.639
+        "mean": 739.267,
+        "std": 41.366
       },
       "success": {
-        "mean": 100.0,
-        "std": 0.0
+        "mean": 96.667,
+        "std": 6.667
       },
       "collision": {
-        "mean": 0.0,
-        "std": 0.0
+        "mean": 3.333,
+        "std": 6.667
       },
       "jerk": {
-        "mean": 2.486,
-        "std": 0.329
+        "mean": 2.475,
+        "std": 0.273
+      },
+      "qp_feasible_pct": {
+        "mean": 99.917,
+        "std": 0.121
+      },
+      "cbf_satisfied_pct": {
+        "mean": 99.208,
+        "std": 1.183
       }
     },
     "EKF-CUSUM + DT-CBF": {
       "auroc": {
-        "mean": 0.98,
-        "std": 0.002
+        "mean": 0.984,
+        "std": 0.001
       },
       "delay_ms": {
-        "mean": 234.6,
-        "std": 24.0
+        "mean": 212.6,
+        "std": 20.0
       },
       "success": {
         "mean": 100.0,
@@ -106,120 +168,198 @@
         "std": 0.0
       },
       "jerk": {
-        "mean": 7.895,
-        "std": 0.334
+        "mean": 7.873,
+        "std": 0.332
+      },
+      "qp_feasible_pct": {
+        "mean": 97.979,
+        "std": 0.346
+      },
+      "cbf_satisfied_pct": {
+        "mean": 89.437,
+        "std": 1.074
       }
     }
   },
   "i-80": {
     "RecurrentShield-V2X": {
       "auroc": {
-        "mean": 0.923,
-        "std": 0.009
+        "mean": 0.934,
+        "std": 0.008
       },
       "delay_ms": {
-        "mean": 1858.6,
-        "std": 48.0
+        "mean": 1565.933,
+        "std": 40.0
       },
       "success": {
-        "mean": 96.0,
-        "std": 8.0
+        "mean": 93.333,
+        "std": 8.165
       },
       "collision": {
-        "mean": 4.0,
-        "std": 8.0
+        "mean": 6.667,
+        "std": 8.165
       },
       "jerk": {
-        "mean": 3.672,
-        "std": 1.559
+        "mean": 3.318,
+        "std": 1.359
+      },
+      "qp_feasible_pct": {
+        "mean": 97.425,
+        "std": 2.658
+      },
+      "cbf_satisfied_pct": {
+        "mean": 96.993,
+        "std": 1.906
       }
     },
     "Ablation (No DT-CBF)": {
       "auroc": {
-        "mean": 0.908,
-        "std": 0.012
+        "mean": 0.923,
+        "std": 0.008
       },
       "delay_ms": {
-        "mean": 2838.184,
-        "std": 348.826
+        "mean": 2382.253,
+        "std": 290.688
       },
       "success": {
-        "mean": 80.0,
-        "std": 12.649
+        "mean": 83.333,
+        "std": 10.541
       },
       "collision": {
-        "mean": 4.0,
-        "std": 8.0
+        "mean": 3.333,
+        "std": 6.667
       },
       "jerk": {
-        "mean": 1.135,
-        "std": 0.322
+        "mean": 1.152,
+        "std": 0.306
+      },
+      "qp_feasible_pct": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "cbf_satisfied_pct": {
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "TCN-Residual IDS": {
+      "auroc": {
+        "mean": 0.932,
+        "std": 0.007
+      },
+      "delay_ms": {
+        "mean": 1825.933,
+        "std": 52.281
+      },
+      "success": {
+        "mean": 93.333,
+        "std": 8.165
+      },
+      "collision": {
+        "mean": 6.667,
+        "std": 8.165
+      },
+      "jerk": {
+        "mean": 3.43,
+        "std": 1.471
+      },
+      "qp_feasible_pct": {
+        "mean": 96.174,
+        "std": 3.505
+      },
+      "cbf_satisfied_pct": {
+        "mean": 94.686,
+        "std": 3.591
       }
     },
     "Tiny-Transformer IDS": {
       "auroc": {
-        "mean": 0.922,
-        "std": 0.01
+        "mean": 0.934,
+        "std": 0.008
       },
       "delay_ms": {
-        "mean": 2342.496,
-        "std": 477.121
+        "mean": 1969.18,
+        "std": 397.601
       },
       "success": {
-        "mean": 88.0,
-        "std": 9.798
+        "mean": 83.333,
+        "std": 10.541
       },
       "collision": {
-        "mean": 12.0,
-        "std": 9.798
+        "mean": 16.667,
+        "std": 10.541
       },
       "jerk": {
-        "mean": 3.864,
-        "std": 1.753
+        "mean": 3.827,
+        "std": 1.702
+      },
+      "qp_feasible_pct": {
+        "mean": 95.409,
+        "std": 2.892
+      },
+      "cbf_satisfied_pct": {
+        "mean": 95.947,
+        "std": 2.858
       }
     },
     "Stateless PPO": {
       "auroc": {
-        "mean": 0.916,
-        "std": 0.006
+        "mean": 0.929,
+        "std": 0.004
       },
       "delay_ms": {
-        "mean": 2814.392,
-        "std": 617.126
+        "mean": 2362.427,
+        "std": 514.272
       },
       "success": {
-        "mean": 88.0,
-        "std": 9.798
+        "mean": 86.667,
+        "std": 12.472
       },
       "collision": {
-        "mean": 4.0,
-        "std": 8.0
+        "mean": 6.667,
+        "std": 8.165
       },
       "jerk": {
-        "mean": 2.061,
-        "std": 0.417
+        "mean": 2.116,
+        "std": 0.364
+      },
+      "qp_feasible_pct": {
+        "mean": 99.167,
+        "std": 1.281
+      },
+      "cbf_satisfied_pct": {
+        "mean": 99.749,
+        "std": 0.222
       }
     },
     "EKF-CUSUM + DT-CBF": {
       "auroc": {
-        "mean": 0.93,
+        "mean": 0.94,
         "std": 0.005
       },
       "delay_ms": {
-        "mean": 1702.6,
-        "std": 12.649
+        "mean": 1435.933,
+        "std": 10.541
       },
       "success": {
-        "mean": 96.0,
-        "std": 8.0
+        "mean": 93.333,
+        "std": 8.165
       },
       "collision": {
-        "mean": 4.0,
-        "std": 8.0
+        "mean": 6.667,
+        "std": 8.165
       },
       "jerk": {
-        "mean": 3.56,
-        "std": 0.315
+        "mean": 3.405,
+        "std": 0.322
+      },
+      "qp_feasible_pct": {
+        "mean": 96.553,
+        "std": 2.691
+      },
+      "cbf_satisfied_pct": {
+        "mean": 99.794,
+        "std": 0.253
       }
     }
   },
@@ -230,8 +370,8 @@
         "std": 0.001
       },
       "delay_ms": {
-        "mean": 642.6,
-        "std": 33.466
+        "mean": 552.6,
+        "std": 27.889
       },
       "success": {
         "mean": 100.0,
@@ -242,18 +382,26 @@
         "std": 0.0
       },
       "jerk": {
-        "mean": 1.42,
-        "std": 0.358
+        "mean": 1.346,
+        "std": 0.299
+      },
+      "qp_feasible_pct": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "cbf_satisfied_pct": {
+        "mean": 100.0,
+        "std": 0.0
       }
     },
     "Ablation (No DT-CBF)": {
       "auroc": {
-        "mean": 0.995,
-        "std": 0.002
+        "mean": 0.996,
+        "std": 0.001
       },
       "delay_ms": {
-        "mean": 642.6,
-        "std": 33.466
+        "mean": 552.6,
+        "std": 27.889
       },
       "success": {
         "mean": 100.0,
@@ -264,18 +412,56 @@
         "std": 0.0
       },
       "jerk": {
-        "mean": 0.868,
-        "std": 0.099
+        "mean": 0.886,
+        "std": 0.091
+      },
+      "qp_feasible_pct": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "cbf_satisfied_pct": {
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "TCN-Residual IDS": {
+      "auroc": {
+        "mean": 0.996,
+        "std": 0.001
+      },
+      "delay_ms": {
+        "mean": 705.933,
+        "std": 12.472
+      },
+      "success": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "collision": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "jerk": {
+        "mean": 1.241,
+        "std": 0.519
+      },
+      "qp_feasible_pct": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "cbf_satisfied_pct": {
+        "mean": 99.75,
+        "std": 0.5
       }
     },
     "Tiny-Transformer IDS": {
       "auroc": {
-        "mean": 0.996,
+        "mean": 0.997,
         "std": 0.002
       },
       "delay_ms": {
-        "mean": 798.6,
-        "std": 38.781
+        "mean": 682.6,
+        "std": 32.318
       },
       "success": {
         "mean": 100.0,
@@ -286,8 +472,16 @@
         "std": 0.0
       },
       "jerk": {
-        "mean": 1.073,
-        "std": 0.28
+        "mean": 0.922,
+        "std": 0.231
+      },
+      "qp_feasible_pct": {
+        "mean": 99.979,
+        "std": 0.042
+      },
+      "cbf_satisfied_pct": {
+        "mean": 100.0,
+        "std": 0.0
       }
     },
     "Stateless PPO": {
@@ -296,20 +490,28 @@
         "std": 0.002
       },
       "delay_ms": {
-        "mean": 866.6,
-        "std": 49.639
+        "mean": 739.267,
+        "std": 41.366
       },
       "success": {
-        "mean": 100.0,
-        "std": 0.0
+        "mean": 96.667,
+        "std": 6.667
       },
       "collision": {
-        "mean": 0.0,
-        "std": 0.0
+        "mean": 3.333,
+        "std": 6.667
       },
       "jerk": {
-        "mean": 2.201,
-        "std": 0.647
+        "mean": 2.106,
+        "std": 0.536
+      },
+      "qp_feasible_pct": {
+        "mean": 99.896,
+        "std": 0.161
+      },
+      "cbf_satisfied_pct": {
+        "mean": 100.0,
+        "std": 0.0
       }
     },
     "EKF-CUSUM + DT-CBF": {
@@ -318,8 +520,8 @@
         "std": 0.0
       },
       "delay_ms": {
-        "mean": 274.6,
-        "std": 24.0
+        "mean": 245.933,
+        "std": 20.0
       },
       "success": {
         "mean": 100.0,
@@ -330,8 +532,16 @@
         "std": 0.0
       },
       "jerk": {
-        "mean": 4.568,
-        "std": 0.05
+        "mean": 4.243,
+        "std": 0.051
+      },
+      "qp_feasible_pct": {
+        "mean": 99.521,
+        "std": 0.459
+      },
+      "cbf_satisfied_pct": {
+        "mean": 99.917,
+        "std": 0.102
       }
     }
   }

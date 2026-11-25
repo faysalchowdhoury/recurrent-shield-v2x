@@ -1,0 +1,23 @@
+{
+  "0.20": {
+    "success_pct": 83.33,
+    "collision_pct": 16.67,
+    "qp_feasible_pct": 93.45,
+    "cbf_satisfied_pct": 98.7,
+    "rms_jerk": 4.235
+  },
+  "0.35": {
+    "success_pct": 83.33,
+    "collision_pct": 16.67,
+    "qp_feasible_pct": 92.97,
+    "cbf_satisfied_pct": 98.2,
+    "rms_jerk": 4.452
+  },
+  "0.50": {
+    "success_pct": 83.33,
+    "collision_pct": 16.67,
+    "qp_feasible_pct": 92.69,
+    "cbf_satisfied_pct": 97.89,
+    "rms_jerk": 4.524
+  }
+}

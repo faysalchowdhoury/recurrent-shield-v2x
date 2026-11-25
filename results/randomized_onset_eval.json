@@ -1,0 +1,36 @@
+{
+  "randomized_onset": {
+    "RecurrentShield-V2X": {
+      "success_pct": 100.0,
+      "collision_pct": 0.0,
+      "delay_ms": 1852.6
+    },
+    "TCN-Residual IDS": {
+      "success_pct": 100.0,
+      "collision_pct": 0.0,
+      "delay_ms": 2119.3
+    },
+    "EKF-CUSUM + DT-CBF": {
+      "success_pct": 100.0,
+      "collision_pct": 0.0,
+      "delay_ms": 1385.9
+    }
+  },
+  "intermittent_burst": {
+    "RecurrentShield-V2X": {
+      "success_pct": 100.0,
+      "collision_pct": 0.0,
+      "delay_ms": 1785.9
+    },
+    "TCN-Residual IDS": {
+      "success_pct": 100.0,
+      "collision_pct": 0.0,
+      "delay_ms": 2169.3
+    },
+    "EKF-CUSUM + DT-CBF": {
+      "success_pct": 83.33,
+      "collision_pct": 0.0,
+      "delay_ms": 2685.5
+    }
+  }
+}

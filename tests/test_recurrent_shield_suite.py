@@ -13,6 +13,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from attacks.sae_j2735_threat_model import ALL_ATTACKS, SaeJ2735ThreatInjector, ThreatConfig
+from baselines.tcn_residual_ids import TCNResidualIDS
 from control.dt_cbf_safety_shield import DtCbfSafetyShield
 from data.ngsim_corridor_env import CorridorEnvConfig, NgsimCorridorEnv
 from models.recurrent_shield_ppo import RecurrentShieldPPO
@@ -32,6 +33,8 @@ def test_model_memory_budget_under_edge_limits():
     fp = model.memory_footprint_kb()
     assert fp["fp32_kb"] < 350.0
     assert fp["int8_kb"] < 100.0
+    tcn = TCNResidualIDS()
+    assert tcn.count_parameters() * 4.0 / 1024.0 < 350.0
 
 
 def test_five_sae_j2735_attacks_trigger_correctly():
@@ -55,6 +58,16 @@ def test_five_sae_j2735_attacks_trigger_correctly():
             assert len(out["bsms"]) >= 11
         elif atk == "radar_sector_blinding":
             assert 1 <= int(np.sum(out["blinded_mask"])) <= 2
+        elif atk == "combined_spoof_blinding":
+            assert np.linalg.norm(out["gnss_pos"] - ego_pos) > 0.5
+            assert 1 <= int(np.sum(out["blinded_mask"])) <= 2
+
+    # Verify intermittent injection duty cycle toggles off during silent phase
+    pulse_inj = SaeJ2735ThreatInjector(
+        ThreatConfig(attack_type="radar_sector_blinding", onset_step=10, intermittent_duty=0.5, intermittent_period_steps=10, seed=2)
+    )
+    assert pulse_inj.apply(12, 0.1, ego_pos, ego_vel, 0.0, true_bsms, "GREEN", r_dist, r_vel)["attack_active"] is True
+    assert pulse_inj.apply(17, 0.1, ego_pos, ego_vel, 0.0, true_bsms, "GREEN", r_dist, r_vel)["attack_active"] is False
 
 
 def test_dt_cbf_safety_shield_enforces_safe_braking_and_bounds():
@@ -84,6 +97,7 @@ def test_dt_cbf_safety_shield_enforces_safe_braking_and_bounds():
     assert u_safe[0] < 0.0  # Forced braking under tight headway & front blinding
     assert u_safe[1] > u_nom[1]  # Lateral steer toward left curb clamped safely
     assert diag["cbf_intervened"] == 1.0
+    assert "qp_feasible" in diag and "cbf_satisfied" in diag and "emergency_fallback" in diag
 
 
 def test_ngsim_corridor_env_runs_cleanly():

@@ -128,6 +128,7 @@ def plot_fig2_roc_and_delay(out_dir: Path, roc_data: dict) -> None:
 
     styles = {
         "RecurrentShield-V2X": (OKABE_ITO["blue"], "-", "o"),
+        "TCN-Residual IDS": (OKABE_ITO["purple"], ":", "D"),
         "Tiny-Transformer IDS": (OKABE_ITO["green"], "--", "s"),
         "EKF-CUSUM + DT-CBF": (OKABE_ITO["vermillion"], "-.", "^"),
     }
@@ -167,18 +168,19 @@ def plot_fig3_zeroshot_corridor(out_dir: Path, summary: dict) -> None:
     c_labels = ["US-101\n(In-Dist.)", "I-80\n(Zero-Shot)", "Lankershim\n(Zero-Shot)"]
     methods = [
         ("RecurrentShield-V2X", OKABE_ITO["blue"]),
+        ("TCN-Residual IDS", OKABE_ITO["skyblue"]),
         ("Tiny-Transformer IDS", OKABE_ITO["green"]),
         ("Stateless PPO", OKABE_ITO["orange"]),
         ("EKF-CUSUM + DT-CBF", OKABE_ITO["purple"]),
         ("Ablation (No DT-CBF)", OKABE_ITO["vermillion"]),
     ]
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.4, 3.2))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.6, 3.3))
     x = np.arange(len(corridors))
-    w = 0.15
+    w = 0.13
 
     for idx, (m, col) in enumerate(methods):
-        offset = (idx - 2.0) * w
+        offset = (idx - 2.5) * w
         succ_m = [summary[c][m]["success"]["mean"] for c in corridors]
         succ_s = [summary[c][m]["success"]["std"] for c in corridors]
         coll_m = [summary[c][m]["collision"]["mean"] for c in corridors]

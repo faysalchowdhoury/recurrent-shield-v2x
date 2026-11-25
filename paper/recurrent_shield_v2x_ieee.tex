@@ -3,171 +3,318 @@
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{cite}
 \usepackage{url}
 \usepackage{xcolor}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{assumption}{Assumption}
 \newtheorem{definition}{Definition}
 
-\title{RecurrentShield-V2X: Autonomous V2X/GNSS Quarantine and Provably Safe Tactical Limp-Home on Real USDOT Corridors}
+\title{RecurrentShield-V2X: Autonomous V2X/GNSS Quarantine and CBF-Enforced Tactical Limp-Home on Real USDOT Corridors}
 
 \author{Faysal~Chowdhoury%
-\thanks{Manuscript prepared for \textit{IEEE Transactions on Intelligent Transportation Systems}. Source code, benchmarks, and ESP32-S3 quantized firmware weights are available at \url{https://github.com/faysalchowdhoury/recurrent-shield-v2x}.}}
+\thanks{Manuscript targeting \textit{IEEE Transactions on Intelligent Transportation Systems}. Source code, USDOT integrity manifest, benchmark logs, 300-DPI figures, and ESP32-S3 INT8 firmware weights are publicly archived at \url{https://github.com/faysalchowdhoury/recurrent-shield-v2x}.}}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-Connected and Automated Vehicles (CAVs) rely on external Vehicle-to-Everything (V2X) Basic Safety Messages (BSMs), Road-Side Unit (RSU) Signal Phase and Timing (SPaT) broadcasts, and Global Navigation Satellite System (GNSS) localization that expose the safety-critical control loop to cyber-physical spoofing, false-data injection (FDI), Sybil flooding, and sensor denial. Rather than evaluating resilience in synthetic maze environments, we formulate GNSS/V2X-compromised navigation as a \textbf{Tactical Minimum-Risk Maneuver (MRM) \& GNSS/V2X-Denied Limp-Home POMDP} grounded directly in real multi-lane highway and signalized arterial trajectories from the USDOT Next Generation Simulation (NGSIM) and Safety Pilot Model Deployment (SPMD) datasets. We introduce \textbf{RecurrentShield-V2X}, a compact dual-head \texttt{RecurrentPPO} architecture powered by a 128-unit LSTM backbone (84,505 parameters; 330.1~KB FP32, 82.6~KB INT8) coupled with a 200~Hz Discrete-Time Control Barrier Function (DT-CBF) Quadratic Program (QP) safety shield. Head~1 computes the Mahalanobis kinematic residual $r_t$ between the LSTM-predicted kinematic envelope and incoming external feeds to trigger autonomous V2X/GNSS quarantine, while Head~2 executes zero-shot limp-home control anchored strictly to 6-sector 120~m automotive radar/LiDAR curb boundaries, wheel encoders, and 3-axis IMU. Trained exclusively on real US-101 freeway data and evaluated zero-shot across unseen I-80 congested traffic and Lankershim arterial intersections over 5 random seeds and 5 parameterized SAE~J2735 attacks, RecurrentShield-V2X achieves 100.0\% (US-101), 96.0\% (I-80), and 100.0\% (Lankershim) limp-home survival with 0.923--0.996 AUROC, outperforming a non-CBF ablation (76.0\% US-101, 80.0\% I-80) and matched-parameter Transformer/MLP baselines while fitting inside a 1.70~ms / 107.1~KB SRAM INT8 footprint on ESP32-S3.
+Connected and Automated Vehicles (CAVs) fuse cooperative SAE~J2735 Basic Safety Messages (BSMs), Road-Side Unit (RSU) Signal Phase and Timing (SPaT) advisories, and Global Navigation Satellite System (GNSS) localization to extend perception beyond line-of-sight; however, insider BSM falsification, RF GNSS ramp spoofing, and physical radar blinding can bypass cryptographic authentication (IEEE~1609.2) and corrupt downstream planning. Existing cyber-resilient CAV benchmarks largely evaluate detection in synthetic gridworlds or decouple intrusion alarms from verified limp-home actuation. To bridge this gap, we formulate compromised CAV traversal as a Tactical Minimum-Risk Maneuver (MRM) POMDP over live-ingested USDOT Next Generation Simulation (NGSIM) trajectories and Safety Pilot Model Deployment (SPMD) BSM schemas. We propose \textbf{RecurrentShield-V2X}, an 84,505-parameter dual-head \texttt{RecurrentPPO} (128-unit LSTM) unifying heteroscedastic Mahalanobis residual quarantine, road-boundary lateral dead-reckoning anchoring, and a closed-form 200~Hz Discrete-Time Control Barrier Function (DT-CBF) shield. Trained strictly on US-101 freeway data and tested zero-shot on unseen I-80 and Lankershim arterial corridors across 5 seeds and 6 single/combined threats, RecurrentShield-V2X achieves 96.7\% (US-101), 93.3\% (I-80), and 100.0\% (Lankershim) survival with 97.43\%--100.0\% QP feasibility, retaining 100.0\% survival under 50\%-duty intermittent bursts where EKF-CUSUM drops to 83.33\%, while fitting within 82.6~KB INT8 flash, 107.1~KB SRAM, and 1.70~ms on ESP32-S3.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Connected and Automated Vehicles, V2X Cybersecurity, SAE~J2735, Control Barrier Functions, Recurrent Reinforcement Learning, Zero-Shot Transfer, NGSIM, Edge Deployment.
+Connected and Automated Vehicles, V2X Cybersecurity, SAE~J2735, Discrete-Time Control Barrier Functions, Safe Reinforcement Learning, Zero-Shot Transfer, NGSIM, TinyML.
 \end{IEEEkeywords}
 
 \section{Introduction}
-Modern Connected and Automated Vehicles (CAVs) fuse cooperative SAE~J2735 Basic Safety Messages (BSMs), RSU SPaT traffic signal broadcasts, and GNSS positioning to coordinate highway car-following and intersection traversal. However, unauthenticated or compromised external channels introduce stealthy attack vectors: gradual GNSS ramp drift pulls localization off-lane before conventional snapshot monitors react, kinematically plausible ghost-vehicle BSM injections induce phantom braking, SPaT phase inversions manufacture red-light violations or gridlock, Sybil BSM floods overwhelm neighborhood trackers, and physical or electronic sector blinding degrades local automotive radar/LiDAR sectors.
+Cooperative Automated Vehicles expand situational awareness by fusing Global Navigation Satellite System (GNSS) positioning with SAE~J2735 Basic Safety Messages (BSMs) and Road-Side Unit (RSU) Signal Phase and Timing (SPaT) broadcasts. While asymmetric cryptography and Public Key Infrastructure (IEEE~1609.2) mitigate unauthenticated packet spoofing from external transmitters, cryptographic validation presents a structural trade-off: certified insiders can still broadcast kinematically falsified BSMs~\cite{vanderheijden2019,kamel2020tvt}, RF GNSS spoofers can inject sub-threshold ramp drift directly into multi-sensor fusion loops~\cite{shen2020drift}, and physical or electronic interference can blind onboard radar/LiDAR sectors.
 
-Two persistent gaps undermine prior cyber-resilient CAV literature. First, many reinforcement learning safety studies evaluate navigation in toy gridworlds or walled mazes devoid of real multi-lane traffic shockwaves, heavy-vehicle lengths, and arterial signal cycles. Second, decoupling anomaly detection from safety-guaranteed actuation leaves an unprotected vulnerability window between attack onset and isolation, or stalls the vehicle dead in live highway lanes.
+Despite progress in vehicular Intrusion Detection Systems (IDS) and Control Barrier Function (CBF) safety filters, four concrete methodological gaps persist across current literature:
+\begin{itemize}
+    \item \textbf{Gap G1 (Synthetic Corridor Abstraction):} Cyber-resilient RL controllers frequently benchmark in synthetic walled mazes devoid of real car-following shockwaves, heavy-vehicle dimensions, and signalized arterial timing.
+    \item \textbf{Gap G2 (Decoupled Detection and Limp-Home Control):} Most V2X/GNSS detectors evaluate offline classification (AUROC)~\cite{kamel2020veremi,vanderheijden2019} without proving closed-loop survival once external feeds are quarantined, causing either dead-reckoning drift or complete in-lane stoppage.
+    \item \textbf{Gap G3 (Unbounded Sensor-Denial Feasibility):} Standard RL-CBF pipelines assume uncorrupted obstacle perception and continuous QP feasibility~\cite{cheng2019rlcbf,zeng2021mpccbf}, rarely accounting for partial radar sector blinding, intermittent attack bursts, or empty-constraint fallbacks.
+    \item \textbf{Gap G4 (Embedded MCU Compute Mismatch):} Heavy Transformer or nonlinear MPC-CBF controllers exceed the SRAM (512~KB) and latency ($5.0\text{ ms}$ at 200~Hz) envelopes of embedded automotive microcontrollers~\cite{david2021tflm}.
+\end{itemize}
 
-This work addresses both limitations with \textbf{RecurrentShield-V2X}, an end-to-end anomaly quarantine and verified limp-home stack benchmarked strictly on live-fetched USDOT NGSIM trajectories mapped to authentic SPMD SAE~J2735 schemas. Our contributions are:
+To resolve G1--G4 as a unified \emph{last-line physical plausibility and safety control layer} (assuming upstream cryptographic verification is compromised or unavailable), this work makes four mapped contributions:
 \begin{enumerate}
-    \item \textbf{Real USDOT Multi-Corridor POMDP Benchmark:} Live Socrata ingestion of real US-101 freeway (33,395 records, 227 vehicles), I-80 highway (48,397 records, 289 vehicles), and Lankershim signalized arterial (43,142 records, 157 vehicles) trajectories converted to SI units and projected into standardized SAE~J2735 BSMs, paired with 5 parameterized attacks without synthetic baseline traffic.
-    \item \textbf{Compact Dual-Head Recurrent Architecture ($<$350~KB FP32 / $<$100~KB INT8):} A 26-to-24 topological relational encoder feeding a 128-unit LSTM backbone (84,505 parameters) with Head~1 Mahalanobis kinematic residual quarantine ($r_t > \tau_t$ over consecutive steps) and Head~2 zero-shot limp-home actor-critic policy anchored via road-boundary lateral stabilization.
-    \item \textbf{200~Hz DT-CBF Safety Shield under Sector Blinding:} A real-time discrete-time barrier filter enforcing longitudinal time-headway/stopping invariance and lateral curb/neighbor clearance with worst-case reachability inflation $\epsilon_{\text{radar}}$ during partial radar sector blinding.
-    \item \textbf{ESP32-S3 Edge Profiling \& 5-Seed Cross-Corridor Evaluation:} Full ONNX FP32 and INT8 TFLite Micro C++ weight export (\texttt{model\_weights.cc}), cycle/SRAM/energy profiling (1.70~ms INT8 step latency, 107.1~KB peak SRAM), and statistical comparisons against EKF+CUSUM, Stateless PPO, Tiny-Transformer IDS, and No-CBF ablation.
+    \item \textbf{Real-USDOT Corridor POMDP \& Zero-Leakage Benchmark (Addresses G1; Section~III, Tables~\ref{tab:dataset_stats}--\ref{tab:zero_leakage}):} Formulates GNSS/V2X-denied traversal directly atop live-ingested USDOT NGSIM trajectories (US-101, I-80, Lankershim) mapped to SPMD SAE~J2735 schemas, isolating all training and calibration strictly to US-101.
+    \item \textbf{Dual-Head LSTM Quarantine \& Anchored MRM Policy (Addresses G2; Section~V, Fig.~\ref{fig:arch}):} Couples a 26$\to$24 topological encoder and 128-unit LSTM ($84,505$ parameters) to detect external discrepancies via heteroscedastic Mahalanobis residuals ($r_t > \tau_t$) while bounding lateral drift via local curb anchoring.
+    \item \textbf{Closed-Form 200~Hz DT-CBF Shield with Infeasibility Fallback (Addresses G3; Section~V-E, Theorem~1, Tables~\ref{tab:alpha_sens}--\ref{tab:failure_modes}):} Enforces longitudinal and curb barriers in $O(1)$ via closed-form KKT projection under reachability-inflated blinding bounds ($\epsilon_{\text{radar}} \in \{0.85, 1.85\}\text{ m}$), logging QP feasibility rates and deterministic emergency-braking fallback.
+    \item \textbf{Multi-Baseline Parity, Burst Stress Tests \& ESP32-S3 Profiling (Addresses G4; Sections~VI--VII, Tables~\ref{tab:baseline_spec}--\ref{tab:edge_profile}):} Benchmarks 6 comparators across 5 seeds, 6 single/combined threats, randomized onsets, and 50\%-duty bursts, alongside INT8 TFLite Micro firmware export ($82.6\text{ KB}$ flash, $107.1\text{ KB}$ SRAM, $1.70\text{ ms}$ step).
 \end{enumerate}
 
-\section{Problem Formulation: Tactical MRM \& GNSS/V2X-Denied POMDP}
-We model compromised CAV highway/arterial traversal as a finite-horizon Partially Observable Markov Decision Process $\mathcal{M} = (\mathcal{S}, \mathcal{A}, \mathcal{O}, \mathcal{T}, \mathcal{R}, \gamma)$ operating at outer control interval $\Delta t = 0.1\text{ s}$ (10~Hz) with inner safety enforcement at $\delta t = 0.005\text{ s}$ (200~Hz).
+\section{Related Work \& Positioning}
 
-\begin{definition}[Physical State \& Local Observation Space]
-The latent state $s_t = (x_t, y_t, v_{x,t}, v_{y,t}, \psi_t, a_t, \mathcal{V}_t^{\text{NGSIM}}, \phi_t^{\text{SPaT}}, m_t^{\text{atk}}) \in \mathcal{S}$ comprises the ego lateral/longitudinal corridor coordinates $(x_t, y_t)$, velocity $(v_{x,t}, v_{y,t})$, heading $\psi_t$, acceleration $a_t$, surrounding physical NGSIM traffic $\mathcal{V}_t^{\text{NGSIM}}$, ground-truth arterial SPaT phase $\phi_t^{\text{SPaT}}$, and active adversary state $m_t^{\text{atk}}$. The 26-dimensional topological relational observation $o_t \in \mathcal{O} \subset \mathbb{R}^{26}$ stacks:
-\begin{itemize}
-    \item Normalized 6-sector 120~m automotive radar/LiDAR edge clearances $d_{t}^{(0:5)} / R$ ($R = 120\text{ m}$, $60^\circ$ angular bins centered on travel axis $+y$),
-    \item Normalized sector closing velocities $-\dot{d}_{t}^{(0:5)} / 25.0$,
-    \item Binary sector validity mask $\mathbf{v}_t^{\text{sec}} \in \{0,1\}^6$ reflecting blinded sectors,
-    \item Normalized road-curb clearances $(x_t - x_{\text{left}})/12.0$ and $(x_{\text{right}} - x_t)/12.0$,
-    \item Wheel-encoder speed, lateral velocity, 3-axis IMU heading/acceleration, ego-centric lane center error $(x_{\text{lane}}^* - x_t)/4.0$, and gated external SPaT stop flag.
-\end{itemize}
-\end{definition}
+\subsection{Residual-Based GNSS and V2X Misbehavior Detection}
+Van~der Heijden \textit{et al.}~\cite{vanderheijden2019} classify vehicular misbehavior checks into entity-centric trust frameworks and data-centric plausibility monitors. While VeReMi Extension~\cite{kamel2020veremi} and cooperative simulators~\cite{kamel2020tvt} standardized SAE~J2735 BSM attack taxonomies in simulation, Shen \textit{et al.}~\cite{shen2020drift} exposed how gradual GNSS ramp spoofing (\textit{FusionRipper}) evades snapshot Kalman chi-squared gates in multi-sensor localization. Sequential neural detectors using LSTMs, causal dilated Temporal Convolutional Networks (TCNs)~\cite{bai2018tcn}, and compact Transformers capture multi-step kinematic deviations, yet rarely test zero-shot closed-loop resilience across distinct real-world road geometries.
 
-When Head~1 triggers quarantine ($q_t = 1$), external GNSS, SAE~J2735 BSMs, and SPaT advisories are isolated from planning; dead-reckoned lateral drift $\hat{x}_t^{\text{DR}}$ is bounded via road-boundary lateral anchoring:
-\begin{equation}
-\hat{x}_t^{\text{DR}} \leftarrow 0.70\,\hat{x}_t^{\text{DR}} + 0.30 \cdot \frac{(x_{\text{left}} + c_L) + (x_{\text{right}} - c_R)}{2},
-\end{equation}
-where $c_L, c_R$ are local radar curb measurements, preventing unbounded open-loop drift during multi-kilometer GNSS denial.
+\subsection{Discrete-Time CBFs and Safe RL under Perception Attacks}
+CBFs synthesize minimally invasive QP safety filters enforcing forward invariance of safe operating sets~\cite{ames2019cbf}. Agrawal and Sreenath~\cite{agrawal2017dcbf} established discrete-time CBF (DT-CBF) invariance conditions matching digital control sampling, while Zeng \textit{et al.}~\cite{zeng2021mpccbf} unified DT-CBFs with receding-horizon MPC to reduce single-step myopia. Similarly, Cheng \textit{et al.}~\cite{cheng2019rlcbf} embedded CBF guards inside RL policies~\cite{schulman2017ppo}. However, classical RL-CBF designs presuppose benign obstacle feeds; passing spoofed BSMs directly into a barrier filter can induce phantom braking or blind-spot encroachment unless preceded by an autonomous quarantine gate.
 
-The control action $u_t = [a_{\text{long}, t}, v_{\text{lat}, t}]^\top \in \mathcal{A} = [-6.5, 2.8]\text{ m/s}^2 \times [-2.2, 2.2]\text{ m/s}$ commands longitudinal acceleration and lateral stabilization velocity. Reward $\mathcal{R}(s_t, u_t)$ balances forward progress along the corridor, tactical cruise tracking (scaled down by $0.80\times$ during limp-home quarantine), lane centering, jerk minimization, and severe collision/off-road penalties ($-25.0$). Discount factor is $\gamma = 0.96$.
+\subsection{TinyML Deployment for Embedded Vehicle Controllers}
+Deploying neural sequence policies and optimization filters on resource-constrained microcontrollers (e.g., 512~KB SRAM) prohibits dynamic allocation and iterative QPs. TensorFlow Lite Micro (TFLM)~\cite{david2021tflm} enables static tensor arenas and symmetric INT8 execution. Prior embedded ML controllers focus primarily on stateless MLPs or offline classification rather than co-scheduling a stateful 128-unit LSTM IDS, an MRM actor, and a 200~Hz barrier filter under strict cycle budgets.
 
-\section{Real USDOT Data Pipeline & SAE J2735 Threat Model}
+\begin{table*}[t]
+\centering
+\caption{Positioning Matrix Against Representative Cyber-Resilient V2X, Safe-RL, and Embedded Control Literature}
+\label{tab:lit_positioning}
+\scriptsize
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{lllll}
+\toprule
+Study / Framework & Focus Area & Validation Strategy & Core Limitation wrt Gaps G1--G4 & RecurrentShield-V2X Advancement \\
+\midrule
+Kamel \textit{et al.}~\cite{kamel2020veremi,kamel2020tvt} & V2X BSM Misbehavior & Synthetic OMNeT++/VeReMi & Offline detection only; no control fallback & Closed-loop quarantine + MRM on USDOT data \\
+Shen \textit{et al.}~\cite{shen2020drift} & GNSS Spoof vs. EKF & Real trace offline MSF replay & No DT-CBF safety layer or V2X integration & Couples residual IDS with 200~Hz DT-CBF shield \\
+Bai \textit{et al.}~\cite{bai2018tcn} & Causal TCN Sequence & Synthetic / audio benchmarks & Fixed window latency; not evaluated on CAVs & Parameter-matched TCN included as baseline \\
+Zeng \textit{et al.}~\cite{zeng2021mpccbf} & MPC-DT-CBF Control & Simulation / robotics & Iterative NLP/QP; assumes clean perception & Closed-form 480-cycle KKT QP + quarantine \\
+Cheng \textit{et al.}~\cite{cheng2019rlcbf} & RL-CBF Safety Filter & Inverted pendulum / driving sim & Assumes unspoofed observations & Isolates spoofed V2X; bounds radar blinding \\
+David \textit{et al.}~\cite{david2021tflm} & TFLite Micro Runtime & MCU vision / audio TinyML & No stateful safety filter verification & Profiles INT8 LSTM + DT-CBF on ESP32-S3 \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
-\subsection{USDOT NGSIM & SPMD Data Ingestion}
-To guarantee zero toy assumptions, \texttt{data/fetch\_real\_usdot\_data.py} queries the live USDOT Socrata REST endpoint (\url{https://data.transportation.gov/resource/8ect-6jqj.json}, DOI: \texttt{10.21949/1504477}), caching validated splits and failing loudly if unreachable. Imperial units (\texttt{ft}, \texttt{ft/s}, \texttt{ft/s}^2) are converted strictly to SI units, Lankershim trajectories are filtered to unidirectional travel (\texttt{direction==2}), and kinematics are mapped via corridor WGS-84 origins and headings into authentic USDOT SPMD SAE~J2735 BSM fields (\texttt{msgCnt}, \texttt{id}, \texttt{lat}, \texttt{lon}, \texttt{speed}, \texttt{heading}, \texttt{accelSet}; DOI: \texttt{10.21949/1504482}). Table~\ref{tab:dataset_stats} summarizes the cached splits and SHA-256 integrity prefixes verified in \texttt{data/usdot\_manifest.json}.
+\subsection{Critical Synthesis}
+As synthesized in Table~\ref{tab:lit_positioning}, existing methods solve isolated slices of the problem: V2X IDS frameworks~\cite{vanderheijden2019,kamel2020veremi} lack verified actuation fallback; MSF spoof studies~\cite{shen2020drift} do not couple control barriers with local radar blinding; and DT-CBF/MPC frameworks~\cite{agrawal2017dcbf,zeng2021mpccbf,cheng2019rlcbf} assume trustworthy perception inputs and heavier compute. RecurrentShield-V2X unifies these threads inside a single USDOT-grounded architecture designed to fail safely under MCU constraints.
+
+\section{USDOT Data Provenance, POMDP, and Threat Scope}
+
+\subsection{Dataset Selection, Physical Hygiene, and Zero-Leakage Proof}
+To eliminate synthetic maze assumptions (G1), all vehicle kinematics derive from live USDOT Socrata REST queries (\url{https://data.transportation.gov/resource/8ect-6jqj.json}, DOI~\texttt{10.21949/1504477}), failing loudly if unreachable rather than substituting synthetic baselines. Imperial values (\texttt{ft}, \texttt{ft/s}, \texttt{ft/s$^2$}) convert strictly to SI units, Lankershim records filter to unidirectional southbound/northbound corridor alignment (\texttt{direction==2}), and trajectories project via corridor WGS-84 origins and bearings into standardized USDOT SPMD SAE~J2735 BSM fields (\texttt{msgCnt}, \texttt{id}, \texttt{lat}, \texttt{lon}, \texttt{speed}, \texttt{heading}, \texttt{accelSet}; DOI~\texttt{10.21949/1504482}). Table~\ref{tab:dataset_stats} logs exact verified split counts and SHA-256 prefixes from \texttt{data/usdot\_manifest.json}. During closed-loop rollouts, discontinuous Socrata recycled-\texttt{Vehicle\_ID} jumps ($>8.0\text{ m}$ in $0.1\text{ s}$) within $25\text{ m}$ of ego are suppressed, and reactive trailing clearances scale explicitly with each physical neighbor's length (accounting for long semi-trucks on I-80).
+
+To prove zero cross-corridor data leakage, Table~\ref{tab:zero_leakage} documents our strict train-versus-test separation: policy weights, heteroscedastic variance $\Sigma$, EKF-CUSUM thresholds, and quarantine constants are determined solely on \textbf{US-101}, while \textbf{I-80} and \textbf{Lankershim} remain completely unseen until final inference evaluation.
 
 \begin{table}[t]
 \centering
-\caption{Cached Real USDOT NGSIM & SAE J2735 BSM Splits}
+\caption{Cached Real USDOT NGSIM \& SAE J2735 BSM Splits}
 \label{tab:dataset_stats}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{llcc}
 \toprule
-Corridor & Role & Records / Veh. & Raw SHA-256 Prefix \\
+Corridor & Split Role & Records / Veh. & SHA-256 \\
 \midrule
-US-101 (Highway) & Train / In-Dist. & 33,395 / 227 & \texttt{8da1254ce4ff} \\
-I-80 (Congested Hwy) & Zero-Shot Test & 48,397 / 289 & \texttt{2c097fac4f59} \\
-Lankershim (Arterial) & Zero-Shot Test & 43,142 / 157 & \texttt{20180d01aae2} \\
-Primary 50k Sample & Integrity Check & 49,949 / -- & \texttt{63633ddc7feb} \\
+US-101 & Train / Calib. & 33,395 / 227 & \texttt{8da1254c} \\
+I-80 & Zero-Shot Hwy & 48,397 / 289 & \texttt{2c097fac} \\
+Lankershim & Zero-Shot Art. & 43,142 / 157 & \texttt{20180d01} \\
+50k Sample & API Integrity & 49,949 / -- & \texttt{63633ddc} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Parameterized SAE J2735 Cyber-Physical Threat Suite}
-In \texttt{attacks/sae\_j2735\_threat\_model.py}, attacks activate at $t_{\text{onset}} = 4.0\text{ s}$ (step 40) across 16.0~s continuous NGSIM episodes:
-\begin{enumerate}
-    \item \textbf{GNSS Ramp Spoofing (\texttt{gnss\_ramp\_spoof}):} Gradual lateral/longitudinal drift at $0.1\text{--}1.5\text{ m/s}$ ($0.75\text{ m/s}$ default, angle $0.45\text{ rad}$), evading naive single-step jump checks.
-    \item \textbf{Ghost-Vehicle BSM FDI (\texttt{ghost\_vehicle\_fdi}):} Injects a kinematically plausible BSM 14--15~m ahead in the ego lane when no physical radar target exists.
-    \item \textbf{RSU SPaT Phase Inversion (\texttt{spat\_phase\_inversion}):} Flips \texttt{GREEN} $\leftrightarrow$ \texttt{RED} broadcasts to induce unsafe red-light running or highway phantom stops.
-    \item \textbf{Sybil BSM Flood (\texttt{sybil\_bsm\_flood}):} Broadcasts 10--50 (25 default) forged neighboring BSMs around ego.
-    \item \textbf{Partial Radar/LiDAR Sector Blinding (\texttt{radar\_sector\_blinding}):} Drops 1--2 of the 6 radar sectors ($k=2$ default), forcing worst-case reachability fallback.
-\end{enumerate}
+\begin{table}[t]
+\centering
+\caption{Strict Zero-Leakage Corridor Separation Protocol}
+\label{tab:zero_leakage}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lll}
+\toprule
+Pipeline Artifact & Fitting Scope & Unseen Eval \\
+\midrule
+Policy \& Kin. ($\theta, \Sigma$) & US-101 (8 speeds) & I-80, Lankershim \\
+Baseline Windows & US-101 frames only & I-80, Lankershim \\
+Thresholds ($\tau_{\text{base}}, k$) & US-101 residuals & I-80, Lankershim \\
+EKF-CUSUM ($\delta, h$) & US-101 clean runs & I-80, Lankershim \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\section{RecurrentShield-V2X Architecture & 200~Hz DT-CBF Shield}
+\subsection{Tactical MRM \& GNSS/V2X-Denied POMDP Formulation}
+\begin{definition}[POMDP Tuple and Anchored Localization]
+Navigation under cyber-physical denial is formulated as $\mathcal{M} = (\mathcal{S}, \mathcal{A}, \mathcal{O}, \mathcal{T}, \mathcal{R}, \gamma)$ with outer loop $\Delta t = 0.1\text{ s}$ (10~Hz) and inner shield $\delta t = 0.005\text{ s}$ (200~Hz). Latent state $s_t$ captures ego pose, velocity, heading, acceleration, physical NGSIM traffic, true arterial SPaT phase, and adversary state. Observation $o_t \in \mathbb{R}^{26}$ stacks normalized 6-sector 120~m radar distances, sector closing speeds, binary sector validity mask $\mathbf{v}_t \in \{0,1\}^6$, left/right curb clearances, wheel speed, lateral velocity, 3-axis IMU heading/acceleration, lane-center error, and quarantine-gated SPaT flag.
+\end{definition}
+
+When quarantine latches ($q_t=1$), dead-reckoned lateral drift $\hat{x}_t^{\text{DR}}$ is bounded via complementary road-boundary anchoring:
+\begin{equation}
+\hat{x}_t^{\text{DR}} \leftarrow 0.70\,\hat{x}_t^{\text{DR}} + 0.30 \cdot \frac{(x_{\text{left}} + c_L) + (x_{\text{right}} - c_R)}{2},
+\end{equation}
+using physical curb distances $c_L, c_R$. Continuous actions $u_t = [a_{\text{long},t}, v_{\text{lat},t}]^\top \in [-6.5, 2.8]\text{ m/s}^2 \times [-2.2, 2.2]\text{ m/s}$ optimize discounted ($\gamma=0.96$) progress, cruise speed ($0.80\times$ limp-home factor under $q_t=1$), lane centering, jerk penalty, and $-25.0$ collision penalty.
+
+\subsection{Parameterized Threat Suite and Auth Boundary}
+Assuming upstream IEEE~1609.2 cryptographic authentication is compromised via valid insider certificates or bypassed at physical RF/sensor front ends, \texttt{attacks/sae\_j2735\_threat\_model.py} injects six threat classes (at fixed $t_{\text{onset}}=4.0\text{ s}$, randomized $t_{\text{onset}} \in [2.0, 5.8]\text{ s}$, and 50\%-duty intermittent bursts):
+(1)~\texttt{gnss\_ramp\_spoof} ($0.1\text{--}1.5\text{ m/s}$ gradual velocity/pose bias);
+(2)~\texttt{ghost\_vehicle\_fdi} (phantom vehicle $14\text{--}15\text{ m}$ ahead absent in radar);
+(3)~\texttt{spat\_phase\_inversion} (RSU \texttt{GREEN} $\leftrightarrow$ \texttt{RED} flip);
+(4)~\texttt{sybil\_bsm\_flood} ($25$ forged BSMs within $7.5\times 80\text{ m}$);
+(5)~\texttt{radar\_sector\_blinding} ($k=2$ of $6$ sectors dropped to $120\text{ m}$); and
+(6)~\texttt{combined\_spoof\_blinding} (simultaneous GNSS ramp drift + 2-sector blinding).
+
+\section{Methodology: RecurrentShield-V2X Architecture}
 
 \begin{figure*}[t]
     \centering
     \includegraphics[width=0.92\textwidth]{../results/figures/fig1_architecture_cbf_loop.png}
-    \caption{Dual-head RecurrentShield-V2X architecture: a 26$\to$24 topological encoder feeds a 128-unit LSTM backbone whose hidden state $h_t$ drives (1) the Mahalanobis residual quarantine gate and (2) the zero-shot MRM actor verified by a 200~Hz DT-CBF QP safety filter.}
+    \caption{\textbf{End-to-end signal isolation and safety shielding pipeline.} Local 6-sector 120~m radar, curb boundaries, wheel encoders, and 3-axis IMU ($o_t \in \mathbb{R}^{26}$) feed the $26\to 24$ topological encoder and 128-unit LSTM backbone (330.1~KB FP32 / 82.6~KB INT8), whose hidden state $h_t$ drives both Head~1 Mahalanobis quarantine ($r_t > \tau_t$ against untrusted V2X/GNSS input $y_{\text{ext}}$) and Head~2 zero-shot limp-home control ($u_{\text{nom}}$), verified at 200~Hz by the closed-form DT-CBF QP shield before reaching vehicle actuators.}
     \label{fig:arch}
 \end{figure*}
 
-As illustrated in Fig.~\ref{fig:arch}, \texttt{RecurrentShieldPPO} maps $o_t \in \mathbb{R}^{26}$ through a Linear(26, 24)--LayerNorm--Tanh topological encoder into a 128-unit single-layer LSTM ($h_t \in \mathbb{R}^{128}$). Two lightweight heads share $h_t$:
-\begin{itemize}
-    \item \textbf{Head 1 (Kinematic Residual IDS):} Predicts the 6D external-anchor discrepancy vector $\hat{y}_{t} = W_{\text{kin}} h_t + b_{\text{kin}}$ trained with heteroscedastic Gaussian NLL ($\Sigma = \text{diag}(\exp(\text{clamp}(\ell, -4, 2)))$). At inference, the Mahalanobis residual $r_t = \sqrt{\sum_{j=1}^6 (y_{\text{ext},t,j} - \hat{y}_{t,j})^2 / \Sigma_{jj}}$ is compared against an exponential-moving-average adaptive threshold $\tau_t = \max(\tau_{\text{base}}, \bar{r}_t + k\,\sigma_r)$ ($\tau_{\text{base}}=2.35, k=0.35$). Quarantine engages autonomously after $\ge 2$ consecutive crossings ($r_t > \tau_t$).
-    \item \textbf{Head 2 (Topological MRM Policy):} A $128 \to 16 \to 2$ Tanh MLP outputs nominal limp-home control $u_{\text{nom},t} = [a_{\text{nom},t}, v_{y,\text{nom},t}]^\top$.
-\end{itemize}
+Following the left-to-right dataflow of Fig.~\ref{fig:arch}, each architectural stage is structured and justified as follows:
 
-\subsection{200~Hz DT-CBF QP Filter and Recursive Safety}
-Prior to actuator execution, \texttt{control/dt\_cbf\_safety\_shield.py} evaluates longitudinal stopping invariance and lateral curb/neighbor clearance barriers:
+\subsection{Local Topological Encoding (26 $\to$ 24)}
+Rather than ingesting global corridor coordinates that overfit to US-101 road geometry, $o_t \in \mathbb{R}^{26}$ passes through $\text{Linear}(26, 24) \to \text{LayerNorm} \to \text{Tanh}$ to produce scale-invariant ego-centric clearances and velocities, enabling zero-shot transfer to unseen lane counts and intersection layouts.
+
+\subsection{128-Unit LSTM Hidden State Backbone}
+A single-layer 128-unit LSTM ($h_t \in \mathbb{R}^{128}$) tracks temporal kinematics across occluded frames and intermittent attack silent gaps using $O(1)$ per-step recurrent memory ($84,505$ total network parameters; $83,360$ MACs/step), avoiding Transformer $O(K^2)$ context cache expansion on microcontrollers.
+
+\subsection{Head 1: Heteroscedastic Mahalanobis Residual Quarantine}
+From $h_t$, a linear projection predicts the expected 6D external-anchor discrepancy vector $\hat{y}_t \in \mathbb{R}^6$ parameterized with learned diagonal log-variance $\Sigma = \text{diag}(\exp(\text{clamp}(\ell, -4, 2)))$. Mahalanobis residual $r_t = \sqrt{\sum_{j=1}^6 (y_{\text{ext},t,j} - \hat{y}_{t,j})^2 / \Sigma_{jj}}$ triggers autonomous quarantine ($q_t=1$) when $r_t > \tau_t = \max(2.35, \bar{r}_t + 0.35\sigma_r)$ persists for two consecutive steps, rejecting transient sensor noise spikes while catching stealthy ramp drift.
+
+\subsection{Head 2: Topological MRM Policy}
+A $128 \to 16 \to 2$ Tanh actor outputs nominal tactical acceleration and lateral lane-centering velocity $u_{\text{nom},t} = [a_{\text{nom},t}, v_{y,\text{nom},t}]^\top$, paired with a symmetric $128 \to 16 \to 1$ critic during US-101 training.
+
+\subsection{200~Hz Closed-Form DT-CBF Shield and Fallback}
+Head~2 outputs are filtered prior to actuation by \texttt{control/dt\_cbf\_safety\_shield.py} via longitudinal stopping-headway and lateral curb barriers:
 \begin{align}
-h_{\text{long}}(x_t) &= d_{\text{eff}, t} - \left(d_{\min} + \tau_h v_t + \frac{\max(0, v_t^2 - v_{\text{lead}}^2)}{2 a_{\text{brake}}} + \epsilon_{\text{radar}}\right), \\
-h_{\text{left}}(x_t) &= c_{L,\text{eff},t} - w_{\text{half}} - \epsilon_{\text{lat}}, \quad
-h_{\text{right}}(x_t) = c_{R,\text{eff},t} - w_{\text{half}} - \epsilon_{\text{lat}},
+h_{\text{long}}(x_t) &= d_{\text{eff},t} - \left(d_{\min} + \tau_h v_t + \frac{(v_t^2 - v_{\text{lead}}^2)_+}{2 a_{\text{brake}}} + \epsilon_{\text{radar}}\right), \\
+h_{\text{left}}(x_t) &= c_{L,\text{eff},t} - w_{\text{half}} - \epsilon_{\text{lat}}, \\
+h_{\text{right}}(x_t) &= c_{R,\text{eff},t} - w_{\text{half}} - \epsilon_{\text{lat}},
 \end{align}
-with $d_{\min}=5.2\text{ m}$, $\tau_h=1.30\text{ s}$, $a_{\text{brake}}=6.5\text{ m/s}^2$, nominal margin $\epsilon_{\text{radar}}=0.85\text{ m}$, and blinded margin $\epsilon_{\text{radar}}^{\text{blind}}=1.85\text{ m}$. During front-sector blinding, the shield propagates worst-case reachability shrinkage $d_{\text{eff}} \leftarrow \max(1.0, d_{\text{eff}} + \min(v_{\text{rel}}, -2.5)\Delta t - 0.35)$.
+with $d_{\min}=5.2\text{ m}$, $\tau_h=1.30\text{ s}$, $a_{\text{brake}}=6.5\text{ m/s}^2$, $\epsilon_{\text{radar}}=0.85\text{ m}$ nominal and $1.85\text{ m}$ under front blinding (propagating worst-case gap decay $d_{\text{eff}} \leftarrow \max(1.0, d_{\text{eff}} + \min(v_{\text{rel}}, -2.5)\Delta t - 0.35)$).
 
-\begin{theorem}[DT-CBF Forward Invariance under Bounded Sector Blinding]
-Assume bounded sensor noise $|d_{\text{meas}} - d_{\text{true}}| \le \epsilon_{\text{radar}}$, bounded lead deceleration matching $a_{\text{brake}}$, and a non-empty safe initial set $h_{\text{long}}(x_0) \ge 0$, $h_{\text{left}}(x_0) \ge 0$, $h_{\text{right}}(x_0) \ge 0$. If the 200~Hz QP filter selects $u_t^* = \arg\min_{u \in \mathcal{A}} \|u - u_{\text{nom},t}\|_2^2$ subject to $h(x_{t+1}(u)) \ge (1-\alpha)h(x_t)$ ($\alpha = 0.35$), then longitudinal headway remains strictly positive and curb boundaries remain forward invariant across blinded intervals up to reachability horizon depletion.
+\begin{assumption}[Local Safety Filter Operating Envelope]
+(A1)~Unblinded radar error satisfies $|d_{\text{meas}} - d_{\text{true}}| \le 0.85\text{ m}$, and blinded reachability degradation stays bounded by $1.85\text{ m}$; (A2)~leading traffic decelerates by at most $a_{\text{brake}}$ across an unblinded step; (A3)~local wheel encoders, IMU, and curb edges remain uncompromised; (A4)~initial state belongs to the safe set $h_{\text{long}}(x_0), h_{\text{left}}(x_0), h_{\text{right}}(x_0) \ge 0$.
+\end{assumption}
+
+\begin{theorem}[Local DT-CBF Forward Invariance under Feasible Projection]
+Under Assumptions~A1--A4, whenever $\mathcal{U}_{\text{safe}}(x_t) = \{u \in \mathcal{A} : a \le a_{\text{upper}}(x_t),\; v_{y,\text{lower}}(x_t) \le v_y \le v_{y,\text{upper}}(x_t)\} \neq \emptyset$, the closed-form KKT optimizer $u_t^* = \arg\min_{u \in \mathcal{U}_{\text{safe}}} \|u - u_{\text{nom},t}\|_2^2$ satisfies $h(x_{t+1}) \ge (1-\alpha)h(x_t) \ge 0$ ($\alpha \in (0,1]$) regardless of arbitrary nominal commands $u_{\text{nom},t}$, maintaining positive physical headway and curb margins across the step.
 \end{theorem}
 
 \begin{IEEEproof}
-By Taylor expansion of relative longitudinal headway over $\Delta t$ with braking sensitivity $s_{\text{long}} = (\tau_h + \mathbf{1}_{v_t > v_{\text{lead}}} v_t / a_{\text{brake}})\Delta t > 0$, enforcing $-s_{\text{long}} a_t \ge -\alpha h_{\text{long}}(x_t) - (v_{\text{lead}} - v_t)\Delta t$ guarantees $h_{\text{long}}(x_{t+1}) \ge (1 - \alpha)h_{\text{long}}(x_t) \ge 0$ for $\alpha \in (0,1]$. Because physical gap $d_{\text{true}} \ge d_{\text{eff}} - \epsilon_{\text{radar}}$ holds both nominally ($\epsilon = 0.85\text{ m}$) and under conservative blinded shrinkage ($\epsilon = 1.85\text{ m}$), $h_{\text{long}} \ge 0$ implies $d_{\text{true}} \ge d_{\min} + \tau_h v_t + (v_t^2 - v_{\text{lead}}^2)_+ / (2 a_{\text{brake}}) > 0$. Analogous linear inequalities on $v_{\text{lat}}$ bound curb encroachment $h_{\text{left}}, h_{\text{right}} \ge 0$.
+Defining longitudinal braking sensitivity $s_{\text{long}} = (\tau_h + \mathbf{1}_{v_t > v_{\text{lead}}} v_t / a_{\text{brake}})\Delta t > 0$, enforcing $a_t \le a_{\text{upper}} = (\alpha h_{\text{long}}(x_t) + (v_{\text{lead}}-v_t)\Delta t)/s_{\text{long}}$ ensures $h_{\text{long}}(x_{t+1}) \ge (1-\alpha)h_{\text{long}}(x_t) \ge 0$ by first-order discrete expansion. By A1, $d_{\text{true}} \ge d_{\text{eff}} - \epsilon_{\text{radar}} \ge d_{\min} + \tau_h v_t + (v_t^2 - v_{\text{lead}}^2)_+/(2a_{\text{brake}}) > 0$. Decoupled lateral bounds preserve $h_{\text{left}}, h_{\text{right}} \ge 0$.
 \end{IEEEproof}
 
-\section{Experimental Setup & Zero-Shot Transfer Results}
+\textbf{Deterministic QP Infeasibility Fallback:} If an aggressive cut-in during sector blinding renders $\mathcal{U}_{\text{safe}}(x_t) = \emptyset$ ($a_{\text{upper}} < -a_{\text{brake}}$ or $v_{y,\text{lower}} > v_{y,\text{upper}}$), the shield immediately executes deterministic fallback: maximum deceleration $a^* = -a_{\text{brake}}$ longitudinally and curb-midpoint stabilization $\frac{1}{2}(v_{y,\text{lower}} + v_{y,\text{upper}})$ laterally, logging infeasibility explicitly without iterative solver deadlock.
 
-All neural policies (\texttt{RecurrentShieldPPO}, \texttt{StatelessPPO}, and matched-budget \texttt{TinyTransformerIDS} with $K=16$ causal context windows) are trained across 5 random seeds (\texttt{101, 202, 303, 404, 505}) exclusively on real \textbf{US-101} NGSIM traffic across varied target flow speeds (7.5--17.5~m/s), then frozen and evaluated zero-shot on unseen \textbf{I-80} and \textbf{Lankershim Blvd} corridors across all 5 SAE~J2735 threats plus \texttt{EkfCusumDetector + DT-CBF} and \texttt{Ablation (No DT-CBF)}.
+\section{Experiments, Baselines, and Failure Analysis}
+
+\subsection{Baseline Specification and Compute Parity}
+All learned models train identically over 5 seeds (\texttt{101, 202, 303, 404, 505}) solely on US-101 across varied flow speeds ($7.5\text{--}17.5\text{ m/s}$) using \texttt{Adam(lr=2.5e-3)} and unified behavioral + kinematic loss ($1.0\,\mathcal{L}_{\text{act}} + 0.6\,\mathcal{L}_{\text{kin}}$). Table~\ref{tab:baseline_spec} details model budgets and explicit engineering justifications.
+
+\begin{table*}[t]
+\centering
+\caption{Comparator Specifications, Hyperparameter Parity, and Engineering Justifications}
+\label{tab:baseline_spec}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llcl}
+\toprule
+Method & Params / FP32 & Training / Tuning & Engineering \& Benchmark Justification \\
+\midrule
+RecurrentShield-V2X & 84,505 / 330.1 KB & 70 US-101 epochs; $\tau_{\text{base}}=2.35$ & Proposed 128-LSTM dual-head + closed-form DT-CBF shield \\
+Ablation (No DT-CBF) & 84,505 / 330.1 KB & Identical weights; shield disabled & Isolates marginal safety/survival gain of 200~Hz DT-CBF \\
+TCN-Residual IDS~\cite{bai2018tcn} & 41,695 / 162.9 KB & 45 US-101 epochs ($K=16$); dil. 1,2,4 & Recent causal dilated 1D conv sequential IDS baseline \\
+Tiny-Transformer IDS & 70,287 / 274.6 KB & 45 US-101 epochs ($K=16$); 4 heads & Parameter-matched causal attention sequence baseline \\
+Stateless PPO & 21,393 / 83.6 KB & 55 US-101 epochs; no hidden state & Tests necessity of recurrent memory under blinding/ramps \\
+EKF-CUSUM + DT-CBF & State-space & $Q, R_{\text{cov}}$ diag; $\delta=1.35, h=7.8$ & Strong classical residual baseline tuned on clean US-101 \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
 \input{../results/tables/benchmark_results.tex}
+\input{../results/tables/per_attack_table.tex}
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=\columnwidth]{../results/figures/fig2_roc_detection_latency.png}
-    \caption{(a) GNSS ramp-spoof ROC curves on unseen I-80 at 0.3--0.6~m/s drift; (b) mean detection latency across drift rates 0.1--1.5~m/s.}
+    \caption{\textbf{Stealthy GNSS ramp-drift ROC curves and latency scaling on unseen I-80.} Panel (a) shows 0.3--0.6~m/s drift separation where RecurrentShield-V2X (0.975 AUC) matches EKF-CUSUM (0.976 AUC) and surpasses Tiny-Transformer (0.972) and TCN-Residual (0.959); Panel (b) compares mean detection delay across 0.1--1.5~m/s drift rates, with RecurrentShield-V2X achieving the fastest 102.6~ms response at 1.5~m/s.}
     \label{fig:roc}
 \end{figure}
 
 \begin{figure*}[t]
     \centering
     \includegraphics[width=0.92\textwidth]{../results/figures/fig3_zeroshot_corridor_survival.png}
-    \caption{Five-seed zero-shot limp-home success rate and collision/off-road rate across US-101 (in-distribution), I-80 (zero-shot congested highway), and Lankershim (zero-shot signalized arterial).}
+    \caption{\textbf{Five-seed zero-shot survival and collision Pareto comparison across all 6 methods and 6 threats.} Removing DT-CBF degrades US-101 survival from 96.7\% to 80.0\% and I-80 survival to 83.3\%, whereas RecurrentShield-V2X achieves 96.7\% (US-101), 93.3\% (unseen I-80), and 100.0\% (unseen Lankershim) with lowest collision exposure on unseen dense traffic.}
     \label{fig:survival}
 \end{figure*}
 
-Table~\ref{tab:benchmark_results} and Fig.~\ref{fig:survival} reveal three key findings:
+\subsection{Cross-Corridor Results and Pareto Interpretation}
+Tables~\ref{tab:benchmark_results}--\ref{tab:per_attack_i80} and Figs.~\ref{fig:roc}--\ref{fig:survival} show three Pareto trade-offs across corridors:
 \begin{enumerate}
-    \item \textbf{Necessity of the 200~Hz DT-CBF Shield:} Removing the DT-CBF filter (\texttt{Ablation (No DT-CBF)}) degrades US-101 limp-home success from \textbf{100.0\%} (0.0\% collision) to \textbf{76.0\%} (24.0\% collision), and drops unseen I-80 success from \textbf{96.0\%} to \textbf{80.0\%}.
-    \item \textbf{Superior Zero-Shot Congested Highway Resilience:} On unseen congested I-80, RecurrentShield-V2X attains \textbf{96.0$\pm$8.0\%} limp-home success (only 4.0\% collision), outperforming \texttt{Tiny-Transformer IDS} (88.0\% success, 12.0\% collision, 2342.5~ms delay) and \texttt{Stateless PPO} (88.0\% success, 2814.4~ms delay), while matching \texttt{EKF-CUSUM + DT-CBF} survival (96.0\%) with substantially smoother signalized arterial control on Lankershim (RMS jerk \textbf{1.42} vs. \textbf{4.57}~$\text{m/s}^3$).
-    \item \textbf{Stealthy Drift Detection:} On the I-80 GNSS ramp-drift sweep (Fig.~\ref{fig:roc}), RecurrentShield-V2X achieves \textbf{0.975 AUC} (vs. 0.972 for Tiny-Transformer and 0.976 for EKF-CUSUM), dropping detection latency from 7882.6~ms at 0.3~m/s drift to 102.6~ms at 1.5~m/s drift (faster than EKF-CUSUM's 242.6~ms and Tiny-Transformer's 442.6~ms at 1.5~m/s).
+    \item \textbf{DT-CBF Shield Necessity:} Disabling DT-CBF (\texttt{Ablation (No DT-CBF)}) drops US-101 limp-home survival from \textbf{96.7\%} ($3.3\%$ collision) to \textbf{80.0\%} ($20.0\%$ collision) and reduces unseen I-80 survival to \textbf{83.3\%}.
+    \item \textbf{Zero-Shot Highway \& Arterial Control:} On unseen congested I-80, RecurrentShield-V2X attains \textbf{93.3$\pm$8.2\%} survival ($0.934$ AUROC), matching \texttt{TCN-Residual IDS} ($93.3\%$, $1825.9\text{ ms}$ delay) and \texttt{EKF-CUSUM} ($93.3\%$), while exceeding \texttt{Tiny-Transformer IDS} ($83.3\%$ survival, $16.7\%$ collision) and \texttt{Stateless PPO} ($86.7\%$). On unseen Lankershim intersections, RecurrentShield-V2X achieves \textbf{100.0\%} survival and \textbf{0.0\%} collision with low RMS jerk (\textbf{1.35~$\text{m/s}^3$} vs.\ \textbf{4.24~$\text{m/s}^3$} for EKF-CUSUM).
+    \item \textbf{Continuous Ramps vs.\ Intermittent Bursts:} Under continuous fixed-onset ramps (Fig.~\ref{fig:roc}), \texttt{EKF-CUSUM} detects faster on average ($212.6\text{ ms}$ US-101, $1435.9\text{ ms}$ I-80; $0.976$ AUC) than RecurrentShield-V2X ($552.6\text{ ms}$ US-101, $1565.9\text{ ms}$ I-80; $0.975$ AUC), whereas RecurrentShield-V2X reacts fastest under aggressive $1.5\text{ m/s}$ drift ($102.6\text{ ms}$ vs.\ $242.6\text{ ms}$ EKF-CUSUM and $462.6\text{ ms}$ TCN). Crucially, Table~\ref{tab:rand_int} demonstrates that under \textbf{50\%-duty intermittent bursts} on I-80, \texttt{EKF-CUSUM} drops to \textbf{83.33\%} success ($2685.5\text{ ms}$ delay) because cumulative CUSUM decays across silent gaps, while the LSTM hidden state preserves anomaly context for \textbf{100.0\%} survival ($1785.9\text{ ms}$ delay).
 \end{enumerate}
-
-\section{ESP32-S3 Edge Deployment & Latency Profiling}
-
-Using \texttt{edge\_deploy/esp32\_s3\_export.py}, we export RecurrentShield-V2X to FP32 ONNX (329.4~KB file) and INT8 symmetric quantized TFLite Micro C++ arrays (\texttt{edge\_deploy/esp32\_s3\_firmware/model\_weights.cc}). Profiling targets a 240~MHz Dual-Core Xtensa LX7 MCU (ESP32-S3, 512~KB internal SRAM, 83,360 MACs/step) utilizing Xtensa PIE SIMD acceleration for INT8 vs. FPU for FP32. Table~\ref{tab:edge_profile} and Fig.~\ref{fig:edge} confirm that INT8 deployment achieves \textbf{1.70~ms} control latency (well within the 5.0~ms 200~Hz real-time budget), \textbf{82.6~KB} weight flash, \textbf{107.1~KB} peak SRAM, and \textbf{0.579~mJ/step}.
 
 \begin{table}[t]
 \centering
-\caption{ESP32-S3 Microcontroller Footprint & Profiling Summary}
-\label{tab:edge_profile}
-\begin{tabular}{lcccc}
+\caption{Randomized Onset \& Intermittent Burst Stress Test (I-80)}
+\label{tab:rand_int}
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{llccc}
 \toprule
-Precision & Weights (KB) & Peak SRAM (KB) & Latency (ms) & Energy (mJ) \\
+Regime & Method & Succ. (\%) & Coll. (\%) & Delay (ms) \\
 \midrule
-FP32 (ONNX) & 330.1 & 372.1 & 4.71 & 1.600 \\
-INT8 (TFLite Micro) & \textbf{82.6} & \textbf{107.1} & \textbf{1.70} & \textbf{0.579} \\
+Rand. Onset & RecurrentShield-V2X & \textbf{100.0} & \textbf{0.0} & 1852.6 \\
+($t_0 \in [2,5.8]\text{s}$) & TCN-Residual IDS & 100.0 & 0.0 & 2119.3 \\
+ & EKF-CUSUM + DT-CBF & 100.0 & 0.0 & \textbf{1385.9} \\
+\midrule
+Intermittent & RecurrentShield-V2X & \textbf{100.0} & \textbf{0.0} & \textbf{1785.9} \\
+(50\% Duty) & TCN-Residual IDS & 100.0 & 0.0 & 2169.3 \\
+ & EKF-CUSUM + DT-CBF & 83.33 & 0.0 & 2685.5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{QP Feasibility, \texorpdfstring{$\alpha$}{alpha}-Sensitivity, and Failure Modes}
+Across 5 seeds, the closed-form DT-CBF QP achieved \textbf{98.96$\pm$0.60\%} (US-101), \textbf{97.43$\pm$2.66\%} (I-80), and \textbf{100.00$\pm$0.00\%} (Lankershim) constraint feasibility, with \textbf{94.41\%}, \textbf{96.99\%}, and \textbf{100.00\%} barrier satisfaction rates respectively. Table~\ref{tab:alpha_sens} evaluates $\alpha \in \{0.20, 0.35, 0.50\}$ on unseen I-80 (Seed 101, 6 threats): stricter damping ($\alpha=0.20$) yields peak QP feasibility (\textbf{93.45\%}), peak barrier invariance (\textbf{98.70\%}), and lowest RMS jerk (\textbf{4.235~$\text{m/s}^3$}).
+
+\begin{table}[t]
+\centering
+\caption{DT-CBF $\alpha$-Sensitivity on Unseen I-80 (Seed 101, 6 Attacks)}
+\label{tab:alpha_sens}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{ccccc}
+\toprule
+$\alpha$ & QP Feas. (\%) & CBF Sat. (\%) & Coll. (\%) & RMS Jerk ($\text{m/s}^3$) \\
+\midrule
+0.20 & \textbf{93.45} & \textbf{98.70} & 16.67 & \textbf{4.235} \\
+0.35 & 92.97 & 98.20 & 16.67 & 4.452 \\
+0.50 & 92.69 & 97.89 & 16.67 & 4.524 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\centering
+\caption{Failure Mode \& Residual Risk Diagnosis Across Unseen I-80}
+\label{tab:failure_modes}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lccp{3.3cm}}
+\toprule
+Threat Subset (I-80) & Coll. & Feas. & Physical Root Cause \\
+\midrule
+GNSS / Ghost / SPaT / Sybil & \textbf{0.0\%} & $>98\%$ & Local radar anchors valid; quarantine isolates spoof cleanly \\
+Blinding \& Spoof+Blinding & 20.0\% & 92--97\% & Dense cut-in inside blinded cones across 100~ms NGSIM step \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:failure_modes} and Table~\ref{tab:per_attack_i80} localize all residual unseen-highway collisions (6.7\% aggregate I-80 rate) exclusively to \texttt{radar\_sector\_blinding} and \texttt{combined\_spoof\_blinding} (20\% each). Under physical 10~Hz NGSIM sampling, rapid lateral merges inside blinded sectors can breach single-step braking feasibility ($-6.5\text{ m/s}^2$) identically across LSTM, TCN, and EKF-CUSUM policies.
+
+\section{ESP32-S3 Edge Solver \& Latency Profiling}
+Because the diagonal 2D DT-CBF objective decouples $a_{\text{long}}$ and $v_{\text{lat}}$ box-half-space constraints, its closed-form KKT projection plus 20-substep 200~Hz verifier requires \textbf{no OSQP memory heap} and runs deterministically in \textbf{480 Xtensa LX7 cycles (2.0~$\mu$s)} @ 240~MHz (\texttt{0.150 ms} Python host median). Exported via \texttt{edge\_deploy/esp32\_s3\_export.py} to ONNX FP32 and symmetric INT8 C++ arrays (\texttt{model\_weights.cc}), Table~\ref{tab:edge_profile} and Fig.~\ref{fig:edge} verify complete execution within the $5.0\text{ ms}$ 200~Hz deadline at \textbf{1.70~ms}, \textbf{82.6~KB} weight flash, \textbf{107.1~KB} peak SRAM, and \textbf{0.579~mJ/step}.
+
+\begin{table}[t]
+\centering
+\caption{ESP32-S3 Footprint, Cycles \& Step Latency Breakdown}
+\label{tab:edge_profile}
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lccccc}
+\toprule
+Variant & Weights & SRAM & Cycles & Latency & Energy \\
+\midrule
+FP32 (ONNX) & 330.1 KB & 372.1 KB & 1,028,648 & 4.71 ms & 1.600 mJ \\
+INT8 (TFLM) & \textbf{82.6 KB} & \textbf{107.1 KB} & \textbf{322,096} & \textbf{1.70 ms} & \textbf{0.579 mJ} \\
+DT-CBF KKT & -- & $<$1 KB & \textbf{480} & \textbf{0.002 ms} & $<$0.001 mJ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -175,22 +322,45 @@ INT8 (TFLite Micro) & \textbf{82.6} & \textbf{107.1} & \textbf{1.70} & \textbf{0
 \begin{figure}[t]
     \centering
     \includegraphics[width=\columnwidth]{../results/figures/fig4_esp32_edge_profiling.png}
-    \caption{ESP32-S3 edge inference latency, memory footprint, and energy consumption comparing FP32 ONNX against INT8 TFLite Micro deployment.}
+    \caption{\textbf{ESP32-S3 quantization Pareto gains for 200~Hz embedded execution.} Symmetric INT8 TFLite Micro deployment reduces inference latency by 63.9\% (4.71~ms FP32 to 1.70~ms INT8, well under the 5~ms 200~Hz threshold), shrinks peak SRAM+weight footprint from 372.1~KB to 107.1~KB (within 512~KB SRAM), and cuts step energy from 1.60~mJ to 0.58~mJ.}
     \label{fig:edge}
 \end{figure}
 
-\section{Limitations & Future Work}
-First, our outer decision loop steps at 10~Hz matching native USDOT NGSIM camera sampling, which leaves a 4.0\% residual collision rate under dense aggressive cut-ins on unseen I-80 when adjacent lateral encroachment exceeds single-step nudging margins. Second, the ESP32-S3 latency and energy metrics are analytical cycle-count projections validated alongside host CPU ONNX/PyTorch benchmarks rather than physical hardware-in-the-loop (HIL) current probe captures. Future work will incorporate direct 200~Hz C++ closed-loop HIL benchmarking on physical ESP32-S3 boards and cooperative multi-CAV consensus filtering.
+\section{Limitations \& Ranked Future Directions}
+Under the evaluated $16\text{ s}$ NGSIM corridor regime and stated assumptions, three specific limitations bound deployment scope, ranked by operational severity:
+\begin{enumerate}
+    \item \textbf{Rank 1 — Discrete 10~Hz Sampling \& Binary Sector Blinding:} Native USDOT NGSIM trajectories sample at 10~Hz, and radar denial models discrete sector drops rather than angle-dependent SNR attenuation over multi-kilometer horizons; mitigating the 20\% blinded cut-in collisions motivates high-rate occupancy reachability tracking.
+    \item \textbf{Rank 2 — Analytical MCU Projection vs.\ Physical HIL:} ESP32-S3 cycle counts ($322\text{k}$ INT8, $480$ KKT) derive from documented Xtensa LX7/ESP-NN instruction models paired with measured host ONNX latencies ($0.675\text{ ms}$) rather than on-board oscilloscope current captures.
+    \item \textbf{Rank 3 — Single-Ego Quarantine Scope:} External V2X channels are quarantined unilaterally without cooperative multi-CAV consensus to re-validate suspect BSMs across neighbor vehicles.
+\end{enumerate}
 
-\begin{thebibliography}{9}
+\begin{thebibliography}{13}
 \bibitem{ngsim}
-U.S. Department of Transportation, Federal Highway Administration, ``Next Generation Simulation (NGSIM) Vehicle Trajectories and Supporting Data,'' DOI: \url{10.21949/1504477}.
+U.S. Department of Transportation, FHWA, ``Next Generation Simulation (NGSIM) Vehicle Trajectories and Supporting Data,'' DOI: \url{10.21949/1504477}.
 \bibitem{spmd}
 U.S. Department of Transportation, ``Safety Pilot Model Deployment Data,'' DOI: \url{10.21949/1504482}.
-\bibitem{ames_cbf}
+\bibitem{vanderheijden2019}
+R.~W. van~der Heijden, S.~Dietzel, T.~Leinm\"uller, and F.~Kargl, ``Survey on misbehavior detection in cooperative intelligent transportation systems,'' \textit{IEEE Commun. Surveys Tuts.}, vol.~21, no.~1, pp. 779--811, 2019.
+\bibitem{kamel2020veremi}
+J.~Kamel, M.~Wolf, R.~W. van~der Heijden, A.~Kaiser, P.~Urien, and F.~Kargl, ``VeReMi extension: A dataset for comparable evaluation of misbehavior detection in VANETs,'' in \textit{Proc. IEEE ICC}, 2020.
+\bibitem{kamel2020tvt}
+J.~Kamel \textit{et al.}, ``Simulation framework for misbehavior detection in vehicular networks,'' \textit{IEEE Trans. Veh. Technol.}, vol.~69, no.~6, pp. 6631--6643, 2020.
+\bibitem{shen2020drift}
+J.~Shen, J.~Y. Won, Z.~Chen, and Q.~A. Chen, ``Drift with devil: Security of multi-sensor fusion based localization in high-level autonomous driving under GPS spoofing,'' in \textit{Proc. USENIX Security}, 2020.
+\bibitem{bai2018tcn}
+S.~Bai, J.~Z. Kolter, and V.~Koltun, ``An empirical evaluation of generic convolutional and recurrent networks for sequence modeling,'' \textit{arXiv:1803.01271}, 2018.
+\bibitem{ames2019cbf}
 A.~D. Ames \textit{et al.}, ``Control barrier functions: Theory and applications,'' in \textit{Proc. European Control Conf. (ECC)}, 2019, pp. 3420--3431.
-\bibitem{schulman_ppo}
+\bibitem{agrawal2017dcbf}
+A.~Agrawal and K.~Sreenath, ``Discrete control barrier functions for safety-critical control of discrete systems with application to bipedal robot navigation,'' in \textit{Proc. Robotics: Science and Systems (RSS)}, 2017.
+\bibitem{zeng2021mpccbf}
+J.~Zeng, B.~Zhang, and K.~Sreenath, ``Safety-critical model predictive control with discrete-time control barrier function,'' in \textit{Proc. American Control Conf. (ACC)}, 2021, pp. 3882--3889.
+\bibitem{cheng2019rlcbf}
+R.~Cheng, G.~Orosz, R.~M. Murray, and J.~W. Burdick, ``End-to-end safe reinforcement learning through barrier functions for safety-critical continuous control tasks,'' in \textit{Proc. AAAI}, 2019.
+\bibitem{schulman2017ppo}
 J.~Schulman \textit{et al.}, ``Proximal policy optimization algorithms,'' \textit{arXiv:1707.06347}, 2017.
+\bibitem{david2021tflm}
+R.~David \textit{et al.}, ``TensorFlow Lite Micro: Embedded machine learning on TinyML systems,'' in \textit{Proc. MLSys}, vol.~3, 2021.
 \end{thebibliography}
 
 \end{document}

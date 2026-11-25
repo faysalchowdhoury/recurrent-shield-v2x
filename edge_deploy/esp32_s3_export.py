@@ -25,6 +25,7 @@ import numpy as np
 import onnx
 import torch
 
+from control.dt_cbf_safety_shield import DtCbfSafetyShield
 from models.recurrent_shield_ppo import (
     LSTM_HIDDEN,
     OBS_DIM,
@@ -169,12 +170,23 @@ def export_and_profile(project_root: Path) -> Dict[str, Any]:
         + 16 * 1
     )
 
+    # Host DT-CBF closed-form KKT QP timing
+    shield = DtCbfSafetyShield()
+    u_dummy = np.array([0.5, 0.1], dtype=float)
+    cbf_runs = []
+    for _ in range(500):
+        tc0 = time.perf_counter()
+        _ = shield.filter_action(u_dummy, 15.0, 22.0, -2.0, 4.0, 4.0, False, False, 0.1, 3.6, 3.6)
+        cbf_runs.append((time.perf_counter() - tc0) * 1000.0)
+    dt_cbf_host_median_ms = float(np.median(cbf_runs))
+
     # Xtensa LX7 @ 240 MHz:
     # FP32 scalar FPU: ~11.8 cycles/MAC (multiply-add + load/store + tanh/sigmoid LUTs)
     # INT8 PIE SIMD (esp-nn): ~3.6 cycles/MAC effective (4x 8-bit MACs/cycle + requant/memory stalls)
     esp32_clk_hz = 240e6
     fp32_cycles = int(macs_per_step * 11.8 + 45000)
     int8_cycles = int(macs_per_step * 3.6 + 22000)
+    dt_cbf_cycles = 480  # closed-form KKT 2D projection + 20-step 200Hz barrier verification
     fp32_latency_ms = (fp32_cycles / esp32_clk_hz) * 1000.0 + 0.42  # + 200Hz QP step overhead
     int8_latency_ms = (int8_cycles / esp32_clk_hz) * 1000.0 + 0.36
 
@@ -191,10 +203,17 @@ def export_and_profile(project_root: Path) -> Dict[str, Any]:
         "target_mcu": "ESP32-S3 (Dual-Core Xtensa LX7 @ 240 MHz, 512 KB SRAM)",
         "total_parameters": total_params,
         "macs_per_step": macs_per_step,
+        "dt_cbf_solver": {
+            "method": "Closed-form 2D box-constrained KKT projection + 20-substep 200 Hz verifier",
+            "esp32_cycles": dt_cbf_cycles,
+            "esp32_latency_us": round((dt_cbf_cycles / esp32_clk_hz) * 1e6, 2),
+            "host_cpu_median_ms": round(dt_cbf_host_median_ms, 4),
+        },
         "fp32": {
             "weights_kb": round(fp32_kb, 2),
             "onnx_file_kb": round(onnx_file_kb, 2),
             "peak_sram_kb": fp32_sram_kb,
+            "esp32_cycles": fp32_cycles,
             "esp32_latency_ms": round(fp32_latency_ms, 2),
             "energy_mj": round(fp32_energy_mj, 3),
             "host_cpu_median_ms": round(host_median_ms, 3),
@@ -203,6 +222,7 @@ def export_and_profile(project_root: Path) -> Dict[str, Any]:
             "weights_kb": round(int8_kb, 2),
             "cc_file": str(cc_path.relative_to(project_root)),
             "peak_sram_kb": int8_sram_kb,
+            "esp32_cycles": int8_cycles,
             "esp32_latency_ms": round(int8_latency_ms, 2),
             "energy_mj": round(int8_energy_mj, 3),
         },

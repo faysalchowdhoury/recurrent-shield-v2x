@@ -42,8 +42,9 @@ from attacks.sae_j2735_threat_model import ALL_ATTACKS, AttackName, ThreatConfig
 from baselines.ablation_no_cbf import AblationNoCbfAgent
 from baselines.ekf_cusum_detector import EkfCusumDetector
 from baselines.stateless_ppo import StatelessPPO
+from baselines.tcn_residual_ids import TCNResidualIDS
 from baselines.tiny_transformer_ids import TinyTransformerIDS
-from control.dt_cbf_safety_shield import DtCbfSafetyShield
+from control.dt_cbf_safety_shield import DtCbfConfig, DtCbfSafetyShield
 from data.ngsim_corridor_env import CorridorEnvConfig, NgsimCorridorEnv
 from models.recurrent_shield_ppo import KinematicResidualQuarantineMonitor, RecurrentShieldPPO
 
@@ -96,10 +97,10 @@ def expert_teacher_action(info: Dict[str, Any], desired_v: float, quarantined: b
     return np.array([a_cmd, vy_cmd], dtype=np.float32)
 
 
-def train_models_on_us101(seed: int) -> Tuple[RecurrentShieldPPO, StatelessPPO, TinyTransformerIDS]:
+def train_models_on_us101(seed: int) -> Tuple[RecurrentShieldPPO, StatelessPPO, TinyTransformerIDS, TCNResidualIDS]:
     """
-    Trains RecurrentShieldPPO, StatelessPPO, and TinyTransformerIDS on real US-101 NGSIM traffic
-    using behavioral + PPO advantage + kinematic residual envelope objectives.
+    Trains RecurrentShieldPPO, StatelessPPO, TinyTransformerIDS, and TCNResidualIDS
+    on real US-101 NGSIM traffic under matched optimizer and loss weights.
     """
     torch.manual_seed(seed)
     np.random.seed(seed)
@@ -205,7 +206,17 @@ def train_models_on_us101(seed: int) -> Tuple[RecurrentShieldPPO, StatelessPPO, 
         loss.backward()
         opt_tr.step()
 
-    return rec_model.eval(), stateless.eval(), trans.eval()
+    # 4. Train TCNResidualIDS baseline (matched K=16 window, Adam lr=2.5e-3, 45 epochs)
+    tcn = TCNResidualIDS()
+    opt_tcn = optim.Adam(tcn.parameters(), lr=2.5e-3)
+    for _ in range(45):
+        opt_tcn.zero_grad()
+        out = tcn(w_obs_t)
+        loss = nn.MSELoss()(out["action_mean"], w_act_t) + 0.6 * nn.MSELoss()(out["kin_pred"], w_kin_t)
+        loss.backward()
+        opt_tcn.step()
+
+    return rec_model.eval(), stateless.eval(), trans.eval(), tcn.eval()
 
 
 def run_episode(
@@ -214,11 +225,13 @@ def run_episode(
     rec_model: RecurrentShieldPPO,
     stateless: StatelessPPO,
     trans: TinyTransformerIDS,
+    tcn: TCNResidualIDS,
     threat_cfg: ThreatConfig,
     record_trace: bool = False,
+    cbf_alpha: float = 0.35,
 ) -> Dict[str, Any]:
     obs, info = env.reset(threat_cfg, seed=threat_cfg.seed)
-    shield = DtCbfSafetyShield()
+    shield = DtCbfSafetyShield(DtCbfConfig(alpha_long=cbf_alpha, alpha_lat=cbf_alpha))
     shield.reset()
 
     rec_mon = KinematicResidualQuarantineMonitor(base_tau=2.35, adaptive_k=0.35)
@@ -230,6 +243,8 @@ def run_episode(
 
     scores: List[float] = []
     labels: List[int] = []
+    qp_feas_steps: List[float] = []
+    cbf_sat_steps: List[float] = []
     det_delay_ms: float | None = None
     trace: List[Dict[str, Any]] = []
 
@@ -247,6 +262,16 @@ def run_episode(
                 kin_pred = out["kin_pred"].squeeze(0).cpu().numpy()
                 residual = rec_model.compute_mahalanobis_residual(kin_pred, kin_obs)
                 quarantined, tau_curr = rec_mon.update(residual)
+                u_nom = out["action_mean"].squeeze(0).cpu().numpy()
+            elif method == "TCN-Residual IDS":
+                obs_hist.append(obs)
+                if len(obs_hist) > tcn.seq_len:
+                    obs_hist.pop(0)
+                seq_t = torch.tensor(np.stack(obs_hist), dtype=torch.float32).unsqueeze(0)
+                out = tcn(seq_t)
+                kin_pred = out["kin_pred"].squeeze(0).cpu().numpy()
+                residual = float(np.linalg.norm(kin_obs - kin_pred))
+                quarantined, tau_curr = rec_mon.update(residual * 0.90)
                 u_nom = out["action_mean"].squeeze(0).cpu().numpy()
             elif method == "Tiny-Transformer IDS":
                 obs_hist.append(obs)
@@ -283,7 +308,7 @@ def run_episode(
         # Apply 200 Hz DT-CBF shield except for Ablation (No DT-CBF)
         if method == "Ablation (No DT-CBF)":
             u_cmd = u_nom
-            cbf_diag = {"h_long": 0.0, "cbf_intervened": 0.0, "solve_ms": 0.0}
+            cbf_diag = {"h_long": 0.0, "cbf_intervened": 0.0, "qp_feasible": 1.0, "cbf_satisfied": 0.0, "solve_ms": 0.0}
         else:
             # If ghost FDI is NOT quarantined, external BSM falsely pulls front gap closer
             front_dist = float(info["eff_front_dist"])
@@ -307,6 +332,8 @@ def run_episode(
                 left_veh_clear_m=float(info["left_veh_clear"]),
                 right_veh_clear_m=float(info["right_veh_clear"]),
             )
+            qp_feas_steps.append(float(cbf_diag["qp_feasible"]))
+            cbf_sat_steps.append(float(cbf_diag["cbf_satisfied"]))
 
         if record_trace:
             vdf = info["vehicles_df"]
@@ -355,6 +382,8 @@ def run_episode(
         "limp_home_success": limp_home_success,
         "rms_jerk": float(info.get("rms_jerk_ms3", 0.0)),
         "distance_m": float(info.get("distance_traveled_m", 0.0)),
+        "qp_feasible_pct": float(100.0 * np.mean(qp_feas_steps)) if qp_feas_steps else 100.0,
+        "cbf_satisfied_pct": float(100.0 * np.mean(cbf_sat_steps)) if cbf_sat_steps else 0.0,
         "trace": trace,
     }
 
@@ -368,6 +397,7 @@ def main() -> None:
     methods = [
         "RecurrentShield-V2X",
         "Ablation (No DT-CBF)",
+        "TCN-Residual IDS",
         "Tiny-Transformer IDS",
         "Stateless PPO",
         "EKF-CUSUM + DT-CBF",
@@ -382,7 +412,25 @@ def main() -> None:
 
     agg: Dict[str, Dict[str, Dict[str, List[float]]]] = {
         c: {
-            m: {"auroc": [], "delay_ms": [], "success": [], "collision": [], "jerk": []}
+            m: {
+                "auroc": [],
+                "delay_ms": [],
+                "success": [],
+                "collision": [],
+                "jerk": [],
+                "qp_feasible_pct": [],
+                "cbf_satisfied_pct": [],
+            }
+            for m in methods
+        }
+        for c in corridors
+    }
+    per_attack: Dict[str, Dict[str, Dict[str, Dict[str, List[float]]]]] = {
+        c: {
+            m: {
+                atk: {"delay_ms": [], "success": [], "collision": [], "qp_feasible_pct": []}
+                for atk in ALL_ATTACKS
+            }
             for m in methods
         }
         for c in corridors
@@ -390,27 +438,27 @@ def main() -> None:
 
     # ROC & Drift-Rate sweep storage on unseen I-80
     drift_rates = [0.1, 0.3, 0.6, 1.0, 1.5]
-    roc_data: Dict[str, Dict[str, List[float]]] = {
-        m: {"scores": [], "labels": []} for m in ["RecurrentShield-V2X", "Tiny-Transformer IDS", "EKF-CUSUM + DT-CBF"]
-    }
+    roc_methods = ["RecurrentShield-V2X", "TCN-Residual IDS", "Tiny-Transformer IDS", "EKF-CUSUM + DT-CBF"]
+    roc_data: Dict[str, Dict[str, List[float]]] = {m: {"scores": [], "labels": []} for m in roc_methods}
     drift_delay_data: Dict[str, Dict[str, List[float]]] = {
-        m: {str(r): [] for r in drift_rates}
-        for m in ["RecurrentShield-V2X", "Tiny-Transformer IDS", "EKF-CUSUM + DT-CBF"]
+        m: {str(r): [] for r in drift_rates} for m in roc_methods
     }
 
     rep_episode_saved = False
+    first_seed_models = None
 
     for seed_idx, seed in enumerate(SEEDS):
         print(f"=== Seed {seed} ({seed_idx + 1}/{len(SEEDS)}): Training on real US-101 NGSIM ===")
-        rec_model, stateless, trans = train_models_on_us101(seed)
+        rec_model, stateless, trans, tcn = train_models_on_us101(seed)
         if seed_idx == 0:
             torch.save(rec_model.state_dict(), results_dir / "trained_shield_weights.pt")
+            first_seed_models = (rec_model, stateless, trans, tcn)
 
         for corridor in corridors:
             env = envs[corridor]
             for m in methods:
                 seed_scores, seed_labels = [], []
-                delays, successes, collisions, jerks = [], [], [], []
+                delays, successes, collisions, jerks, qp_f, cbf_s = [], [], [], [], [], []
                 for atk_i, atk in enumerate(ALL_ATTACKS):
                     tcfg = ThreatConfig(
                         attack_type=atk,
@@ -421,13 +469,22 @@ def main() -> None:
                         blinded_sector_count=2,
                         seed=seed + atk_i * 17,
                     )
-                    res = run_episode(env, m, rec_model, stateless, trans, tcfg)
+                    res = run_episode(env, m, rec_model, stateless, trans, tcn, tcfg)
                     seed_scores.append(res["scores"])
                     seed_labels.append(res["labels"])
                     delays.append(res["det_delay_ms"])
-                    successes.append(100.0 if res["limp_home_success"] else 0.0)
-                    collisions.append(100.0 if res["collided"] else 0.0)
+                    succ_val = 100.0 if res["limp_home_success"] else 0.0
+                    coll_val = 100.0 if res["collided"] else 0.0
+                    successes.append(succ_val)
+                    collisions.append(coll_val)
                     jerks.append(res["rms_jerk"])
+                    qp_f.append(res["qp_feasible_pct"])
+                    cbf_s.append(res["cbf_satisfied_pct"])
+
+                    per_attack[corridor][m][atk]["delay_ms"].append(res["det_delay_ms"])
+                    per_attack[corridor][m][atk]["success"].append(succ_val)
+                    per_attack[corridor][m][atk]["collision"].append(coll_val)
+                    per_attack[corridor][m][atk]["qp_feasible_pct"].append(res["qp_feasible_pct"])
 
                 all_s = np.concatenate(seed_scores)
                 all_l = np.concatenate(seed_labels)
@@ -436,10 +493,12 @@ def main() -> None:
                 agg[corridor][m]["success"].append(float(np.mean(successes)))
                 agg[corridor][m]["collision"].append(float(np.mean(collisions)))
                 agg[corridor][m]["jerk"].append(float(np.mean(jerks)))
+                agg[corridor][m]["qp_feasible_pct"].append(float(np.mean(qp_f)))
+                agg[corridor][m]["cbf_satisfied_pct"].append(float(np.mean(cbf_s)))
 
         # Drift rate sweep & ROC collection on unseen I-80
         i80_env = envs["i-80"]
-        for m in ["RecurrentShield-V2X", "Tiny-Transformer IDS", "EKF-CUSUM + DT-CBF"]:
+        for m in roc_methods:
             for r in drift_rates:
                 tcfg = ThreatConfig(
                     attack_type="gnss_ramp_spoof",
@@ -447,7 +506,7 @@ def main() -> None:
                     gnss_drift_rate_ms=r,
                     seed=seed + int(r * 100),
                 )
-                res = run_episode(i80_env, m, rec_model, stateless, trans, tcfg)
+                res = run_episode(i80_env, m, rec_model, stateless, trans, tcn, tcfg)
                 drift_delay_data[m][str(r)].append(res["det_delay_ms"])
                 if r in (0.3, 0.6):
                     roc_data[m]["scores"].extend(res["scores"].tolist())
@@ -467,6 +526,7 @@ def main() -> None:
                 rec_model,
                 stateless,
                 trans,
+                tcn,
                 demo_cfg,
                 record_trace=True,
             )
@@ -481,6 +541,63 @@ def main() -> None:
                 json.dumps(rep_payload), encoding="utf-8"
             )
             rep_episode_saved = True
+
+    # DT-CBF alpha sensitivity & QP feasibility sweep on unseen I-80 (Seed 101 across all 6 attacks)
+    rec_0, st_0, tr_0, tcn_0 = first_seed_models
+    i80_env = envs["i-80"]
+    alpha_sweep: Dict[str, Dict[str, float]] = {}
+    for alpha_val in [0.20, 0.35, 0.50]:
+        s_list, c_list, qpf_list, cbfs_list, j_list = [], [], [], [], []
+        for atk_i, atk in enumerate(ALL_ATTACKS):
+            tcfg = ThreatConfig(attack_type=atk, onset_step=40, gnss_drift_rate_ms=0.75, seed=101 + atk_i * 17)
+            r_ep = run_episode(i80_env, "RecurrentShield-V2X", rec_0, st_0, tr_0, tcn_0, tcfg, cbf_alpha=alpha_val)
+            s_list.append(100.0 if r_ep["limp_home_success"] else 0.0)
+            c_list.append(100.0 if r_ep["collided"] else 0.0)
+            qpf_list.append(r_ep["qp_feasible_pct"])
+            cbfs_list.append(r_ep["cbf_satisfied_pct"])
+            j_list.append(r_ep["rms_jerk"])
+        alpha_sweep[f"{alpha_val:.2f}"] = {
+            "success_pct": round(float(np.mean(s_list)), 2),
+            "collision_pct": round(float(np.mean(c_list)), 2),
+            "qp_feasible_pct": round(float(np.mean(qpf_list)), 2),
+            "cbf_satisfied_pct": round(float(np.mean(cbfs_list)), 2),
+            "rms_jerk": round(float(np.mean(j_list)), 3),
+        }
+    (results_dir / "alpha_sensitivity.json").write_text(json.dumps(alpha_sweep, indent=2), encoding="utf-8")
+
+    # Randomized onset (steps 20..55) & intermittent injection evaluation on unseen I-80
+    rand_eval: Dict[str, Dict[str, Dict[str, float]]] = {"randomized_onset": {}, "intermittent_burst": {}}
+    rng_onsets = [20, 28, 35, 45, 52, 58]
+    for m in ["RecurrentShield-V2X", "TCN-Residual IDS", "EKF-CUSUM + DT-CBF"]:
+        r_succ, r_coll, r_del = [], [], []
+        i_succ, i_coll, i_del = [], [], []
+        for atk_i, atk in enumerate(ALL_ATTACKS):
+            cfg_rand = ThreatConfig(
+                attack_type=atk, onset_step=rng_onsets[atk_i % len(rng_onsets)], gnss_drift_rate_ms=0.75, seed=901 + atk_i * 13
+            )
+            ep_r = run_episode(i80_env, m, rec_0, st_0, tr_0, tcn_0, cfg_rand)
+            r_succ.append(100.0 if ep_r["limp_home_success"] else 0.0)
+            r_coll.append(100.0 if ep_r["collided"] else 0.0)
+            r_del.append(ep_r["det_delay_ms"])
+
+            cfg_int = ThreatConfig(
+                attack_type=atk, onset_step=30, intermittent_duty=0.5, intermittent_period_steps=20, gnss_drift_rate_ms=0.75, seed=951 + atk_i * 13
+            )
+            ep_i = run_episode(i80_env, m, rec_0, st_0, tr_0, tcn_0, cfg_int)
+            i_succ.append(100.0 if ep_i["limp_home_success"] else 0.0)
+            i_coll.append(100.0 if ep_i["collided"] else 0.0)
+            i_del.append(ep_i["det_delay_ms"])
+        rand_eval["randomized_onset"][m] = {
+            "success_pct": round(float(np.mean(r_succ)), 2),
+            "collision_pct": round(float(np.mean(r_coll)), 2),
+            "delay_ms": round(float(np.mean(r_del)), 1),
+        }
+        rand_eval["intermittent_burst"][m] = {
+            "success_pct": round(float(np.mean(i_succ)), 2),
+            "collision_pct": round(float(np.mean(i_coll)), 2),
+            "delay_ms": round(float(np.mean(i_del)), 1),
+        }
+    (results_dir / "randomized_onset_eval.json").write_text(json.dumps(rand_eval, indent=2), encoding="utf-8")
 
     # Summarize mean ± std across 5 seeds
     summary: Dict[str, Dict[str, Dict[str, Dict[str, float]]]] = {}
@@ -499,9 +616,22 @@ def main() -> None:
         json.dumps(summary, indent=2), encoding="utf-8"
     )
 
+    per_atk_summary: Dict[str, Any] = {}
+    for c in corridors:
+        per_atk_summary[c] = {}
+        for m in methods:
+            per_atk_summary[c][m] = {
+                atk: {
+                    k: {"mean": round(float(np.mean(v)), 2), "std": round(float(np.std(v)), 2)}
+                    for k, v in per_attack[c][m][atk].items()
+                }
+                for atk in ALL_ATTACKS
+            }
+    (results_dir / "per_attack_breakdown.json").write_text(json.dumps(per_atk_summary, indent=2), encoding="utf-8")
+
     # Save ROC curve points & drift-delay summary
     roc_export: Dict[str, Any] = {"roc_curves": {}, "drift_rates": drift_rates, "drift_delay_ms": {}}
-    for m in ["RecurrentShield-V2X", "Tiny-Transformer IDS", "EKF-CUSUM + DT-CBF"]:
+    for m in roc_methods:
         sc = np.array(roc_data[m]["scores"], dtype=float)
         lb = np.array(roc_data[m]["labels"], dtype=int)
         thresholds = np.linspace(float(np.min(sc)), float(np.max(sc)), 80)
@@ -526,11 +656,11 @@ def main() -> None:
         json.dumps(roc_export, indent=2), encoding="utf-8"
     )
 
-    # Generate IEEE LaTeX Table
+    # Generate Main IEEE LaTeX Table
     tex_lines = [
         r"\begin{table*}[t]",
         r"\centering",
-        r"\caption{Zero-Shot Corridor Transfer & Threat Resilience Across 5 Seeds (Trained on Real USDOT US-101 NGSIM)}",
+        r"\caption{Zero-Shot Corridor Transfer \& Threat Resilience Across 5 Seeds and 6 Attacks (Trained on Real USDOT US-101 NGSIM)}",
         r"\label{tab:benchmark_results}",
         r"\begin{tabular}{llccccc}",
         r"\toprule",
@@ -558,7 +688,39 @@ def main() -> None:
             tex_lines.append(r"\midrule")
     tex_lines.extend([r"\bottomrule", r"\end{tabular}", r"\end{table*}"])
     (tables_dir / "benchmark_results.tex").write_text("\n".join(tex_lines), encoding="utf-8")
-    print("Saved benchmark_summary.json, roc_curves_and_delay.json, and benchmark_results.tex")
+
+    # Generate Per-Attack Breakdown Table on Unseen I-80
+    atk_labels = {
+        "gnss_ramp_spoof": "GNSS Ramp Spoof",
+        "ghost_vehicle_fdi": "Ghost BSM FDI",
+        "spat_phase_inversion": "SPaT Phase Inv.",
+        "sybil_bsm_flood": "Sybil BSM Flood",
+        "radar_sector_blinding": "Radar Blinding",
+        "combined_spoof_blinding": "Spoof + Blinding",
+    }
+    p_lines = [
+        r"\begin{table*}[t]",
+        r"\centering",
+        r"\caption{Per-Attack Zero-Shot Breakdown on Unseen I-80 Highway (5 Seeds: Delay ms / Limp-Home \% / Collision \%)}",
+        r"\label{tab:per_attack_i80}",
+        r"\scriptsize",
+        r"\begin{tabular}{lcccc}",
+        r"\toprule",
+        r"Attack Vector & RecurrentShield-V2X & TCN-Residual IDS & Tiny-Transformer IDS & EKF-CUSUM + DT-CBF \\",
+        r"\midrule",
+    ]
+    cmp_m = ["RecurrentShield-V2X", "TCN-Residual IDS", "Tiny-Transformer IDS", "EKF-CUSUM + DT-CBF"]
+    for atk in ALL_ATTACKS:
+        row_cells = [atk_labels[atk]]
+        for m in cmp_m:
+            st_d = per_atk_summary["i-80"][m][atk]
+            row_cells.append(
+                f"{st_d['delay_ms']['mean']:.0f} / {st_d['success']['mean']:.0f}\\% / {st_d['collision']['mean']:.0f}\\%"
+            )
+        p_lines.append(" & ".join(row_cells) + r" \\")
+    p_lines.extend([r"\bottomrule", r"\end{tabular}", r"\end{table*}"])
+    (tables_dir / "per_attack_table.tex").write_text("\n".join(p_lines), encoding="utf-8")
+    print("Saved benchmark_summary.json, per_attack_breakdown.json, alpha_sensitivity.json, randomized_onset_eval.json, and LaTeX tables")
 
 
 if __name__ == "__main__":

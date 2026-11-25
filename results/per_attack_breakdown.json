@@ -1,0 +1,1988 @@
+{
+  "us-101": {
+    "RecurrentShield-V2X": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 2802.6,
+          "std": 167.33
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.5,
+          "std": 0.47
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.12,
+          "std": 0.31
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.75,
+          "std": 1.19
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.38,
+          "std": 0.97
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.12,
+          "std": 2.68
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.88,
+          "std": 1.39
+        }
+      }
+    },
+    "Ablation (No DT-CBF)": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 2802.6,
+          "std": 167.33
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 60.0,
+          "std": 48.99
+        },
+        "collision": {
+          "mean": 40.0,
+          "std": 48.99
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 60.0,
+          "std": 48.99
+        },
+        "collision": {
+          "mean": 40.0,
+          "std": 48.99
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      }
+    },
+    "TCN-Residual IDS": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 3842.6,
+          "std": 241.66
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.12,
+          "std": 1.09
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.0,
+          "std": 1.7
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.12,
+          "std": 1.09
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.12,
+          "std": 1.09
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.75,
+          "std": 0.5
+        }
+      }
+    },
+    "Tiny-Transformer IDS": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 3702.6,
+          "std": 63.25
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.12,
+          "std": 2.2
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.25,
+          "std": 0.25
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.12,
+          "std": 2.2
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.12,
+          "std": 2.2
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.75,
+          "std": 1.58
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.62,
+          "std": 0.75
+        }
+      }
+    },
+    "Stateless PPO": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 3922.6,
+          "std": 248.19
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.88,
+          "std": 0.25
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.62,
+          "std": 0.75
+        }
+      }
+    },
+    "EKF-CUSUM + DT-CBF": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 962.6,
+          "std": 120.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.38,
+          "std": 1.25
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 2.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 97.5,
+          "std": 0.0
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 97.5,
+          "std": 0.0
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 2.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 97.5,
+          "std": 0.0
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.0,
+          "std": 1.0
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.0,
+          "std": 1.0
+        }
+      }
+    }
+  },
+  "i-80": {
+    "RecurrentShield-V2X": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 2802.6,
+          "std": 167.33
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.62,
+          "std": 1.21
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 6182.6,
+          "std": 222.71
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.88,
+          "std": 0.25
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.62,
+          "std": 1.65
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.88,
+          "std": 1.0
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 94.74,
+          "std": 10.53
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 93.81,
+          "std": 12.37
+        }
+      }
+    },
+    "Ablation (No DT-CBF)": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 2802.6,
+          "std": 167.33
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 11080.52,
+          "std": 1838.96
+        },
+        "success": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      }
+    },
+    "TCN-Residual IDS": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 3902.6,
+          "std": 260.77
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.25,
+          "std": 2.28
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 6462.6,
+          "std": 135.65
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.25,
+          "std": 2.28
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 282.6,
+          "std": 132.66
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.25,
+          "std": 2.28
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 93.4,
+          "std": 11.71
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 88.9,
+          "std": 13.79
+        }
+      }
+    },
+    "Tiny-Transformer IDS": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 3582.6,
+          "std": 193.91
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 97.62,
+          "std": 3.07
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 7642.08,
+          "std": 2204.96
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.2,
+          "std": 1.08
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 97.62,
+          "std": 3.07
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 282.6,
+          "std": 132.66
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 97.62,
+          "std": 3.07
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 60.0,
+          "std": 48.99
+        },
+        "collision": {
+          "mean": 40.0,
+          "std": 48.99
+        },
+        "qp_feasible_pct": {
+          "mean": 90.9,
+          "std": 10.6
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 60.0,
+          "std": 48.99
+        },
+        "collision": {
+          "mean": 40.0,
+          "std": 48.99
+        },
+        "qp_feasible_pct": {
+          "mean": 89.47,
+          "std": 14.52
+        }
+      }
+    },
+    "Stateless PPO": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 3922.6,
+          "std": 248.19
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 9161.56,
+          "std": 3431.69
+        },
+        "success": {
+          "mean": 60.0,
+          "std": 48.99
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 782.6,
+          "std": 574.11
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.05,
+          "std": 1.17
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 95.96,
+          "std": 8.09
+        }
+      }
+    },
+    "EKF-CUSUM + DT-CBF": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 962.6,
+          "std": 120.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 6942.6,
+          "std": 48.99
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.75,
+          "std": 0.0
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 402.6,
+          "std": 63.25
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 90.28,
+          "std": 13.18
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 90.28,
+          "std": 13.18
+        }
+      }
+    }
+  },
+  "lankershim": {
+    "RecurrentShield-V2X": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 2802.6,
+          "std": 167.33
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      }
+    },
+    "Ablation (No DT-CBF)": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 2802.6,
+          "std": 167.33
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      }
+    },
+    "TCN-Residual IDS": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 3722.6,
+          "std": 74.83
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      }
+    },
+    "Tiny-Transformer IDS": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 3582.6,
+          "std": 193.91
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.88,
+          "std": 0.25
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      }
+    },
+    "Stateless PPO": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 3922.6,
+          "std": 248.19
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.88,
+          "std": 0.25
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.75,
+          "std": 0.31
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.88,
+          "std": 0.25
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.88,
+          "std": 0.25
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 80.0,
+          "std": 40.0
+        },
+        "collision": {
+          "mean": 20.0,
+          "std": 40.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      }
+    },
+    "EKF-CUSUM + DT-CBF": {
+      "gnss_ramp_spoof": {
+        "delay_ms": {
+          "mean": 962.6,
+          "std": 120.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 99.38,
+          "std": 0.0
+        }
+      },
+      "spat_phase_inversion": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        }
+      },
+      "radar_sector_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.88,
+          "std": 2.25
+        }
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": {
+          "mean": 102.6,
+          "std": 0.0
+        },
+        "success": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "qp_feasible_pct": {
+          "mean": 98.88,
+          "std": 2.25
+        }
+      }
+    }
+  }
+}

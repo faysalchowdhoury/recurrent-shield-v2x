@@ -15,7 +15,13 @@ __pycache__/
 dist/
 build/
 
-# IDE & OS
+# IDE & OS & LaTeX build intermediates
 .vscode/
 .DS_Store
 Thumbs.db
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
