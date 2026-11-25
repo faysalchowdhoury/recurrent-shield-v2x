@@ -1,0 +1,29 @@
+\begin{table}[t]
+\centering
+\caption{Post-Hoc Matched 4\% In-Domain FPR \& Unsupervised Target Recalibration}
+\label{tab:matched_fpr}
+\scriptsize
+\setlength{\tabcolsep}{1.5pt}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llcccc}
+\toprule
+Split & Detector & TPR@4\% & Match Del./Miss & Unsup.\ FPR & Unsup.\ Del./Miss \\
+\midrule
+US-101 P3 & RecurrentShield-BC & 85.8\% & 1013 / 2.5\% & 6.7\% & 852 / 0.0\% \\
+ & TCN-Residual & 76.2\% & 1404 / 5.0\% & 20.0\% & 1130 / 0.0\% \\
+ & Tiny-Transformer & 77.4\% & 1211 / 3.3\% & 0.0\% & 678 / 0.0\% \\
+ & EKF-CUSUM & 80.3\% & 3299 / 0.0\% & 0.0\% & 3517 / 0.0\% \\
+\midrule
+I-80 P1 & RecurrentShield-BC & 91.8\% & 902 / 6.7\% & 13.3\% & 368 / 0.0\% \\
+ & TCN-Residual & 82.2\% & 1464 / 5.8\% & 6.7\% & 1170 / 4.2\% \\
+ & Tiny-Transformer & 81.3\% & 1340 / 2.5\% & 0.0\% & 752 / 4.2\% \\
+ & EKF-CUSUM & 91.3\% & 1540 / 3.3\% & 6.7\% & 1735 / 4.2\% \\
+\midrule
+Lankershim & RecurrentShield-BC & 97.8\% & 865 / 7.5\% & 0.0\% & 622 / 4.2\% \\
+ & TCN-Residual & 94.0\% & 1143 / 10.0\% & 13.3\% & 1096 / 8.3\% \\
+ & Tiny-Transformer & 92.7\% & 1216 / 7.5\% & 6.7\% & 987 / 4.2\% \\
+ & EKF-CUSUM & 94.4\% & 1116 / 2.5\% & 0.0\% & 1367 / 0.0\% \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

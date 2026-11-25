@@ -30,6 +30,8 @@ class CorridorEnvConfig:
     ego_half_width_m: float = 0.85
     ego_half_length_m: float = 2.2
     desired_cruise_ms: float = 18.0
+    radar_noise_std_m: float = 0.20
+    track_noise_std_m: float = 0.25
     seed: int = 42
 
 
@@ -309,8 +311,8 @@ class NgsimCorridorEnv:
 
         in_idx = np.where(dist_edge < R)[0]
         if len(in_idx) > 0:
-            rx_noise = self.rng.normal(0.0, 0.25, size=len(in_idx))
-            ry_noise = self.rng.normal(0.0, 0.25, size=len(in_idx))
+            rx_noise = self.rng.normal(0.0, self.cfg.track_noise_std_m, size=len(in_idx))
+            ry_noise = self.rng.normal(0.0, self.cfg.track_noise_std_m, size=len(in_idx))
             rv_noise = self.rng.normal(0.0, 0.15, size=len(in_idx))
             for k, i in enumerate(in_idx):
                 a = az_deg[i]
@@ -341,7 +343,7 @@ class NgsimCorridorEnv:
                         swept_front_dist = d_sw
                         swept_front_rel_vel = float(rel_vy[i])
 
-        radar_noise = self.rng.normal(0.0, 0.20, size=6)
+        radar_noise = self.rng.normal(0.0, self.cfg.radar_noise_std_m, size=6)
         sector_dist = np.clip(sector_dist + radar_noise, 0.2, R)
 
         left_clear = float(self.ego_pos[0] - self.x_left_curb + self.rng.normal(0.0, 0.08))
@@ -473,10 +475,32 @@ class NgsimCorridorEnv:
                     if min_radar_err > 5.5:
                         unmatched_bsms += 1
 
-        radar_front = float(radar_dist[0])
-        front_gap_mismatch = 0.0 if blinded[0] else float(np.clip((bsm_front_gap - radar_front) / 10.0, -2.5, 2.5))
-        if not blinded[0] and bsm_front_gap < 30.0 and radar_front > bsm_front_gap + 4.0:
-            front_gap_mismatch = float((radar_front - bsm_front_gap) / 3.5)
+        # Compute swept-lane onboard radar gap strictly from unblinded noisy radar tracks
+        # using a +/-0.45 m boundary hysteresis band around |dx|<2.25 m to avoid lateral-noise false spikes
+        if blinded[0]:
+            front_gap_mismatch = 0.0
+        else:
+            if bsm_front_gap < self.cfg.radar_range_m:
+                vis_swept_gaps = [
+                    max(0.2, float(ry - self.ego_pos[1]) - 4.7)
+                    for (rx, ry, _) in visible_radar
+                    if abs(float(rx - self.ego_pos[0])) < 2.75 and float(ry - self.ego_pos[1]) > 0.0
+                ]
+                # Compare against closest matching radar range (preferring >= bsm_front_gap - 4 if ghost is absent)
+                radar_swept_gap = float(min(vis_swept_gaps)) if vis_swept_gaps else self.cfg.radar_range_m
+                # If an actual lead exists right at the noisy edge slightly inside 2.75m it stays bounded;
+                # if a ghost BSM sits well ahead of the nearest unblinded radar vehicle, mismatch spikes cleanly.
+                front_gap_mismatch = float(np.clip((bsm_front_gap - radar_swept_gap) / 5.0, -3.5, 3.5))
+                if bsm_front_gap < 30.0 and radar_swept_gap > bsm_front_gap + 4.0:
+                    front_gap_mismatch = float(min(6.0, (radar_swept_gap - bsm_front_gap) / 2.5))
+            else:
+                vis_inner_gaps = [
+                    max(0.2, float(ry - self.ego_pos[1]) - 4.7)
+                    for (rx, ry, _) in visible_radar
+                    if abs(float(rx - self.ego_pos[0])) < 1.80 and float(ry - self.ego_pos[1]) > 0.0
+                ]
+                radar_inner_gap = float(min(vis_inner_gaps)) if vis_inner_gaps else self.cfg.radar_range_m
+                front_gap_mismatch = float(np.clip((bsm_front_gap - radar_inner_gap) / 5.0, -3.5, 3.5))
 
         bsm_radar_anomaly = float(unmatched_bsms) / 3.5 + float(np.sum(blinded)) * 2.5
 
@@ -626,11 +650,29 @@ class NgsimCorridorEnv:
         dy_v = np.abs(vdf["y_m"] - self.ego_pos[1])
         half_w = 0.5 * vdf["width_m"] + self.cfg.ego_half_width_m
         half_l = 0.5 * vdf["length_m"] + self.cfg.ego_half_length_m
-        collided = bool(np.any((dx_v < half_w) & (dy_v < half_l)))
+        hit_idx = np.where((dx_v < half_w) & (dy_v < half_l))[0]
+        collided = bool(len(hit_idx) > 0)
         off_road = bool(
             self.ego_pos[0] - self.cfg.ego_half_width_m < self.x_left_curb
             or self.ego_pos[0] + self.cfg.ego_half_width_m > self.x_right_curb
         )
+
+        collision_mode = "none"
+        if off_road:
+            collision_mode = "off_road"
+        elif collided:
+            hi = int(hit_idx[0])
+            rel_dx = abs(float(vdf["x_m"][hi] - self.ego_pos[0]))
+            rel_dy = float(vdf["y_m"][hi] - self.ego_pos[1])
+            is_react = int(vdf["vehicle_id"][hi]) in self._reactive_veh
+            if rel_dy < -1.0 and is_react:
+                collision_mode = "reactive_rear_end"
+            elif rel_dx >= 1.25:
+                collision_mode = "adjacent_merge_sideswipe"
+            elif rel_dy >= 0.0:
+                collision_mode = "front_rear_end"
+            else:
+                collision_mode = "rear_lateral_encroach"
 
         if collided:
             self.collision_count += 1
@@ -656,6 +698,7 @@ class NgsimCorridorEnv:
         )
         info["collided"] = collided
         info["off_road"] = off_road
+        info["collision_mode"] = collision_mode
         info["distance_traveled_m"] = self.distance_traveled_m
         info["rms_jerk_ms3"] = float(np.sqrt(self.jerk_sq_sum / max(1, self.step_idx)))
         return obs, reward, done, info

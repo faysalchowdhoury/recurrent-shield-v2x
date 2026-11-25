@@ -119,7 +119,7 @@ def plot_fig1_architecture(out_dir: Path, edge_prof: dict) -> None:
     arrow(82.6, 16.5, 86.4, 16.5, "u_nom", OKABE_ITO["black"], 84.5, 19.2)
     arrow(96.5, 32.8, 96.5, 46.5, "u_safe -> Actuators", OKABE_ITO["green"], 96.5, 49.5)
 
-    ax.set_title("RecurrentShield-V2X Dual-Head LSTM & 200 Hz DT-CBF Control Architecture", pad=8)
+    ax.set_title("RecurrentShield-BC Non-Oracle Quarantine & Conditional DT-CBF Architecture", pad=8)
     save_both(fig, out_dir, "fig1_architecture_cbf_loop")
 
 
@@ -169,6 +169,7 @@ def plot_fig3_zeroshot_corridor(out_dir: Path, summary: dict) -> None:
     methods = [
         ("RecurrentShield-BC", OKABE_ITO["blue"]),
         ("RecurrentShield-INT8", OKABE_ITO["skyblue"]),
+        ("Onboard-Only (No V2X)", OKABE_ITO["black"]),
         ("Shield-Only (No IDS)", OKABE_ITO["orange"]),
         ("First-Order CBF + BC", OKABE_ITO["purple"]),
         ("EKF-CUSUM + BC", OKABE_ITO["green"]),
@@ -176,12 +177,12 @@ def plot_fig3_zeroshot_corridor(out_dir: Path, summary: dict) -> None:
         ("No-Shield Ablation", OKABE_ITO["vermillion"]),
     ]
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.9, 3.5))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8.1, 3.6))
     x = np.arange(len(corridors))
-    w = 0.11
+    w = 0.095
 
     for idx, (m, col) in enumerate(methods):
-        offset = (idx - 3.0) * w
+        offset = (idx - 3.5) * w
         surv_m = [summary[c][m]["survival"]["mean"] for c in corridors]
         surv_s = [summary[c][m]["survival"]["std"] for c in corridors]
         dist_m = [summary[c][m]["distance_m"]["mean"] for c in corridors]

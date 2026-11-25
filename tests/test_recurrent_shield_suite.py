@@ -135,8 +135,12 @@ def test_reactive_idm_env_and_baselines_offline_safe():
         obs, _, done, info2 = env.step(np.array([-4.5, 0.0]), quarantined=False)
         if done:
             break
-    assert "distance_traveled_m" in info2
+    assert "distance_traveled_m" in info2 and "collision_mode" in info2
     assert len(env._reactive_veh) >= 0
+
+    noisy_env = NgsimCorridorEnv(ROOT, CorridorEnvConfig(corridor="us-101_train", max_steps=10, radar_noise_std_m=0.50, track_noise_std_m=0.55), df_override=df_test)
+    obs_n, _ = noisy_env.reset(ThreatConfig(attack_type="none"))
+    assert obs_n.shape == (26,)
 
     aeb = IdmAccAebBaseline()
     u_aeb = aeb.act(info2, front_dist_m=6.0, front_rel_v_ms=-8.0)

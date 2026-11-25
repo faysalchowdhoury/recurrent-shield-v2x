@@ -1,0 +1,502 @@
+{
+  "sample_size_sweep": {
+    "i-80": {
+      "N=10": {
+        "tau_adapt": 2.644,
+        "clean_fpr_pct": 36.0,
+        "clean_fpr_cp95_ci": [
+          18.0,
+          57.5
+        ],
+        "clean_dist_m": 77.9,
+        "det_delay_ms": 528.6,
+        "miss_pct": 0.0,
+        "surv_pct": 88.9
+      },
+      "N=15": {
+        "tau_adapt": 2.643,
+        "clean_fpr_pct": 36.0,
+        "clean_fpr_cp95_ci": [
+          18.0,
+          57.5
+        ],
+        "clean_dist_m": 77.9,
+        "det_delay_ms": 528.6,
+        "miss_pct": 0.0,
+        "surv_pct": 88.9
+      },
+      "N=25": {
+        "tau_adapt": 2.642,
+        "clean_fpr_pct": 36.0,
+        "clean_fpr_cp95_ci": [
+          18.0,
+          57.5
+        ],
+        "clean_dist_m": 77.9,
+        "det_delay_ms": 528.6,
+        "miss_pct": 0.0,
+        "surv_pct": 88.9
+      },
+      "N=40": {
+        "tau_adapt": 2.643,
+        "clean_fpr_pct": 36.0,
+        "clean_fpr_cp95_ci": [
+          18.0,
+          57.5
+        ],
+        "clean_dist_m": 77.9,
+        "det_delay_ms": 528.6,
+        "miss_pct": 0.0,
+        "surv_pct": 88.9
+      }
+    },
+    "lankershim": {
+      "N=10": {
+        "tau_adapt": 2.719,
+        "clean_fpr_pct": 28.0,
+        "clean_fpr_cp95_ci": [
+          12.1,
+          49.4
+        ],
+        "clean_dist_m": 49.7,
+        "det_delay_ms": 917.6,
+        "miss_pct": 5.6,
+        "surv_pct": 61.1
+      },
+      "N=15": {
+        "tau_adapt": 2.881,
+        "clean_fpr_pct": 8.0,
+        "clean_fpr_cp95_ci": [
+          1.0,
+          26.0
+        ],
+        "clean_dist_m": 49.7,
+        "det_delay_ms": 976.5,
+        "miss_pct": 5.6,
+        "surv_pct": 61.1
+      },
+      "N=25": {
+        "tau_adapt": 3.026,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          13.7
+        ],
+        "clean_dist_m": 49.7,
+        "det_delay_ms": 1023.5,
+        "miss_pct": 5.6,
+        "surv_pct": 61.1
+      },
+      "N=40": {
+        "tau_adapt": 3.02,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          13.7
+        ],
+        "clean_dist_m": 49.7,
+        "det_delay_ms": 1023.5,
+        "miss_pct": 5.6,
+        "surv_pct": 61.1
+      }
+    }
+  },
+  "contamination_sweep": {
+    "i-80": {
+      "contam=0%": {
+        "tau_adapt": 2.642,
+        "clean_fpr_pct": 36.0,
+        "clean_fpr_cp95_ci": [
+          18.0,
+          57.5
+        ],
+        "clean_dist_m": 77.9,
+        "det_delay_ms": 528.6,
+        "miss_pct": 0.0,
+        "surv_pct": 88.9
+      },
+      "contam=5%": {
+        "tau_adapt": 2.919,
+        "clean_fpr_pct": 8.0,
+        "clean_fpr_cp95_ci": [
+          1.0,
+          26.0
+        ],
+        "clean_dist_m": 77.9,
+        "det_delay_ms": 718.8,
+        "miss_pct": 0.0,
+        "surv_pct": 88.9
+      },
+      "contam=10%": {
+        "tau_adapt": 5.527,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          13.7
+        ],
+        "clean_dist_m": 77.9,
+        "det_delay_ms": 2158.3,
+        "miss_pct": 33.3,
+        "surv_pct": 94.4
+      },
+      "contam=20%": {
+        "tau_adapt": 6.277,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          13.7
+        ],
+        "clean_dist_m": 77.9,
+        "det_delay_ms": 4625.0,
+        "miss_pct": 55.6,
+        "surv_pct": 94.4
+      }
+    },
+    "lankershim": {
+      "contam=0%": {
+        "tau_adapt": 3.026,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          13.7
+        ],
+        "clean_dist_m": 49.7,
+        "det_delay_ms": 1023.5,
+        "miss_pct": 5.6,
+        "surv_pct": 61.1
+      },
+      "contam=5%": {
+        "tau_adapt": 3.308,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          13.7
+        ],
+        "clean_dist_m": 49.7,
+        "det_delay_ms": 1094.1,
+        "miss_pct": 5.6,
+        "surv_pct": 61.1
+      },
+      "contam=10%": {
+        "tau_adapt": 5.557,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          13.7
+        ],
+        "clean_dist_m": 49.7,
+        "det_delay_ms": 1354.5,
+        "miss_pct": 38.9,
+        "surv_pct": 61.1
+      },
+      "contam=20%": {
+        "tau_adapt": 6.282,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          13.7
+        ],
+        "clean_dist_m": 49.7,
+        "det_delay_ms": 3237.5,
+        "miss_pct": 55.6,
+        "surv_pct": 61.1
+      }
+    }
+  },
+  "clean_fpr_clopper_pearson_ci95": {
+    "us-101_test": {
+      "RecurrentShield-BC": {
+        "clean_fpr_pct": 4.0,
+        "clean_k_of_25": 1,
+        "clopper_pearson_95_ci_pct": [
+          0.1,
+          20.4
+        ]
+      },
+      "RecurrentShield-INT8": {
+        "clean_fpr_pct": 4.0,
+        "clean_k_of_25": 1,
+        "clopper_pearson_95_ci_pct": [
+          0.1,
+          20.4
+        ]
+      },
+      "Onboard-Only (No V2X)": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "Shield-Only (No IDS)": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "First-Order CBF + BC": {
+        "clean_fpr_pct": 4.0,
+        "clean_k_of_25": 1,
+        "clopper_pearson_95_ci_pct": [
+          0.1,
+          20.4
+        ]
+      },
+      "No-Shield Ablation": {
+        "clean_fpr_pct": 4.0,
+        "clean_k_of_25": 1,
+        "clopper_pearson_95_ci_pct": [
+          0.1,
+          20.4
+        ]
+      },
+      "TCN-Residual IDS": {
+        "clean_fpr_pct": 8.0,
+        "clean_k_of_25": 2,
+        "clopper_pearson_95_ci_pct": [
+          1.0,
+          26.0
+        ]
+      },
+      "Tiny-Transformer IDS": {
+        "clean_fpr_pct": 4.0,
+        "clean_k_of_25": 1,
+        "clopper_pearson_95_ci_pct": [
+          0.1,
+          20.4
+        ]
+      },
+      "Stateless BC": {
+        "clean_fpr_pct": 20.0,
+        "clean_k_of_25": 5,
+        "clopper_pearson_95_ci_pct": [
+          6.8,
+          40.7
+        ]
+      },
+      "EKF-CUSUM + BC": {
+        "clean_fpr_pct": 4.0,
+        "clean_k_of_25": 1,
+        "clopper_pearson_95_ci_pct": [
+          0.1,
+          20.4
+        ]
+      },
+      "IDM-ACC + AEB": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "Emergency-Stop": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      }
+    },
+    "i-80": {
+      "RecurrentShield-BC": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "RecurrentShield-INT8": {
+        "clean_fpr_pct": 4.0,
+        "clean_k_of_25": 1,
+        "clopper_pearson_95_ci_pct": [
+          0.1,
+          20.4
+        ]
+      },
+      "Onboard-Only (No V2X)": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "Shield-Only (No IDS)": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "First-Order CBF + BC": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "No-Shield Ablation": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "TCN-Residual IDS": {
+        "clean_fpr_pct": 8.0,
+        "clean_k_of_25": 2,
+        "clopper_pearson_95_ci_pct": [
+          1.0,
+          26.0
+        ]
+      },
+      "Tiny-Transformer IDS": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "Stateless BC": {
+        "clean_fpr_pct": 12.0,
+        "clean_k_of_25": 3,
+        "clopper_pearson_95_ci_pct": [
+          2.5,
+          31.2
+        ]
+      },
+      "EKF-CUSUM + BC": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "IDM-ACC + AEB": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "Emergency-Stop": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      }
+    },
+    "lankershim": {
+      "RecurrentShield-BC": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "RecurrentShield-INT8": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "Onboard-Only (No V2X)": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "Shield-Only (No IDS)": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "First-Order CBF + BC": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "No-Shield Ablation": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "TCN-Residual IDS": {
+        "clean_fpr_pct": 12.0,
+        "clean_k_of_25": 3,
+        "clopper_pearson_95_ci_pct": [
+          2.5,
+          31.2
+        ]
+      },
+      "Tiny-Transformer IDS": {
+        "clean_fpr_pct": 4.0,
+        "clean_k_of_25": 1,
+        "clopper_pearson_95_ci_pct": [
+          0.1,
+          20.4
+        ]
+      },
+      "Stateless BC": {
+        "clean_fpr_pct": 8.0,
+        "clean_k_of_25": 2,
+        "clopper_pearson_95_ci_pct": [
+          1.0,
+          26.0
+        ]
+      },
+      "EKF-CUSUM + BC": {
+        "clean_fpr_pct": 4.0,
+        "clean_k_of_25": 1,
+        "clopper_pearson_95_ci_pct": [
+          0.1,
+          20.4
+        ]
+      },
+      "IDM-ACC + AEB": {
+        "clean_fpr_pct": 0.0,
+        "clean_k_of_25": 0,
+        "clopper_pearson_95_ci_pct": [
+          0.0,
+          13.7
+        ]
+      },
+      "Emergency-Stop": {
+        "clean_fpr_pct": 4.0,
+        "clean_k_of_25": 1,
+        "clopper_pearson_95_ci_pct": [
+          0.1,
+          20.4
+        ]
+      }
+    }
+  }
+}

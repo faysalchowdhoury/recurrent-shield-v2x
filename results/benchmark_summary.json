@@ -1,67 +1,73 @@
 {
   "calibration_means": {
-    "tau_rec": 2.1111,
-    "tau_tcn": 2.5303,
-    "tau_trans": 2.3465,
-    "tau_stateless": 2.183,
-    "ekf_drift": 2.2,
-    "ekf_threshold": 121.9324
+    "tau_rec": 3.0829,
+    "tau_tcn": 3.4308,
+    "tau_trans": 3.0926,
+    "tau_stateless": 3.2694,
+    "ekf_drift": 1.5,
+    "ekf_threshold": 114.2919
   },
   "clean_baseline": {
     "us-101_test": {
       "RecurrentShield-BC": {
         "survival_pct": 100.0,
-        "fpr_pct": 0.0,
-        "distance_m": 105.8,
-        "jerk": 2.44
+        "fpr_pct": 4.0,
+        "distance_m": 103.8,
+        "jerk": 2.52
       },
       "RecurrentShield-INT8": {
         "survival_pct": 100.0,
+        "fpr_pct": 4.0,
+        "distance_m": 101.3,
+        "jerk": 2.37
+      },
+      "Onboard-Only (No V2X)": {
+        "survival_pct": 100.0,
         "fpr_pct": 0.0,
-        "distance_m": 106.1,
-        "jerk": 2.3
+        "distance_m": 103.8,
+        "jerk": 2.52
       },
       "Shield-Only (No IDS)": {
         "survival_pct": 100.0,
         "fpr_pct": 0.0,
-        "distance_m": 105.8,
-        "jerk": 2.44
+        "distance_m": 103.8,
+        "jerk": 2.52
       },
       "First-Order CBF + BC": {
         "survival_pct": 100.0,
         "fpr_pct": 4.0,
-        "distance_m": 106.1,
+        "distance_m": 103.8,
         "jerk": 2.41
       },
       "No-Shield Ablation": {
         "survival_pct": 80.0,
-        "fpr_pct": 12.0,
-        "distance_m": 106.2,
-        "jerk": 1.89
+        "fpr_pct": 4.0,
+        "distance_m": 100.3,
+        "jerk": 1.84
       },
       "TCN-Residual IDS": {
         "survival_pct": 100.0,
-        "fpr_pct": 4.0,
-        "distance_m": 127.0,
-        "jerk": 2.7
+        "fpr_pct": 8.0,
+        "distance_m": 130.3,
+        "jerk": 3.08
       },
       "Tiny-Transformer IDS": {
         "survival_pct": 100.0,
-        "fpr_pct": 8.0,
-        "distance_m": 133.6,
-        "jerk": 2.35
+        "fpr_pct": 4.0,
+        "distance_m": 133.7,
+        "jerk": 2.82
       },
       "Stateless BC": {
         "survival_pct": 96.0,
-        "fpr_pct": 0.0,
-        "distance_m": 28.6,
-        "jerk": 2.83
+        "fpr_pct": 20.0,
+        "distance_m": 32.7,
+        "jerk": 2.92
       },
       "EKF-CUSUM + BC": {
         "survival_pct": 100.0,
-        "fpr_pct": 16.0,
-        "distance_m": 105.8,
-        "jerk": 2.44
+        "fpr_pct": 4.0,
+        "distance_m": 103.8,
+        "jerk": 2.52
       },
       "IDM-ACC + AEB": {
         "survival_pct": 100.0,
@@ -71,65 +77,71 @@
       },
       "Emergency-Stop": {
         "survival_pct": 100.0,
-        "fpr_pct": 16.0,
-        "distance_m": 147.0,
-        "jerk": 3.89
+        "fpr_pct": 0.0,
+        "distance_m": 155.8,
+        "jerk": 3.94
       }
     },
     "i-80": {
       "RecurrentShield-BC": {
-        "survival_pct": 100.0,
-        "fpr_pct": 36.0,
-        "distance_m": 96.5,
-        "jerk": 3.56
+        "survival_pct": 96.0,
+        "fpr_pct": 0.0,
+        "distance_m": 86.3,
+        "jerk": 3.79
       },
       "RecurrentShield-INT8": {
-        "survival_pct": 100.0,
-        "fpr_pct": 32.0,
-        "distance_m": 96.5,
-        "jerk": 3.78
+        "survival_pct": 96.0,
+        "fpr_pct": 4.0,
+        "distance_m": 85.7,
+        "jerk": 3.71
+      },
+      "Onboard-Only (No V2X)": {
+        "survival_pct": 96.0,
+        "fpr_pct": 0.0,
+        "distance_m": 86.3,
+        "jerk": 3.79
       },
       "Shield-Only (No IDS)": {
-        "survival_pct": 100.0,
+        "survival_pct": 96.0,
         "fpr_pct": 0.0,
-        "distance_m": 96.5,
-        "jerk": 3.56
+        "distance_m": 86.3,
+        "jerk": 3.79
       },
       "First-Order CBF + BC": {
-        "survival_pct": 100.0,
-        "fpr_pct": 36.0,
-        "distance_m": 96.1,
-        "jerk": 3.43
+        "survival_pct": 96.0,
+        "fpr_pct": 0.0,
+        "distance_m": 85.8,
+        "jerk": 3.55
       },
       "No-Shield Ablation": {
-        "survival_pct": 68.0,
-        "fpr_pct": 40.0,
-        "distance_m": 102.0,
-        "jerk": 1.52
+        "survival_pct": 60.0,
+        "fpr_pct": 0.0,
+        "distance_m": 84.9,
+        "jerk": 1.59
       },
       "TCN-Residual IDS": {
         "survival_pct": 100.0,
-        "fpr_pct": 28.0,
-        "distance_m": 90.0,
-        "jerk": 3.75
+        "fpr_pct": 8.0,
+        "distance_m": 95.7,
+        "jerk": 4.15
       },
       "Tiny-Transformer IDS": {
         "survival_pct": 92.0,
-        "fpr_pct": 32.0,
-        "distance_m": 96.5,
-        "jerk": 3.75
+        "fpr_pct": 0.0,
+        "distance_m": 101.0,
+        "jerk": 4.01
       },
       "Stateless BC": {
         "survival_pct": 96.0,
-        "fpr_pct": 0.0,
-        "distance_m": 26.4,
-        "jerk": 3.32
+        "fpr_pct": 12.0,
+        "distance_m": 28.0,
+        "jerk": 3.02
       },
       "EKF-CUSUM + BC": {
-        "survival_pct": 100.0,
+        "survival_pct": 96.0,
         "fpr_pct": 0.0,
-        "distance_m": 96.5,
-        "jerk": 3.56
+        "distance_m": 86.3,
+        "jerk": 3.79
       },
       "IDM-ACC + AEB": {
         "survival_pct": 80.0,
@@ -139,65 +151,71 @@
       },
       "Emergency-Stop": {
         "survival_pct": 100.0,
-        "fpr_pct": 40.0,
-        "distance_m": 109.2,
-        "jerk": 5.67
+        "fpr_pct": 0.0,
+        "distance_m": 124.2,
+        "jerk": 5.46
       }
     },
     "lankershim": {
       "RecurrentShield-BC": {
-        "survival_pct": 92.0,
-        "fpr_pct": 64.0,
-        "distance_m": 89.7,
-        "jerk": 3.0
+        "survival_pct": 80.0,
+        "fpr_pct": 0.0,
+        "distance_m": 85.9,
+        "jerk": 2.8
       },
       "RecurrentShield-INT8": {
-        "survival_pct": 92.0,
-        "fpr_pct": 64.0,
-        "distance_m": 89.4,
-        "jerk": 3.11
+        "survival_pct": 80.0,
+        "fpr_pct": 0.0,
+        "distance_m": 84.9,
+        "jerk": 2.87
+      },
+      "Onboard-Only (No V2X)": {
+        "survival_pct": 80.0,
+        "fpr_pct": 0.0,
+        "distance_m": 85.9,
+        "jerk": 2.8
       },
       "Shield-Only (No IDS)": {
-        "survival_pct": 92.0,
+        "survival_pct": 80.0,
         "fpr_pct": 0.0,
-        "distance_m": 89.7,
-        "jerk": 3.0
+        "distance_m": 85.9,
+        "jerk": 2.8
       },
       "First-Order CBF + BC": {
-        "survival_pct": 92.0,
-        "fpr_pct": 64.0,
-        "distance_m": 89.1,
-        "jerk": 3.1
+        "survival_pct": 80.0,
+        "fpr_pct": 0.0,
+        "distance_m": 85.6,
+        "jerk": 2.71
       },
       "No-Shield Ablation": {
-        "survival_pct": 80.0,
-        "fpr_pct": 64.0,
-        "distance_m": 90.7,
+        "survival_pct": 72.0,
+        "fpr_pct": 0.0,
+        "distance_m": 86.5,
         "jerk": 1.72
       },
       "TCN-Residual IDS": {
-        "survival_pct": 92.0,
-        "fpr_pct": 44.0,
-        "distance_m": 151.6,
-        "jerk": 4.27
+        "survival_pct": 96.0,
+        "fpr_pct": 12.0,
+        "distance_m": 157.0,
+        "jerk": 3.87
       },
       "Tiny-Transformer IDS": {
         "survival_pct": 100.0,
-        "fpr_pct": 48.0,
-        "distance_m": 146.1,
-        "jerk": 1.72
+        "fpr_pct": 4.0,
+        "distance_m": 159.9,
+        "jerk": 2.77
       },
       "Stateless BC": {
-        "survival_pct": 80.0,
-        "fpr_pct": 36.0,
-        "distance_m": 73.6,
-        "jerk": 3.15
+        "survival_pct": 88.0,
+        "fpr_pct": 8.0,
+        "distance_m": 82.3,
+        "jerk": 2.76
       },
       "EKF-CUSUM + BC": {
-        "survival_pct": 92.0,
+        "survival_pct": 80.0,
         "fpr_pct": 4.0,
-        "distance_m": 89.7,
-        "jerk": 3.0
+        "distance_m": 85.9,
+        "jerk": 2.8
       },
       "IDM-ACC + AEB": {
         "survival_pct": 84.0,
@@ -206,10 +224,10 @@
         "jerk": 3.92
       },
       "Emergency-Stop": {
-        "survival_pct": 96.0,
-        "fpr_pct": 60.0,
-        "distance_m": 117.5,
-        "jerk": 5.09
+        "survival_pct": 100.0,
+        "fpr_pct": 4.0,
+        "distance_m": 185.3,
+        "jerk": 4.47
       }
     }
   },
@@ -217,16 +235,16 @@
     "us-101_test": {
       "RecurrentShield-BC": {
         "auroc": {
-          "mean": 0.947,
-          "std": 0.017
+          "mean": 0.982,
+          "std": 0.005
         },
         "delay_ms": {
-          "mean": 1045.326,
-          "std": 326.361
+          "mean": 880.356,
+          "std": 175.95
         },
         "miss_pct": {
-          "mean": 0.833,
-          "std": 1.667
+          "mean": 2.5,
+          "std": 2.041
         },
         "fa_pct": {
           "mean": 2.5,
@@ -237,49 +255,199 @@
           "std": 0.0
         },
         "quar_surv": {
-          "mean": 99.167,
-          "std": 1.667
+          "mean": 97.5,
+          "std": 2.041
         },
         "collision": {
           "mean": 0.0,
           "std": 0.0
         },
         "distance_m": {
-          "mean": 84.949,
-          "std": 28.208
+          "mean": 92.574,
+          "std": 38.089
         },
         "jerk": {
-          "mean": 4.991,
-          "std": 0.975
+          "mean": 4.817,
+          "std": 1.19
         },
         "qp_feasible_pct": {
-          "mean": 90.443,
-          "std": 2.162
+          "mean": 92.651,
+          "std": 1.506
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 9.557,
-          "std": 2.162
+          "mean": 7.349,
+          "std": 1.506
         }
       },
       "RecurrentShield-INT8": {
         "auroc": {
-          "mean": 0.946,
-          "std": 0.018
+          "mean": 0.981,
+          "std": 0.006
         },
         "delay_ms": {
-          "mean": 925.982,
-          "std": 262.908
+          "mean": 910.672,
+          "std": 219.565
+        },
+        "miss_pct": {
+          "mean": 2.5,
+          "std": 2.041
+        },
+        "fa_pct": {
+          "mean": 2.5,
+          "std": 2.041
+        },
+        "survival": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "quar_surv": {
+          "mean": 97.5,
+          "std": 2.041
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "distance_m": {
+          "mean": 92.172,
+          "std": 38.151
+        },
+        "jerk": {
+          "mean": 4.797,
+          "std": 1.205
+        },
+        "qp_feasible_pct": {
+          "mean": 92.693,
+          "std": 1.522
+        },
+        "cbf_feasible_sat_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "fallback_pct": {
+          "mean": 7.307,
+          "std": 1.522
+        }
+      },
+      "Onboard-Only (No V2X)": {
+        "auroc": {
+          "mean": null,
+          "std": null
+        },
+        "delay_ms": {
+          "mean": null,
+          "std": null
+        },
+        "miss_pct": {
+          "mean": null,
+          "std": null
+        },
+        "fa_pct": {
+          "mean": null,
+          "std": null
+        },
+        "survival": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "quar_surv": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "distance_m": {
+          "mean": 96.492,
+          "std": 37.404
+        },
+        "jerk": {
+          "mean": 3.743,
+          "std": 1.294
+        },
+        "qp_feasible_pct": {
+          "mean": 92.943,
+          "std": 1.492
+        },
+        "cbf_feasible_sat_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "fallback_pct": {
+          "mean": 7.057,
+          "std": 1.492
+        }
+      },
+      "Shield-Only (No IDS)": {
+        "auroc": {
+          "mean": null,
+          "std": null
+        },
+        "delay_ms": {
+          "mean": null,
+          "std": null
+        },
+        "miss_pct": {
+          "mean": null,
+          "std": null
+        },
+        "fa_pct": {
+          "mean": null,
+          "std": null
+        },
+        "survival": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "quar_surv": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "collision": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "distance_m": {
+          "mean": 67.007,
+          "std": 25.901
+        },
+        "jerk": {
+          "mean": 7.484,
+          "std": 1.864
+        },
+        "qp_feasible_pct": {
+          "mean": 76.953,
+          "std": 1.223
+        },
+        "cbf_feasible_sat_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "fallback_pct": {
+          "mean": 23.047,
+          "std": 1.223
+        }
+      },
+      "First-Order CBF + BC": {
+        "auroc": {
+          "mean": 0.982,
+          "std": 0.005
+        },
+        "delay_ms": {
+          "mean": 934.736,
+          "std": 275.706
         },
         "miss_pct": {
           "mean": 1.667,
           "std": 2.041
         },
         "fa_pct": {
-          "mean": 2.5,
+          "mean": 1.667,
           "std": 2.041
         },
         "survival": {
@@ -295,162 +463,62 @@
           "std": 0.0
         },
         "distance_m": {
-          "mean": 85.223,
-          "std": 27.463
+          "mean": 91.918,
+          "std": 37.374
         },
         "jerk": {
-          "mean": 4.946,
-          "std": 1.034
+          "mean": 4.641,
+          "std": 1.099
         },
         "qp_feasible_pct": {
-          "mean": 90.464,
-          "std": 2.155
+          "mean": 93.156,
+          "std": 1.6
         },
         "cbf_feasible_sat_pct": {
-          "mean": 100.0,
-          "std": 0.0
+          "mean": 98.932,
+          "std": 0.318
         },
         "fallback_pct": {
-          "mean": 9.536,
-          "std": 2.155
-        }
-      },
-      "Shield-Only (No IDS)": {
-        "auroc": {
-          "mean": 0.948,
-          "std": 0.016
-        },
-        "delay_ms": {
-          "mean": null,
-          "std": null
-        },
-        "miss_pct": {
-          "mean": 100.0,
-          "std": 0.0
-        },
-        "fa_pct": {
-          "mean": 0.0,
-          "std": 0.0
-        },
-        "survival": {
-          "mean": 99.167,
-          "std": 1.667
-        },
-        "quar_surv": {
-          "mean": 0.0,
-          "std": 0.0
-        },
-        "collision": {
-          "mean": 0.833,
-          "std": 1.667
-        },
-        "distance_m": {
-          "mean": 67.258,
-          "std": 18.519
-        },
-        "jerk": {
-          "mean": 7.411,
-          "std": 1.761
-        },
-        "qp_feasible_pct": {
-          "mean": 76.795,
-          "std": 1.081
-        },
-        "cbf_feasible_sat_pct": {
-          "mean": 100.0,
-          "std": 0.0
-        },
-        "fallback_pct": {
-          "mean": 23.205,
-          "std": 1.081
-        }
-      },
-      "First-Order CBF + BC": {
-        "auroc": {
-          "mean": 0.946,
-          "std": 0.016
-        },
-        "delay_ms": {
-          "mean": 1085.145,
-          "std": 304.877
-        },
-        "miss_pct": {
-          "mean": 0.0,
-          "std": 0.0
-        },
-        "fa_pct": {
-          "mean": 2.5,
-          "std": 2.041
-        },
-        "survival": {
-          "mean": 100.0,
-          "std": 0.0
-        },
-        "quar_surv": {
-          "mean": 100.0,
-          "std": 0.0
-        },
-        "collision": {
-          "mean": 0.0,
-          "std": 0.0
-        },
-        "distance_m": {
-          "mean": 84.155,
-          "std": 27.029
-        },
-        "jerk": {
-          "mean": 4.729,
-          "std": 0.92
-        },
-        "qp_feasible_pct": {
-          "mean": 91.99,
-          "std": 1.738
-        },
-        "cbf_feasible_sat_pct": {
-          "mean": 98.144,
-          "std": 1.153
-        },
-        "fallback_pct": {
-          "mean": 8.01,
-          "std": 1.738
+          "mean": 6.844,
+          "std": 1.6
         }
       },
       "No-Shield Ablation": {
         "auroc": {
-          "mean": 0.951,
-          "std": 0.012
+          "mean": 0.971,
+          "std": 0.01
         },
         "delay_ms": {
-          "mean": 708.003,
-          "std": 84.213
+          "mean": 928.0,
+          "std": 220.917
         },
         "miss_pct": {
-          "mean": 6.667,
-          "std": 5.0
+          "mean": 10.833,
+          "std": 4.249
         },
         "fa_pct": {
-          "mean": 2.5,
+          "mean": 1.667,
           "std": 2.041
         },
         "survival": {
-          "mean": 76.667,
-          "std": 17.2
+          "mean": 79.167,
+          "std": 15.138
         },
         "quar_surv": {
           "mean": 75.0,
-          "std": 17.678
+          "std": 14.672
         },
         "collision": {
-          "mean": 23.333,
-          "std": 17.2
+          "mean": 20.833,
+          "std": 15.138
         },
         "distance_m": {
-          "mean": 99.546,
-          "std": 28.526
+          "mean": 100.391,
+          "std": 36.39
         },
         "jerk": {
-          "mean": 1.828,
-          "std": 0.231
+          "mean": 1.749,
+          "std": 0.177
         },
         "qp_feasible_pct": {
           "mean": 100.0,
@@ -467,228 +535,228 @@
       },
       "TCN-Residual IDS": {
         "auroc": {
-          "mean": 0.93,
-          "std": 0.023
+          "mean": 0.947,
+          "std": 0.011
         },
         "delay_ms": {
-          "mean": 1316.697,
-          "std": 414.25
+          "mean": 1292.292,
+          "std": 140.553
         },
         "miss_pct": {
-          "mean": 6.667,
-          "std": 6.77
+          "mean": 5.0,
+          "std": 1.667
         },
         "fa_pct": {
-          "mean": 4.167,
-          "std": 5.27
+          "mean": 0.833,
+          "std": 1.667
         },
         "survival": {
-          "mean": 97.5,
-          "std": 5.0
+          "mean": 100.0,
+          "std": 0.0
         },
         "quar_surv": {
-          "mean": 90.833,
-          "std": 6.124
+          "mean": 95.0,
+          "std": 1.667
         },
         "collision": {
-          "mean": 2.5,
-          "std": 5.0
+          "mean": 0.0,
+          "std": 0.0
         },
         "distance_m": {
-          "mean": 94.902,
-          "std": 26.968
+          "mean": 103.206,
+          "std": 25.937
         },
         "jerk": {
-          "mean": 5.671,
-          "std": 1.342
+          "mean": 5.184,
+          "std": 0.876
         },
         "qp_feasible_pct": {
-          "mean": 86.359,
-          "std": 3.568
+          "mean": 90.724,
+          "std": 1.866
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 13.641,
-          "std": 3.568
+          "mean": 9.276,
+          "std": 1.866
         }
       },
       "Tiny-Transformer IDS": {
         "auroc": {
-          "mean": 0.935,
-          "std": 0.02
+          "mean": 0.958,
+          "std": 0.017
         },
         "delay_ms": {
-          "mean": 1345.935,
-          "std": 308.392
+          "mean": 1075.181,
+          "std": 265.475
         },
         "miss_pct": {
-          "mean": 0.833,
-          "std": 1.667
-        },
-        "fa_pct": {
           "mean": 2.5,
           "std": 2.041
+        },
+        "fa_pct": {
+          "mean": 0.833,
+          "std": 1.667
         },
         "survival": {
           "mean": 99.167,
           "std": 1.667
         },
         "quar_surv": {
-          "mean": 98.333,
-          "std": 2.041
+          "mean": 96.667,
+          "std": 1.667
         },
         "collision": {
           "mean": 0.833,
           "std": 1.667
         },
         "distance_m": {
-          "mean": 102.085,
-          "std": 26.332
+          "mean": 118.797,
+          "std": 36.893
         },
         "jerk": {
-          "mean": 5.072,
-          "std": 1.124
+          "mean": 5.79,
+          "std": 1.398
         },
         "qp_feasible_pct": {
-          "mean": 87.777,
-          "std": 1.067
+          "mean": 89.942,
+          "std": 1.885
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 12.223,
-          "std": 1.067
+          "mean": 10.058,
+          "std": 1.885
         }
       },
       "Stateless BC": {
         "auroc": {
-          "mean": 0.949,
-          "std": 0.016
+          "mean": 0.975,
+          "std": 0.005
         },
         "delay_ms": {
-          "mean": 933.949,
-          "std": 323.168
+          "mean": 1296.884,
+          "std": 98.127
         },
         "miss_pct": {
-          "mean": 3.333,
-          "std": 4.859
-        },
-        "fa_pct": {
           "mean": 1.667,
           "std": 2.041
+        },
+        "fa_pct": {
+          "mean": 3.333,
+          "std": 4.859
         },
         "survival": {
           "mean": 99.167,
           "std": 1.667
         },
         "quar_surv": {
-          "mean": 95.833,
-          "std": 5.27
+          "mean": 97.5,
+          "std": 2.041
         },
         "collision": {
           "mean": 0.833,
           "std": 1.667
         },
         "distance_m": {
-          "mean": 40.919,
-          "std": 24.59
+          "mean": 41.679,
+          "std": 22.492
         },
         "jerk": {
-          "mean": 3.949,
-          "std": 1.126
+          "mean": 3.793,
+          "std": 0.936
         },
         "qp_feasible_pct": {
-          "mean": 90.615,
-          "std": 3.903
+          "mean": 93.432,
+          "std": 1.499
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 9.385,
-          "std": 3.903
+          "mean": 6.568,
+          "std": 1.499
         }
       },
       "EKF-CUSUM + BC": {
         "auroc": {
-          "mean": 0.872,
-          "std": 0.029
+          "mean": 0.979,
+          "std": 0.005
         },
         "delay_ms": {
-          "mean": 4471.703,
-          "std": 186.095
+          "mean": 3253.333,
+          "std": 267.504
         },
         "miss_pct": {
-          "mean": 19.167,
-          "std": 7.265
+          "mean": 0.0,
+          "std": 0.0
         },
         "fa_pct": {
           "mean": 0.0,
           "std": 0.0
         },
         "survival": {
-          "mean": 100.0,
-          "std": 0.0
+          "mean": 99.167,
+          "std": 1.667
         },
         "quar_surv": {
-          "mean": 80.833,
-          "std": 7.265
+          "mean": 99.167,
+          "std": 1.667
         },
         "collision": {
-          "mean": 0.0,
-          "std": 0.0
+          "mean": 0.833,
+          "std": 1.667
         },
         "distance_m": {
-          "mean": 70.481,
-          "std": 20.827
+          "mean": 75.771,
+          "std": 31.947
         },
         "jerk": {
-          "mean": 6.494,
-          "std": 1.298
+          "mean": 5.303,
+          "std": 1.255
         },
         "qp_feasible_pct": {
-          "mean": 81.188,
-          "std": 2.019
+          "mean": 90.538,
+          "std": 1.299
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 18.812,
-          "std": 2.019
+          "mean": 9.462,
+          "std": 1.299
         }
       },
       "IDM-ACC + AEB": {
         "auroc": {
-          "mean": 0.5,
-          "std": 0.0
+          "mean": null,
+          "std": null
         },
         "delay_ms": {
           "mean": null,
           "std": null
         },
         "miss_pct": {
-          "mean": 100.0,
-          "std": 0.0
+          "mean": null,
+          "std": null
         },
         "fa_pct": {
-          "mean": 0.0,
-          "std": 0.0
+          "mean": null,
+          "std": null
         },
         "survival": {
           "mean": 95.0,
           "std": 3.118
         },
         "quar_surv": {
-          "mean": 0.0,
-          "std": 0.0
+          "mean": 95.0,
+          "std": 3.118
         },
         "collision": {
           "mean": 5.0,
@@ -717,292 +785,342 @@
       },
       "Emergency-Stop": {
         "auroc": {
-          "mean": 0.94,
-          "std": 0.02
+          "mean": 0.978,
+          "std": 0.012
         },
         "delay_ms": {
-          "mean": 909.577,
-          "std": 315.968
+          "mean": 1080.463,
+          "std": 309.266
         },
         "miss_pct": {
-          "mean": 3.333,
+          "mean": 5.0,
           "std": 3.118
         },
         "fa_pct": {
           "mean": 1.667,
-          "std": 2.041
+          "std": 3.333
         },
         "survival": {
-          "mean": 97.5,
+          "mean": 98.333,
           "std": 3.333
         },
         "quar_surv": {
-          "mean": 95.0,
-          "std": 3.118
+          "mean": 94.167,
+          "std": 3.333
         },
         "collision": {
-          "mean": 2.5,
+          "mean": 1.667,
           "std": 3.333
         },
         "distance_m": {
-          "mean": 62.294,
-          "std": 8.867
+          "mean": 67.986,
+          "std": 8.769
         },
         "jerk": {
-          "mean": 6.302,
-          "std": 0.911
+          "mean": 6.375,
+          "std": 0.632
         },
         "qp_feasible_pct": {
-          "mean": 87.651,
-          "std": 3.185
+          "mean": 90.072,
+          "std": 2.073
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 12.349,
-          "std": 3.185
+          "mean": 9.928,
+          "std": 2.073
         }
       }
     },
     "i-80": {
       "RecurrentShield-BC": {
         "auroc": {
-          "mean": 0.945,
+          "mean": 0.984,
           "std": 0.006
         },
         "delay_ms": {
-          "mean": 684.288,
-          "std": 39.181
+          "mean": 878.743,
+          "std": 126.238
         },
         "miss_pct": {
-          "mean": 0.833,
-          "std": 1.667
+          "mean": 5.833,
+          "std": 2.041
         },
         "fa_pct": {
-          "mean": 10.833,
-          "std": 7.265
+          "mean": 1.667,
+          "std": 2.041
         },
         "survival": {
-          "mean": 95.833,
-          "std": 0.0
+          "mean": 94.167,
+          "std": 2.041
         },
         "quar_surv": {
-          "mean": 95.833,
-          "std": 0.0
+          "mean": 90.833,
+          "std": 3.118
         },
         "collision": {
-          "mean": 4.167,
-          "std": 0.0
+          "mean": 5.833,
+          "std": 2.041
         },
         "distance_m": {
-          "mean": 83.466,
-          "std": 15.32
+          "mean": 83.747,
+          "std": 21.474
         },
         "jerk": {
-          "mean": 4.523,
-          "std": 0.745
+          "mean": 4.684,
+          "std": 0.589
         },
         "qp_feasible_pct": {
-          "mean": 93.037,
-          "std": 0.436
+          "mean": 93.296,
+          "std": 0.667
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 6.963,
-          "std": 0.436
+          "mean": 6.704,
+          "std": 0.667
         }
       },
       "RecurrentShield-INT8": {
         "auroc": {
-          "mean": 0.945,
-          "std": 0.006
+          "mean": 0.984,
+          "std": 0.005
         },
         "delay_ms": {
-          "mean": 722.206,
-          "std": 69.256
+          "mean": 812.059,
+          "std": 159.155
         },
         "miss_pct": {
-          "mean": 0.833,
-          "std": 1.667
+          "mean": 5.833,
+          "std": 2.041
         },
         "fa_pct": {
-          "mean": 10.833,
-          "std": 7.265
+          "mean": 1.667,
+          "std": 2.041
         },
         "survival": {
-          "mean": 95.833,
-          "std": 0.0
+          "mean": 95.0,
+          "std": 1.667
         },
         "quar_surv": {
-          "mean": 95.833,
-          "std": 0.0
+          "mean": 91.667,
+          "std": 3.727
         },
         "collision": {
-          "mean": 4.167,
-          "std": 0.0
+          "mean": 5.0,
+          "std": 1.667
         },
         "distance_m": {
-          "mean": 83.886,
-          "std": 15.455
+          "mean": 83.308,
+          "std": 22.022
         },
         "jerk": {
-          "mean": 4.407,
-          "std": 0.662
+          "mean": 4.674,
+          "std": 0.578
         },
         "qp_feasible_pct": {
-          "mean": 93.011,
-          "std": 0.491
+          "mean": 93.327,
+          "std": 0.608
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 6.989,
-          "std": 0.491
+          "mean": 6.673,
+          "std": 0.608
         }
       },
-      "Shield-Only (No IDS)": {
+      "Onboard-Only (No V2X)": {
         "auroc": {
-          "mean": 0.95,
-          "std": 0.004
+          "mean": null,
+          "std": null
         },
         "delay_ms": {
           "mean": null,
           "std": null
         },
         "miss_pct": {
-          "mean": 100.0,
-          "std": 0.0
+          "mean": null,
+          "std": null
         },
         "fa_pct": {
-          "mean": 0.0,
-          "std": 0.0
+          "mean": null,
+          "std": null
         },
         "survival": {
-          "mean": 95.833,
-          "std": 0.0
+          "mean": 93.333,
+          "std": 3.333
         },
         "quar_surv": {
-          "mean": 0.0,
-          "std": 0.0
+          "mean": 93.333,
+          "std": 3.333
         },
         "collision": {
-          "mean": 4.167,
-          "std": 0.0
+          "mean": 6.667,
+          "std": 3.333
         },
         "distance_m": {
-          "mean": 65.76,
-          "std": 12.792
+          "mean": 86.734,
+          "std": 20.242
         },
         "jerk": {
-          "mean": 7.205,
-          "std": 0.974
+          "mean": 3.719,
+          "std": 0.477
         },
         "qp_feasible_pct": {
-          "mean": 78.417,
-          "std": 1.373
+          "mean": 93.667,
+          "std": 0.694
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 21.583,
-          "std": 1.373
+          "mean": 6.333,
+          "std": 0.694
+        }
+      },
+      "Shield-Only (No IDS)": {
+        "auroc": {
+          "mean": null,
+          "std": null
+        },
+        "delay_ms": {
+          "mean": null,
+          "std": null
+        },
+        "miss_pct": {
+          "mean": null,
+          "std": null
+        },
+        "fa_pct": {
+          "mean": null,
+          "std": null
+        },
+        "survival": {
+          "mean": 95.0,
+          "std": 1.667
+        },
+        "quar_surv": {
+          "mean": 95.0,
+          "std": 1.667
+        },
+        "collision": {
+          "mean": 5.0,
+          "std": 1.667
+        },
+        "distance_m": {
+          "mean": 64.575,
+          "std": 16.42
+        },
+        "jerk": {
+          "mean": 7.301,
+          "std": 1.23
+        },
+        "qp_feasible_pct": {
+          "mean": 78.431,
+          "std": 1.312
+        },
+        "cbf_feasible_sat_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "fallback_pct": {
+          "mean": 21.569,
+          "std": 1.312
         }
       },
       "First-Order CBF + BC": {
         "auroc": {
-          "mean": 0.944,
+          "mean": 0.984,
           "std": 0.006
         },
         "delay_ms": {
-          "mean": 640.897,
-          "std": 135.333
+          "mean": 873.924,
+          "std": 124.339
         },
         "miss_pct": {
-          "mean": 0.833,
-          "std": 1.667
+          "mean": 5.833,
+          "std": 2.041
         },
         "fa_pct": {
-          "mean": 10.833,
-          "std": 7.265
+          "mean": 1.667,
+          "std": 2.041
         },
         "survival": {
-          "mean": 95.833,
-          "std": 0.0
+          "mean": 95.0,
+          "std": 1.667
         },
         "quar_surv": {
-          "mean": 95.833,
-          "std": 0.0
+          "mean": 91.667,
+          "std": 3.727
         },
         "collision": {
-          "mean": 4.167,
-          "std": 0.0
+          "mean": 5.0,
+          "std": 1.667
         },
         "distance_m": {
-          "mean": 83.323,
-          "std": 15.299
+          "mean": 83.606,
+          "std": 21.427
         },
         "jerk": {
-          "mean": 4.397,
-          "std": 0.75
+          "mean": 4.498,
+          "std": 0.583
         },
         "qp_feasible_pct": {
-          "mean": 93.518,
-          "std": 0.386
+          "mean": 93.767,
+          "std": 0.565
         },
         "cbf_feasible_sat_pct": {
-          "mean": 98.556,
-          "std": 0.48
+          "mean": 97.896,
+          "std": 1.529
         },
         "fallback_pct": {
-          "mean": 6.482,
-          "std": 0.386
+          "mean": 6.233,
+          "std": 0.565
         }
       },
       "No-Shield Ablation": {
         "auroc": {
-          "mean": 0.953,
-          "std": 0.014
+          "mean": 0.977,
+          "std": 0.012
         },
         "delay_ms": {
-          "mean": 828.834,
-          "std": 135.133
+          "mean": 795.937,
+          "std": 233.746
         },
         "miss_pct": {
-          "mean": 3.333,
-          "std": 3.118
+          "mean": 13.333,
+          "std": 5.528
         },
         "fa_pct": {
-          "mean": 13.333,
-          "std": 7.169
+          "mean": 1.667,
+          "std": 2.041
         },
         "survival": {
-          "mean": 63.333,
-          "std": 19.614
+          "mean": 62.5,
+          "std": 21.731
         },
         "quar_surv": {
-          "mean": 63.333,
-          "std": 19.614
+          "mean": 58.333,
+          "std": 24.008
         },
         "collision": {
-          "mean": 36.667,
-          "std": 19.614
+          "mean": 37.5,
+          "std": 21.731
         },
         "distance_m": {
-          "mean": 91.778,
-          "std": 12.926
+          "mean": 88.645,
+          "std": 17.173
         },
         "jerk": {
-          "mean": 1.634,
-          "std": 0.292
+          "mean": 1.647,
+          "std": 0.29
         },
         "qp_feasible_pct": {
           "mean": 100.0,
@@ -1019,228 +1137,228 @@
       },
       "TCN-Residual IDS": {
         "auroc": {
-          "mean": 0.939,
-          "std": 0.004
+          "mean": 0.974,
+          "std": 0.01
         },
         "delay_ms": {
-          "mean": 1332.55,
-          "std": 476.527
+          "mean": 1366.996,
+          "std": 228.623
         },
         "miss_pct": {
-          "mean": 2.5,
+          "mean": 5.833,
           "std": 3.333
         },
         "fa_pct": {
-          "mean": 6.667,
-          "std": 6.77
+          "mean": 0.833,
+          "std": 1.667
         },
         "survival": {
-          "mean": 95.833,
-          "std": 3.727
+          "mean": 95.0,
+          "std": 4.082
         },
         "quar_surv": {
-          "mean": 95.0,
-          "std": 4.859
+          "mean": 92.5,
+          "std": 4.082
         },
         "collision": {
-          "mean": 4.167,
-          "std": 3.727
+          "mean": 5.0,
+          "std": 4.082
         },
         "distance_m": {
-          "mean": 86.75,
-          "std": 7.574
+          "mean": 97.343,
+          "std": 10.522
         },
         "jerk": {
-          "mean": 4.932,
-          "std": 0.837
+          "mean": 4.898,
+          "std": 0.334
         },
         "qp_feasible_pct": {
-          "mean": 89.577,
-          "std": 1.313
+          "mean": 91.79,
+          "std": 1.702
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 10.423,
-          "std": 1.313
+          "mean": 8.21,
+          "std": 1.702
         }
       },
       "Tiny-Transformer IDS": {
         "auroc": {
-          "mean": 0.939,
-          "std": 0.002
+          "mean": 0.982,
+          "std": 0.007
         },
         "delay_ms": {
-          "mean": 1112.609,
-          "std": 125.955
+          "mean": 1235.44,
+          "std": 327.866
         },
         "miss_pct": {
-          "mean": 1.667,
-          "std": 2.041
+          "mean": 3.333,
+          "std": 1.667
         },
         "fa_pct": {
-          "mean": 5.0,
-          "std": 4.082
+          "mean": 1.667,
+          "std": 3.333
         },
         "survival": {
-          "mean": 90.0,
-          "std": 3.333
+          "mean": 95.0,
+          "std": 3.118
         },
         "quar_surv": {
-          "mean": 89.167,
-          "std": 4.249
+          "mean": 92.5,
+          "std": 4.082
         },
         "collision": {
-          "mean": 10.0,
-          "std": 3.333
+          "mean": 5.0,
+          "std": 3.118
         },
         "distance_m": {
-          "mean": 88.753,
-          "std": 8.183
+          "mean": 102.457,
+          "std": 7.544
         },
         "jerk": {
-          "mean": 5.165,
-          "std": 0.795
+          "mean": 5.285,
+          "std": 0.764
         },
         "qp_feasible_pct": {
-          "mean": 90.355,
-          "std": 1.91
+          "mean": 92.251,
+          "std": 1.49
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 9.645,
-          "std": 1.91
+          "mean": 7.749,
+          "std": 1.49
         }
       },
       "Stateless BC": {
         "auroc": {
-          "mean": 0.949,
-          "std": 0.01
+          "mean": 0.984,
+          "std": 0.002
         },
         "delay_ms": {
-          "mean": 1030.657,
-          "std": 132.675
+          "mean": 1334.173,
+          "std": 308.715
         },
         "miss_pct": {
-          "mean": 1.667,
+          "mean": 2.5,
           "std": 2.041
         },
         "fa_pct": {
-          "mean": 5.0,
-          "std": 4.859
-        },
-        "survival": {
-          "mean": 97.5,
-          "std": 3.333
-        },
-        "quar_surv": {
-          "mean": 97.5,
-          "std": 3.333
-        },
-        "collision": {
           "mean": 2.5,
           "std": 3.333
         },
+        "survival": {
+          "mean": 96.667,
+          "std": 4.859
+        },
+        "quar_surv": {
+          "mean": 95.0,
+          "std": 4.082
+        },
+        "collision": {
+          "mean": 3.333,
+          "std": 4.859
+        },
         "distance_m": {
-          "mean": 40.079,
-          "std": 16.813
+          "mean": 40.192,
+          "std": 17.809
         },
         "jerk": {
-          "mean": 3.957,
-          "std": 0.904
+          "mean": 3.807,
+          "std": 0.869
         },
         "qp_feasible_pct": {
-          "mean": 91.872,
-          "std": 1.057
+          "mean": 93.67,
+          "std": 1.224
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 8.128,
-          "std": 1.057
+          "mean": 6.33,
+          "std": 1.224
         }
       },
       "EKF-CUSUM + BC": {
         "auroc": {
-          "mean": 0.905,
-          "std": 0.013
+          "mean": 0.986,
+          "std": 0.003
         },
         "delay_ms": {
-          "mean": 4319.617,
-          "std": 283.525
+          "mean": 3368.185,
+          "std": 341.708
         },
         "miss_pct": {
-          "mean": 17.5,
-          "std": 3.118
+          "mean": 4.167,
+          "std": 2.635
         },
         "fa_pct": {
           "mean": 0.0,
           "std": 0.0
         },
         "survival": {
-          "mean": 95.833,
-          "std": 0.0
+          "mean": 94.167,
+          "std": 2.041
         },
         "quar_surv": {
-          "mean": 80.833,
-          "std": 3.333
+          "mean": 93.333,
+          "std": 2.041
         },
         "collision": {
-          "mean": 4.167,
-          "std": 0.0
+          "mean": 5.833,
+          "std": 2.041
         },
         "distance_m": {
-          "mean": 68.875,
-          "std": 14.176
+          "mean": 71.885,
+          "std": 19.482
         },
         "jerk": {
-          "mean": 6.1,
-          "std": 0.831
+          "mean": 5.222,
+          "std": 0.798
         },
         "qp_feasible_pct": {
-          "mean": 84.188,
-          "std": 1.365
+          "mean": 91.521,
+          "std": 1.105
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 15.812,
-          "std": 1.365
+          "mean": 8.479,
+          "std": 1.105
         }
       },
       "IDM-ACC + AEB": {
         "auroc": {
-          "mean": 0.5,
-          "std": 0.0
+          "mean": null,
+          "std": null
         },
         "delay_ms": {
           "mean": null,
           "std": null
         },
         "miss_pct": {
-          "mean": 100.0,
-          "std": 0.0
+          "mean": null,
+          "std": null
         },
         "fa_pct": {
-          "mean": 0.0,
-          "std": 0.0
+          "mean": null,
+          "std": null
         },
         "survival": {
           "mean": 86.667,
           "std": 6.124
         },
         "quar_surv": {
-          "mean": 0.0,
-          "std": 0.0
+          "mean": 86.667,
+          "std": 6.124
         },
         "collision": {
           "mean": 13.333,
@@ -1269,292 +1387,342 @@
       },
       "Emergency-Stop": {
         "auroc": {
-          "mean": 0.951,
+          "mean": 0.991,
           "std": 0.002
         },
         "delay_ms": {
-          "mean": 619.657,
-          "std": 127.117
+          "mean": 981.304,
+          "std": 138.659
         },
         "miss_pct": {
-          "mean": 2.5,
-          "std": 2.041
+          "mean": 5.833,
+          "std": 3.333
         },
         "fa_pct": {
-          "mean": 13.333,
-          "std": 7.169
+          "mean": 0.0,
+          "std": 0.0
         },
         "survival": {
-          "mean": 93.333,
-          "std": 2.041
+          "mean": 91.667,
+          "std": 4.564
         },
         "quar_surv": {
-          "mean": 93.333,
-          "std": 2.041
+          "mean": 88.333,
+          "std": 4.082
         },
         "collision": {
-          "mean": 6.667,
-          "std": 2.041
+          "mean": 8.333,
+          "std": 4.564
         },
         "distance_m": {
-          "mean": 53.439,
-          "std": 4.794
+          "mean": 60.604,
+          "std": 5.473
         },
         "jerk": {
-          "mean": 5.904,
-          "std": 0.265
+          "mean": 6.013,
+          "std": 0.45
         },
         "qp_feasible_pct": {
-          "mean": 90.733,
-          "std": 1.31
+          "mean": 91.413,
+          "std": 1.185
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 9.267,
-          "std": 1.31
+          "mean": 8.587,
+          "std": 1.185
         }
       }
     },
     "lankershim": {
       "RecurrentShield-BC": {
         "auroc": {
-          "mean": 0.979,
-          "std": 0.01
+          "mean": 0.99,
+          "std": 0.005
         },
         "delay_ms": {
-          "mean": 292.599,
-          "std": 100.821
+          "mean": 793.872,
+          "std": 246.224
         },
         "miss_pct": {
-          "mean": 0.833,
-          "std": 1.667
+          "mean": 5.833,
+          "std": 2.041
         },
         "fa_pct": {
-          "mean": 21.667,
-          "std": 10.341
+          "mean": 1.667,
+          "std": 2.041
         },
         "survival": {
           "mean": 85.0,
-          "std": 10.069
+          "std": 9.354
         },
         "quar_surv": {
-          "mean": 85.0,
-          "std": 10.069
+          "mean": 80.833,
+          "std": 7.728
         },
         "collision": {
           "mean": 15.0,
-          "std": 10.069
+          "std": 9.354
         },
         "distance_m": {
-          "mean": 65.415,
-          "std": 23.001
+          "mean": 60.836,
+          "std": 12.649
         },
         "jerk": {
-          "mean": 4.261,
-          "std": 0.627
+          "mean": 4.661,
+          "std": 0.444
         },
         "qp_feasible_pct": {
-          "mean": 96.957,
-          "std": 0.814
+          "mean": 97.037,
+          "std": 1.112
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 3.043,
-          "std": 0.814
+          "mean": 2.963,
+          "std": 1.112
         }
       },
       "RecurrentShield-INT8": {
         "auroc": {
-          "mean": 0.98,
-          "std": 0.01
+          "mean": 0.989,
+          "std": 0.005
         },
         "delay_ms": {
-          "mean": 295.711,
-          "std": 100.681
+          "mean": 817.852,
+          "std": 254.432
         },
         "miss_pct": {
-          "mean": 0.833,
-          "std": 1.667
+          "mean": 6.667,
+          "std": 2.041
         },
         "fa_pct": {
-          "mean": 24.167,
-          "std": 10.0
+          "mean": 1.667,
+          "std": 2.041
         },
         "survival": {
-          "mean": 85.0,
-          "std": 9.718
+          "mean": 84.167,
+          "std": 8.898
         },
         "quar_surv": {
-          "mean": 85.0,
-          "std": 9.718
+          "mean": 80.0,
+          "std": 7.169
         },
         "collision": {
-          "mean": 15.0,
-          "std": 9.718
+          "mean": 15.833,
+          "std": 8.898
         },
         "distance_m": {
-          "mean": 66.131,
-          "std": 23.334
+          "mean": 60.069,
+          "std": 12.718
         },
         "jerk": {
-          "mean": 4.249,
-          "std": 0.743
+          "mean": 4.773,
+          "std": 0.481
         },
         "qp_feasible_pct": {
-          "mean": 96.977,
-          "std": 0.935
+          "mean": 97.026,
+          "std": 1.119
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 3.023,
-          "std": 0.935
+          "mean": 2.974,
+          "std": 1.119
         }
       },
-      "Shield-Only (No IDS)": {
+      "Onboard-Only (No V2X)": {
         "auroc": {
-          "mean": 0.98,
-          "std": 0.007
+          "mean": null,
+          "std": null
         },
         "delay_ms": {
           "mean": null,
           "std": null
         },
         "miss_pct": {
-          "mean": 100.0,
-          "std": 0.0
+          "mean": null,
+          "std": null
         },
         "fa_pct": {
-          "mean": 0.0,
-          "std": 0.0
+          "mean": null,
+          "std": null
         },
         "survival": {
-          "mean": 81.667,
-          "std": 8.58
+          "mean": 85.0,
+          "std": 10.069
         },
         "quar_surv": {
-          "mean": 0.0,
-          "std": 0.0
+          "mean": 85.0,
+          "std": 10.069
         },
         "collision": {
-          "mean": 18.333,
-          "std": 8.58
+          "mean": 15.0,
+          "std": 10.069
         },
         "distance_m": {
-          "mean": 50.604,
-          "std": 17.409
+          "mean": 62.981,
+          "std": 12.731
         },
         "jerk": {
-          "mean": 6.826,
-          "std": 0.641
+          "mean": 3.837,
+          "std": 0.712
         },
         "qp_feasible_pct": {
-          "mean": 82.706,
-          "std": 1.338
+          "mean": 97.304,
+          "std": 0.852
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 17.294,
-          "std": 1.338
+          "mean": 2.696,
+          "std": 0.852
+        }
+      },
+      "Shield-Only (No IDS)": {
+        "auroc": {
+          "mean": null,
+          "std": null
+        },
+        "delay_ms": {
+          "mean": null,
+          "std": null
+        },
+        "miss_pct": {
+          "mean": null,
+          "std": null
+        },
+        "fa_pct": {
+          "mean": null,
+          "std": null
+        },
+        "survival": {
+          "mean": 83.333,
+          "std": 8.74
+        },
+        "quar_surv": {
+          "mean": 83.333,
+          "std": 8.74
+        },
+        "collision": {
+          "mean": 16.667,
+          "std": 8.74
+        },
+        "distance_m": {
+          "mean": 47.683,
+          "std": 7.218
+        },
+        "jerk": {
+          "mean": 7.137,
+          "std": 0.672
+        },
+        "qp_feasible_pct": {
+          "mean": 82.853,
+          "std": 0.778
+        },
+        "cbf_feasible_sat_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "fallback_pct": {
+          "mean": 17.147,
+          "std": 0.778
         }
       },
       "First-Order CBF + BC": {
         "auroc": {
-          "mean": 0.978,
-          "std": 0.008
+          "mean": 0.99,
+          "std": 0.005
         },
         "delay_ms": {
-          "mean": 286.427,
-          "std": 107.001
+          "mean": 795.793,
+          "std": 245.456
         },
         "miss_pct": {
-          "mean": 0.833,
-          "std": 1.667
+          "mean": 5.833,
+          "std": 2.041
         },
         "fa_pct": {
-          "mean": 20.833,
-          "std": 10.206
+          "mean": 2.5,
+          "std": 2.041
         },
         "survival": {
           "mean": 83.333,
-          "std": 9.501
+          "std": 9.129
         },
         "quar_surv": {
-          "mean": 83.333,
-          "std": 9.501
+          "mean": 79.167,
+          "std": 7.906
         },
         "collision": {
           "mean": 16.667,
-          "std": 9.501
+          "std": 9.129
         },
         "distance_m": {
-          "mean": 63.847,
-          "std": 22.077
+          "mean": 59.431,
+          "std": 11.851
         },
         "jerk": {
-          "mean": 4.18,
-          "std": 0.735
+          "mean": 4.551,
+          "std": 0.645
         },
         "qp_feasible_pct": {
-          "mean": 97.393,
-          "std": 0.696
+          "mean": 97.348,
+          "std": 1.083
         },
         "cbf_feasible_sat_pct": {
-          "mean": 99.244,
-          "std": 0.804
+          "mean": 99.236,
+          "std": 0.833
         },
         "fallback_pct": {
-          "mean": 2.607,
-          "std": 0.696
+          "mean": 2.652,
+          "std": 1.083
         }
       },
       "No-Shield Ablation": {
         "auroc": {
-          "mean": 0.981,
-          "std": 0.005
+          "mean": 0.991,
+          "std": 0.004
         },
         "delay_ms": {
-          "mean": 174.409,
-          "std": 44.569
+          "mean": 804.372,
+          "std": 288.68
         },
         "miss_pct": {
+          "mean": 10.833,
+          "std": 3.333
+        },
+        "fa_pct": {
           "mean": 1.667,
           "std": 2.041
         },
-        "fa_pct": {
-          "mean": 25.0,
-          "std": 10.865
-        },
         "survival": {
-          "mean": 68.333,
-          "std": 13.591
+          "mean": 67.5,
+          "std": 11.304
         },
         "quar_surv": {
-          "mean": 68.333,
-          "std": 13.591
+          "mean": 64.167,
+          "std": 9.718
         },
         "collision": {
-          "mean": 31.667,
-          "std": 13.591
+          "mean": 32.5,
+          "std": 11.304
         },
         "distance_m": {
-          "mean": 73.496,
-          "std": 29.711
+          "mean": 67.46,
+          "std": 13.762
         },
         "jerk": {
-          "mean": 1.897,
-          "std": 0.327
+          "mean": 2.021,
+          "std": 0.25
         },
         "qp_feasible_pct": {
           "mean": 100.0,
@@ -1571,228 +1739,228 @@
       },
       "TCN-Residual IDS": {
         "auroc": {
-          "mean": 0.969,
-          "std": 0.015
+          "mean": 0.986,
+          "std": 0.006
         },
         "delay_ms": {
-          "mean": 572.765,
-          "std": 436.835
+          "mean": 1092.729,
+          "std": 140.551
         },
         "miss_pct": {
-          "mean": 2.5,
-          "std": 3.333
-        },
-        "fa_pct": {
-          "mean": 25.833,
-          "std": 31.885
-        },
-        "survival": {
-          "mean": 86.667,
+          "mean": 9.167,
           "std": 4.859
         },
+        "fa_pct": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "survival": {
+          "mean": 87.5,
+          "std": 5.27
+        },
         "quar_surv": {
-          "mean": 85.833,
+          "mean": 80.833,
           "std": 4.249
         },
         "collision": {
-          "mean": 13.333,
-          "std": 4.859
+          "mean": 12.5,
+          "std": 5.27
         },
         "distance_m": {
-          "mean": 138.677,
-          "std": 21.212
+          "mean": 139.322,
+          "std": 27.002
         },
         "jerk": {
-          "mean": 4.892,
-          "std": 1.183
+          "mean": 5.144,
+          "std": 0.928
         },
         "qp_feasible_pct": {
-          "mean": 95.771,
-          "std": 1.777
+          "mean": 96.064,
+          "std": 1.496
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 4.229,
-          "std": 1.777
+          "mean": 3.936,
+          "std": 1.496
         }
       },
       "Tiny-Transformer IDS": {
         "auroc": {
-          "mean": 0.976,
-          "std": 0.01
-        },
-        "delay_ms": {
-          "mean": 269.562,
-          "std": 76.635
-        },
-        "miss_pct": {
-          "mean": 1.667,
-          "std": 3.333
-        },
-        "fa_pct": {
-          "mean": 21.667,
-          "std": 14.767
-        },
-        "survival": {
-          "mean": 83.333,
-          "std": 6.972
-        },
-        "quar_surv": {
-          "mean": 82.5,
-          "std": 6.124
-        },
-        "collision": {
-          "mean": 16.667,
-          "std": 6.972
-        },
-        "distance_m": {
-          "mean": 124.732,
-          "std": 12.353
-        },
-        "jerk": {
-          "mean": 4.468,
-          "std": 0.813
-        },
-        "qp_feasible_pct": {
-          "mean": 96.118,
-          "std": 1.083
-        },
-        "cbf_feasible_sat_pct": {
-          "mean": 100.0,
-          "std": 0.0
-        },
-        "fallback_pct": {
-          "mean": 3.882,
-          "std": 1.083
-        }
-      },
-      "Stateless BC": {
-        "auroc": {
-          "mean": 0.975,
-          "std": 0.014
-        },
-        "delay_ms": {
-          "mean": 367.017,
-          "std": 183.691
-        },
-        "miss_pct": {
-          "mean": 2.5,
-          "std": 2.041
-        },
-        "fa_pct": {
-          "mean": 23.333,
-          "std": 14.093
-        },
-        "survival": {
-          "mean": 81.667,
-          "std": 9.718
-        },
-        "quar_surv": {
-          "mean": 81.667,
-          "std": 9.718
-        },
-        "collision": {
-          "mean": 18.333,
-          "std": 9.718
-        },
-        "distance_m": {
-          "mean": 72.972,
-          "std": 35.578
-        },
-        "jerk": {
-          "mean": 4.47,
-          "std": 1.288
-        },
-        "qp_feasible_pct": {
-          "mean": 96.223,
-          "std": 1.673
-        },
-        "cbf_feasible_sat_pct": {
-          "mean": 100.0,
-          "std": 0.0
-        },
-        "fallback_pct": {
-          "mean": 3.777,
-          "std": 1.673
-        }
-      },
-      "EKF-CUSUM + BC": {
-        "auroc": {
-          "mean": 0.976,
+          "mean": 0.987,
           "std": 0.004
         },
         "delay_ms": {
-          "mean": 3365.989,
-          "std": 181.829
+          "mean": 1156.67,
+          "std": 346.645
         },
         "miss_pct": {
           "mean": 8.333,
           "std": 2.635
         },
         "fa_pct": {
-          "mean": 0.0,
-          "std": 0.0
+          "mean": 0.833,
+          "std": 1.667
         },
         "survival": {
-          "mean": 84.167,
-          "std": 9.28
+          "mean": 87.5,
+          "std": 7.454
         },
         "quar_surv": {
-          "mean": 82.5,
-          "std": 8.498
+          "mean": 83.333,
+          "std": 5.893
         },
         "collision": {
-          "mean": 15.833,
-          "std": 9.28
+          "mean": 12.5,
+          "std": 7.454
         },
         "distance_m": {
-          "mean": 57.802,
-          "std": 21.178
+          "mean": 137.473,
+          "std": 15.829
         },
         "jerk": {
-          "mean": 4.703,
-          "std": 0.501
+          "mean": 4.911,
+          "std": 0.581
         },
         "qp_feasible_pct": {
-          "mean": 95.761,
-          "std": 1.014
+          "mean": 96.045,
+          "std": 0.99
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 4.239,
-          "std": 1.014
+          "mean": 3.955,
+          "std": 0.99
         }
       },
-      "IDM-ACC + AEB": {
+      "Stateless BC": {
         "auroc": {
-          "mean": 0.5,
-          "std": 0.0
+          "mean": 0.988,
+          "std": 0.005
         },
         "delay_ms": {
-          "mean": null,
-          "std": null
+          "mean": 1147.108,
+          "std": 304.057
         },
         "miss_pct": {
+          "mean": 9.167,
+          "std": 4.859
+        },
+        "fa_pct": {
+          "mean": 2.5,
+          "std": 3.333
+        },
+        "survival": {
+          "mean": 79.167,
+          "std": 10.865
+        },
+        "quar_surv": {
+          "mean": 74.167,
+          "std": 9.647
+        },
+        "collision": {
+          "mean": 20.833,
+          "std": 10.865
+        },
+        "distance_m": {
+          "mean": 68.161,
+          "std": 38.372
+        },
+        "jerk": {
+          "mean": 4.411,
+          "std": 0.955
+        },
+        "qp_feasible_pct": {
+          "mean": 96.453,
+          "std": 1.18
+        },
+        "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
+        },
+        "fallback_pct": {
+          "mean": 3.547,
+          "std": 1.18
+        }
+      },
+      "EKF-CUSUM + BC": {
+        "auroc": {
+          "mean": 0.985,
+          "std": 0.008
+        },
+        "delay_ms": {
+          "mean": 3167.941,
+          "std": 271.722
+        },
+        "miss_pct": {
+          "mean": 5.0,
+          "std": 3.118
         },
         "fa_pct": {
           "mean": 0.0,
           "std": 0.0
         },
         "survival": {
+          "mean": 85.0,
+          "std": 7.728
+        },
+        "quar_surv": {
+          "mean": 84.167,
+          "std": 7.169
+        },
+        "collision": {
+          "mean": 15.0,
+          "std": 7.728
+        },
+        "distance_m": {
+          "mean": 53.164,
+          "std": 9.707
+        },
+        "jerk": {
+          "mean": 5.054,
+          "std": 0.33
+        },
+        "qp_feasible_pct": {
+          "mean": 95.619,
+          "std": 1.176
+        },
+        "cbf_feasible_sat_pct": {
+          "mean": 100.0,
+          "std": 0.0
+        },
+        "fallback_pct": {
+          "mean": 4.381,
+          "std": 1.176
+        }
+      },
+      "IDM-ACC + AEB": {
+        "auroc": {
+          "mean": null,
+          "std": null
+        },
+        "delay_ms": {
+          "mean": null,
+          "std": null
+        },
+        "miss_pct": {
+          "mean": null,
+          "std": null
+        },
+        "fa_pct": {
+          "mean": null,
+          "std": null
+        },
+        "survival": {
           "mean": 82.5,
           "std": 9.647
         },
         "quar_surv": {
-          "mean": 0.0,
-          "std": 0.0
+          "mean": 82.5,
+          "std": 9.647
         },
         "collision": {
           "mean": 17.5,
@@ -1821,52 +1989,52 @@
       },
       "Emergency-Stop": {
         "auroc": {
-          "mean": 0.977,
-          "std": 0.014
+          "mean": 0.988,
+          "std": 0.006
         },
         "delay_ms": {
-          "mean": 218.392,
-          "std": 100.887
+          "mean": 756.601,
+          "std": 127.149
         },
         "miss_pct": {
-          "mean": 1.667,
+          "mean": 6.667,
           "std": 2.041
         },
         "fa_pct": {
-          "mean": 32.5,
-          "std": 11.304
+          "mean": 0.0,
+          "std": 0.0
         },
         "survival": {
-          "mean": 80.0,
-          "std": 8.898
+          "mean": 80.833,
+          "std": 7.265
         },
         "quar_surv": {
-          "mean": 80.0,
-          "std": 8.898
+          "mean": 76.667,
+          "std": 7.265
         },
         "collision": {
-          "mean": 20.0,
-          "std": 8.898
+          "mean": 19.167,
+          "std": 7.265
         },
         "distance_m": {
-          "mean": 60.242,
-          "std": 7.454
+          "mean": 81.766,
+          "std": 9.385
         },
         "jerk": {
-          "mean": 6.435,
-          "std": 0.826
+          "mean": 6.224,
+          "std": 0.772
         },
         "qp_feasible_pct": {
-          "mean": 96.251,
-          "std": 1.545
+          "mean": 95.958,
+          "std": 1.856
         },
         "cbf_feasible_sat_pct": {
           "mean": 100.0,
           "std": 0.0
         },
         "fallback_pct": {
-          "mean": 3.749,
-          "std": 1.545
+          "mean": 4.042,
+          "std": 1.856
         }
       }
     }
@@ -1876,29 +2044,42 @@
       "RecurrentShield-BC": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          97.5,
+          100.0,
           100.0
         ],
-        "raw_mcnemar_p": 1.0,
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "RecurrentShield-INT8": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          95.83,
+          100.0,
           100.0
         ],
-        "raw_mcnemar_p": 1.0,
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
+        "holm_adjusted_p": 1.0
+      },
+      "Onboard-Only (No V2X)": {
+        "n_clusters": 20,
+        "cluster_boot_95_ci": [
+          100.0,
+          100.0
+        ],
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "Shield-Only (No IDS)": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          0.0,
-          0.0
+          100.0,
+          100.0
         ],
-        "raw_mcnemar_p": 0.0,
-        "holm_adjusted_p": 0.0
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
+        "holm_adjusted_p": 1.0
       },
       "First-Order CBF + BC": {
         "n_clusters": 20,
@@ -1906,117 +2087,140 @@
           100.0,
           100.0
         ],
-        "raw_mcnemar_p": 1.0,
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "No-Shield Ablation": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          65.0,
-          84.17
+          69.98,
+          88.33
         ],
-        "raw_mcnemar_p": 0.0,
+        "raw_mcnemar_p_surv": 0.0,
+        "holm_adjusted_p_surv": 0.0,
         "holm_adjusted_p": 0.0
       },
       "TCN-Residual IDS": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          86.67,
-          95.0
+          100.0,
+          100.0
         ],
-        "raw_mcnemar_p": 0.00195,
-        "holm_adjusted_p": 0.01172
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
+        "holm_adjusted_p": 1.0
       },
       "Tiny-Transformer IDS": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          95.83,
+          97.5,
           100.0
         ],
-        "raw_mcnemar_p": 1.0,
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "Stateless BC": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          92.5,
-          98.33
+          97.5,
+          100.0
         ],
-        "raw_mcnemar_p": 0.21875,
-        "holm_adjusted_p": 0.875
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
+        "holm_adjusted_p": 1.0
       },
       "EKF-CUSUM + BC": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          76.67,
-          85.0
+          97.5,
+          100.0
         ],
-        "raw_mcnemar_p": 0.0,
-        "holm_adjusted_p": 0.0
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
+        "holm_adjusted_p": 1.0
       },
       "IDM-ACC + AEB": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          0.0,
-          0.0
+          90.83,
+          98.35
         ],
-        "raw_mcnemar_p": 0.0,
-        "holm_adjusted_p": 0.0
+        "raw_mcnemar_p_surv": 0.03125,
+        "holm_adjusted_p_surv": 0.3125,
+        "holm_adjusted_p": 1.0
       },
       "Emergency-Stop": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          91.67,
-          98.33
+          95.83,
+          100.0
         ],
-        "raw_mcnemar_p": 0.125,
-        "holm_adjusted_p": 0.625
+        "raw_mcnemar_p_surv": 0.5,
+        "holm_adjusted_p_surv": 1.0,
+        "holm_adjusted_p": 1.0
       }
     },
     "i-80": {
       "RecurrentShield-BC": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          92.5,
-          98.33
+          90.0,
+          97.52
         ],
-        "raw_mcnemar_p": 1.0,
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "RecurrentShield-INT8": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          92.5,
+          90.83,
           98.33
         ],
-        "raw_mcnemar_p": 1.0,
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
+        "holm_adjusted_p": 1.0
+      },
+      "Onboard-Only (No V2X)": {
+        "n_clusters": 20,
+        "cluster_boot_95_ci": [
+          86.67,
+          98.33
+        ],
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "Shield-Only (No IDS)": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          0.0,
-          0.0
+          90.83,
+          98.33
         ],
-        "raw_mcnemar_p": 0.0,
-        "holm_adjusted_p": 0.0
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
+        "holm_adjusted_p": 0.625
       },
       "First-Order CBF + BC": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          92.5,
+          90.83,
           98.33
         ],
-        "raw_mcnemar_p": 1.0,
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "No-Shield Ablation": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          50.83,
-          74.17
+          50.0,
+          74.19
         ],
-        "raw_mcnemar_p": 0.0,
+        "raw_mcnemar_p_surv": 0.0,
+        "holm_adjusted_p_surv": 0.0,
         "holm_adjusted_p": 0.0
       },
       "TCN-Residual IDS": {
@@ -2025,52 +2229,58 @@
           91.67,
           98.33
         ],
-        "raw_mcnemar_p": 1.0,
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "Tiny-Transformer IDS": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          85.0,
-          92.5
+          91.67,
+          98.33
         ],
-        "raw_mcnemar_p": 0.02148,
-        "holm_adjusted_p": 0.12891
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
+        "holm_adjusted_p": 1.0
       },
       "Stateless BC": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          95.0,
+          92.5,
           100.0
         ],
-        "raw_mcnemar_p": 0.6875,
+        "raw_mcnemar_p_surv": 0.50781,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "EKF-CUSUM + BC": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          75.83,
-          85.83
+          90.0,
+          98.33
         ],
-        "raw_mcnemar_p": 1e-05,
-        "holm_adjusted_p": 5e-05
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
+        "holm_adjusted_p": 1.0
       },
       "IDM-ACC + AEB": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          0.0,
-          0.0
+          80.0,
+          92.5
         ],
-        "raw_mcnemar_p": 0.0,
-        "holm_adjusted_p": 0.0
+        "raw_mcnemar_p_surv": 0.06357,
+        "holm_adjusted_p_surv": 0.63568,
+        "holm_adjusted_p": 1.0
       },
       "Emergency-Stop": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          90.0,
-          96.67
+          86.67,
+          95.83
         ],
-        "raw_mcnemar_p": 0.375,
+        "raw_mcnemar_p_surv": 0.50781,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       }
     },
@@ -2079,99 +2289,120 @@
         "n_clusters": 20,
         "cluster_boot_95_ci": [
           76.67,
-          92.5
+          91.67
         ],
-        "raw_mcnemar_p": 1.0,
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "RecurrentShield-INT8": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
+          75.83,
+          90.83
+        ],
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
+        "holm_adjusted_p": 1.0
+      },
+      "Onboard-Only (No V2X)": {
+        "n_clusters": 20,
+        "cluster_boot_95_ci": [
           76.67,
           91.67
         ],
-        "raw_mcnemar_p": 1.0,
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "Shield-Only (No IDS)": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          0.0,
-          0.0
+          75.83,
+          90.0
         ],
-        "raw_mcnemar_p": 0.0,
-        "holm_adjusted_p": 0.0
+        "raw_mcnemar_p_surv": 0.6875,
+        "holm_adjusted_p_surv": 1.0,
+        "holm_adjusted_p": 1.0
       },
       "First-Order CBF + BC": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
           75.0,
-          90.85
+          90.0
         ],
-        "raw_mcnemar_p": 0.625,
+        "raw_mcnemar_p_surv": 0.5,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "No-Shield Ablation": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          57.48,
-          80.0
+          55.0,
+          79.17
         ],
-        "raw_mcnemar_p": 1e-05,
-        "holm_adjusted_p": 9e-05
+        "raw_mcnemar_p_surv": 2e-05,
+        "holm_adjusted_p_surv": 0.00021,
+        "holm_adjusted_p": 0.00039
       },
       "TCN-Residual IDS": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          79.17,
-          91.67
+          80.0,
+          95.0
         ],
-        "raw_mcnemar_p": 1.0,
+        "raw_mcnemar_p_surv": 0.67764,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "Tiny-Transformer IDS": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          72.5,
-          90.83
+          80.83,
+          94.17
         ],
-        "raw_mcnemar_p": 0.70111,
+        "raw_mcnemar_p_surv": 0.64761,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "Stateless BC": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          74.17,
-          88.33
+          71.67,
+          86.67
         ],
-        "raw_mcnemar_p": 0.58466,
+        "raw_mcnemar_p_surv": 0.21004,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "EKF-CUSUM + BC": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          74.17,
-          90.0
+          78.33,
+          90.83
         ],
-        "raw_mcnemar_p": 0.45312,
+        "raw_mcnemar_p_surv": 1.0,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       },
       "IDM-ACC + AEB": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          0.0,
-          0.0
+          75.0,
+          90.0
         ],
-        "raw_mcnemar_p": 0.0,
-        "holm_adjusted_p": 0.0
+        "raw_mcnemar_p_surv": 0.70111,
+        "holm_adjusted_p_surv": 1.0,
+        "holm_adjusted_p": 1.0
       },
       "Emergency-Stop": {
         "n_clusters": 20,
         "cluster_boot_95_ci": [
-          70.83,
-          88.33
+          72.5,
+          87.52
         ],
-        "raw_mcnemar_p": 0.30746,
+        "raw_mcnemar_p_surv": 0.38331,
+        "holm_adjusted_p_surv": 1.0,
         "holm_adjusted_p": 1.0
       }
     }
@@ -2179,16 +2410,16 @@
   "us-101_test": {
     "RecurrentShield-BC": {
       "auroc": {
-        "mean": 0.947,
-        "std": 0.017
+        "mean": 0.982,
+        "std": 0.005
       },
       "delay_ms": {
-        "mean": 1045.326,
-        "std": 326.361
+        "mean": 880.356,
+        "std": 175.95
       },
       "miss_pct": {
-        "mean": 0.833,
-        "std": 1.667
+        "mean": 2.5,
+        "std": 2.041
       },
       "fa_pct": {
         "mean": 2.5,
@@ -2199,49 +2430,199 @@
         "std": 0.0
       },
       "quar_surv": {
-        "mean": 99.167,
-        "std": 1.667
+        "mean": 97.5,
+        "std": 2.041
       },
       "collision": {
         "mean": 0.0,
         "std": 0.0
       },
       "distance_m": {
-        "mean": 84.949,
-        "std": 28.208
+        "mean": 92.574,
+        "std": 38.089
       },
       "jerk": {
-        "mean": 4.991,
-        "std": 0.975
+        "mean": 4.817,
+        "std": 1.19
       },
       "qp_feasible_pct": {
-        "mean": 90.443,
-        "std": 2.162
+        "mean": 92.651,
+        "std": 1.506
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 9.557,
-        "std": 2.162
+        "mean": 7.349,
+        "std": 1.506
       }
     },
     "RecurrentShield-INT8": {
       "auroc": {
-        "mean": 0.946,
-        "std": 0.018
+        "mean": 0.981,
+        "std": 0.006
       },
       "delay_ms": {
-        "mean": 925.982,
-        "std": 262.908
+        "mean": 910.672,
+        "std": 219.565
+      },
+      "miss_pct": {
+        "mean": 2.5,
+        "std": 2.041
+      },
+      "fa_pct": {
+        "mean": 2.5,
+        "std": 2.041
+      },
+      "survival": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "quar_surv": {
+        "mean": 97.5,
+        "std": 2.041
+      },
+      "collision": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "distance_m": {
+        "mean": 92.172,
+        "std": 38.151
+      },
+      "jerk": {
+        "mean": 4.797,
+        "std": 1.205
+      },
+      "qp_feasible_pct": {
+        "mean": 92.693,
+        "std": 1.522
+      },
+      "cbf_feasible_sat_pct": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "fallback_pct": {
+        "mean": 7.307,
+        "std": 1.522
+      }
+    },
+    "Onboard-Only (No V2X)": {
+      "auroc": {
+        "mean": null,
+        "std": null
+      },
+      "delay_ms": {
+        "mean": null,
+        "std": null
+      },
+      "miss_pct": {
+        "mean": null,
+        "std": null
+      },
+      "fa_pct": {
+        "mean": null,
+        "std": null
+      },
+      "survival": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "quar_surv": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "collision": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "distance_m": {
+        "mean": 96.492,
+        "std": 37.404
+      },
+      "jerk": {
+        "mean": 3.743,
+        "std": 1.294
+      },
+      "qp_feasible_pct": {
+        "mean": 92.943,
+        "std": 1.492
+      },
+      "cbf_feasible_sat_pct": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "fallback_pct": {
+        "mean": 7.057,
+        "std": 1.492
+      }
+    },
+    "Shield-Only (No IDS)": {
+      "auroc": {
+        "mean": null,
+        "std": null
+      },
+      "delay_ms": {
+        "mean": null,
+        "std": null
+      },
+      "miss_pct": {
+        "mean": null,
+        "std": null
+      },
+      "fa_pct": {
+        "mean": null,
+        "std": null
+      },
+      "survival": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "quar_surv": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "collision": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "distance_m": {
+        "mean": 67.007,
+        "std": 25.901
+      },
+      "jerk": {
+        "mean": 7.484,
+        "std": 1.864
+      },
+      "qp_feasible_pct": {
+        "mean": 76.953,
+        "std": 1.223
+      },
+      "cbf_feasible_sat_pct": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "fallback_pct": {
+        "mean": 23.047,
+        "std": 1.223
+      }
+    },
+    "First-Order CBF + BC": {
+      "auroc": {
+        "mean": 0.982,
+        "std": 0.005
+      },
+      "delay_ms": {
+        "mean": 934.736,
+        "std": 275.706
       },
       "miss_pct": {
         "mean": 1.667,
         "std": 2.041
       },
       "fa_pct": {
-        "mean": 2.5,
+        "mean": 1.667,
         "std": 2.041
       },
       "survival": {
@@ -2257,162 +2638,62 @@
         "std": 0.0
       },
       "distance_m": {
-        "mean": 85.223,
-        "std": 27.463
+        "mean": 91.918,
+        "std": 37.374
       },
       "jerk": {
-        "mean": 4.946,
-        "std": 1.034
+        "mean": 4.641,
+        "std": 1.099
       },
       "qp_feasible_pct": {
-        "mean": 90.464,
-        "std": 2.155
+        "mean": 93.156,
+        "std": 1.6
       },
       "cbf_feasible_sat_pct": {
-        "mean": 100.0,
-        "std": 0.0
+        "mean": 98.932,
+        "std": 0.318
       },
       "fallback_pct": {
-        "mean": 9.536,
-        "std": 2.155
-      }
-    },
-    "Shield-Only (No IDS)": {
-      "auroc": {
-        "mean": 0.948,
-        "std": 0.016
-      },
-      "delay_ms": {
-        "mean": null,
-        "std": null
-      },
-      "miss_pct": {
-        "mean": 100.0,
-        "std": 0.0
-      },
-      "fa_pct": {
-        "mean": 0.0,
-        "std": 0.0
-      },
-      "survival": {
-        "mean": 99.167,
-        "std": 1.667
-      },
-      "quar_surv": {
-        "mean": 0.0,
-        "std": 0.0
-      },
-      "collision": {
-        "mean": 0.833,
-        "std": 1.667
-      },
-      "distance_m": {
-        "mean": 67.258,
-        "std": 18.519
-      },
-      "jerk": {
-        "mean": 7.411,
-        "std": 1.761
-      },
-      "qp_feasible_pct": {
-        "mean": 76.795,
-        "std": 1.081
-      },
-      "cbf_feasible_sat_pct": {
-        "mean": 100.0,
-        "std": 0.0
-      },
-      "fallback_pct": {
-        "mean": 23.205,
-        "std": 1.081
-      }
-    },
-    "First-Order CBF + BC": {
-      "auroc": {
-        "mean": 0.946,
-        "std": 0.016
-      },
-      "delay_ms": {
-        "mean": 1085.145,
-        "std": 304.877
-      },
-      "miss_pct": {
-        "mean": 0.0,
-        "std": 0.0
-      },
-      "fa_pct": {
-        "mean": 2.5,
-        "std": 2.041
-      },
-      "survival": {
-        "mean": 100.0,
-        "std": 0.0
-      },
-      "quar_surv": {
-        "mean": 100.0,
-        "std": 0.0
-      },
-      "collision": {
-        "mean": 0.0,
-        "std": 0.0
-      },
-      "distance_m": {
-        "mean": 84.155,
-        "std": 27.029
-      },
-      "jerk": {
-        "mean": 4.729,
-        "std": 0.92
-      },
-      "qp_feasible_pct": {
-        "mean": 91.99,
-        "std": 1.738
-      },
-      "cbf_feasible_sat_pct": {
-        "mean": 98.144,
-        "std": 1.153
-      },
-      "fallback_pct": {
-        "mean": 8.01,
-        "std": 1.738
+        "mean": 6.844,
+        "std": 1.6
       }
     },
     "No-Shield Ablation": {
       "auroc": {
-        "mean": 0.951,
-        "std": 0.012
+        "mean": 0.971,
+        "std": 0.01
       },
       "delay_ms": {
-        "mean": 708.003,
-        "std": 84.213
+        "mean": 928.0,
+        "std": 220.917
       },
       "miss_pct": {
-        "mean": 6.667,
-        "std": 5.0
+        "mean": 10.833,
+        "std": 4.249
       },
       "fa_pct": {
-        "mean": 2.5,
+        "mean": 1.667,
         "std": 2.041
       },
       "survival": {
-        "mean": 76.667,
-        "std": 17.2
+        "mean": 79.167,
+        "std": 15.138
       },
       "quar_surv": {
         "mean": 75.0,
-        "std": 17.678
+        "std": 14.672
       },
       "collision": {
-        "mean": 23.333,
-        "std": 17.2
+        "mean": 20.833,
+        "std": 15.138
       },
       "distance_m": {
-        "mean": 99.546,
-        "std": 28.526
+        "mean": 100.391,
+        "std": 36.39
       },
       "jerk": {
-        "mean": 1.828,
-        "std": 0.231
+        "mean": 1.749,
+        "std": 0.177
       },
       "qp_feasible_pct": {
         "mean": 100.0,
@@ -2429,228 +2710,228 @@
     },
     "TCN-Residual IDS": {
       "auroc": {
-        "mean": 0.93,
-        "std": 0.023
+        "mean": 0.947,
+        "std": 0.011
       },
       "delay_ms": {
-        "mean": 1316.697,
-        "std": 414.25
+        "mean": 1292.292,
+        "std": 140.553
       },
       "miss_pct": {
-        "mean": 6.667,
-        "std": 6.77
+        "mean": 5.0,
+        "std": 1.667
       },
       "fa_pct": {
-        "mean": 4.167,
-        "std": 5.27
+        "mean": 0.833,
+        "std": 1.667
       },
       "survival": {
-        "mean": 97.5,
-        "std": 5.0
+        "mean": 100.0,
+        "std": 0.0
       },
       "quar_surv": {
-        "mean": 90.833,
-        "std": 6.124
+        "mean": 95.0,
+        "std": 1.667
       },
       "collision": {
-        "mean": 2.5,
-        "std": 5.0
+        "mean": 0.0,
+        "std": 0.0
       },
       "distance_m": {
-        "mean": 94.902,
-        "std": 26.968
+        "mean": 103.206,
+        "std": 25.937
       },
       "jerk": {
-        "mean": 5.671,
-        "std": 1.342
+        "mean": 5.184,
+        "std": 0.876
       },
       "qp_feasible_pct": {
-        "mean": 86.359,
-        "std": 3.568
+        "mean": 90.724,
+        "std": 1.866
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 13.641,
-        "std": 3.568
+        "mean": 9.276,
+        "std": 1.866
       }
     },
     "Tiny-Transformer IDS": {
       "auroc": {
-        "mean": 0.935,
-        "std": 0.02
+        "mean": 0.958,
+        "std": 0.017
       },
       "delay_ms": {
-        "mean": 1345.935,
-        "std": 308.392
+        "mean": 1075.181,
+        "std": 265.475
       },
       "miss_pct": {
-        "mean": 0.833,
-        "std": 1.667
-      },
-      "fa_pct": {
         "mean": 2.5,
         "std": 2.041
+      },
+      "fa_pct": {
+        "mean": 0.833,
+        "std": 1.667
       },
       "survival": {
         "mean": 99.167,
         "std": 1.667
       },
       "quar_surv": {
-        "mean": 98.333,
-        "std": 2.041
+        "mean": 96.667,
+        "std": 1.667
       },
       "collision": {
         "mean": 0.833,
         "std": 1.667
       },
       "distance_m": {
-        "mean": 102.085,
-        "std": 26.332
+        "mean": 118.797,
+        "std": 36.893
       },
       "jerk": {
-        "mean": 5.072,
-        "std": 1.124
+        "mean": 5.79,
+        "std": 1.398
       },
       "qp_feasible_pct": {
-        "mean": 87.777,
-        "std": 1.067
+        "mean": 89.942,
+        "std": 1.885
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 12.223,
-        "std": 1.067
+        "mean": 10.058,
+        "std": 1.885
       }
     },
     "Stateless BC": {
       "auroc": {
-        "mean": 0.949,
-        "std": 0.016
+        "mean": 0.975,
+        "std": 0.005
       },
       "delay_ms": {
-        "mean": 933.949,
-        "std": 323.168
+        "mean": 1296.884,
+        "std": 98.127
       },
       "miss_pct": {
-        "mean": 3.333,
-        "std": 4.859
-      },
-      "fa_pct": {
         "mean": 1.667,
         "std": 2.041
+      },
+      "fa_pct": {
+        "mean": 3.333,
+        "std": 4.859
       },
       "survival": {
         "mean": 99.167,
         "std": 1.667
       },
       "quar_surv": {
-        "mean": 95.833,
-        "std": 5.27
+        "mean": 97.5,
+        "std": 2.041
       },
       "collision": {
         "mean": 0.833,
         "std": 1.667
       },
       "distance_m": {
-        "mean": 40.919,
-        "std": 24.59
+        "mean": 41.679,
+        "std": 22.492
       },
       "jerk": {
-        "mean": 3.949,
-        "std": 1.126
+        "mean": 3.793,
+        "std": 0.936
       },
       "qp_feasible_pct": {
-        "mean": 90.615,
-        "std": 3.903
+        "mean": 93.432,
+        "std": 1.499
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 9.385,
-        "std": 3.903
+        "mean": 6.568,
+        "std": 1.499
       }
     },
     "EKF-CUSUM + BC": {
       "auroc": {
-        "mean": 0.872,
-        "std": 0.029
+        "mean": 0.979,
+        "std": 0.005
       },
       "delay_ms": {
-        "mean": 4471.703,
-        "std": 186.095
+        "mean": 3253.333,
+        "std": 267.504
       },
       "miss_pct": {
-        "mean": 19.167,
-        "std": 7.265
+        "mean": 0.0,
+        "std": 0.0
       },
       "fa_pct": {
         "mean": 0.0,
         "std": 0.0
       },
       "survival": {
-        "mean": 100.0,
-        "std": 0.0
+        "mean": 99.167,
+        "std": 1.667
       },
       "quar_surv": {
-        "mean": 80.833,
-        "std": 7.265
+        "mean": 99.167,
+        "std": 1.667
       },
       "collision": {
-        "mean": 0.0,
-        "std": 0.0
+        "mean": 0.833,
+        "std": 1.667
       },
       "distance_m": {
-        "mean": 70.481,
-        "std": 20.827
+        "mean": 75.771,
+        "std": 31.947
       },
       "jerk": {
-        "mean": 6.494,
-        "std": 1.298
+        "mean": 5.303,
+        "std": 1.255
       },
       "qp_feasible_pct": {
-        "mean": 81.188,
-        "std": 2.019
+        "mean": 90.538,
+        "std": 1.299
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 18.812,
-        "std": 2.019
+        "mean": 9.462,
+        "std": 1.299
       }
     },
     "IDM-ACC + AEB": {
       "auroc": {
-        "mean": 0.5,
-        "std": 0.0
+        "mean": null,
+        "std": null
       },
       "delay_ms": {
         "mean": null,
         "std": null
       },
       "miss_pct": {
-        "mean": 100.0,
-        "std": 0.0
+        "mean": null,
+        "std": null
       },
       "fa_pct": {
-        "mean": 0.0,
-        "std": 0.0
+        "mean": null,
+        "std": null
       },
       "survival": {
         "mean": 95.0,
         "std": 3.118
       },
       "quar_surv": {
-        "mean": 0.0,
-        "std": 0.0
+        "mean": 95.0,
+        "std": 3.118
       },
       "collision": {
         "mean": 5.0,
@@ -2679,292 +2960,342 @@
     },
     "Emergency-Stop": {
       "auroc": {
-        "mean": 0.94,
-        "std": 0.02
+        "mean": 0.978,
+        "std": 0.012
       },
       "delay_ms": {
-        "mean": 909.577,
-        "std": 315.968
+        "mean": 1080.463,
+        "std": 309.266
       },
       "miss_pct": {
-        "mean": 3.333,
+        "mean": 5.0,
         "std": 3.118
       },
       "fa_pct": {
         "mean": 1.667,
-        "std": 2.041
+        "std": 3.333
       },
       "survival": {
-        "mean": 97.5,
+        "mean": 98.333,
         "std": 3.333
       },
       "quar_surv": {
-        "mean": 95.0,
-        "std": 3.118
+        "mean": 94.167,
+        "std": 3.333
       },
       "collision": {
-        "mean": 2.5,
+        "mean": 1.667,
         "std": 3.333
       },
       "distance_m": {
-        "mean": 62.294,
-        "std": 8.867
+        "mean": 67.986,
+        "std": 8.769
       },
       "jerk": {
-        "mean": 6.302,
-        "std": 0.911
+        "mean": 6.375,
+        "std": 0.632
       },
       "qp_feasible_pct": {
-        "mean": 87.651,
-        "std": 3.185
+        "mean": 90.072,
+        "std": 2.073
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 12.349,
-        "std": 3.185
+        "mean": 9.928,
+        "std": 2.073
       }
     }
   },
   "i-80": {
     "RecurrentShield-BC": {
       "auroc": {
-        "mean": 0.945,
+        "mean": 0.984,
         "std": 0.006
       },
       "delay_ms": {
-        "mean": 684.288,
-        "std": 39.181
+        "mean": 878.743,
+        "std": 126.238
       },
       "miss_pct": {
-        "mean": 0.833,
-        "std": 1.667
+        "mean": 5.833,
+        "std": 2.041
       },
       "fa_pct": {
-        "mean": 10.833,
-        "std": 7.265
+        "mean": 1.667,
+        "std": 2.041
       },
       "survival": {
-        "mean": 95.833,
-        "std": 0.0
+        "mean": 94.167,
+        "std": 2.041
       },
       "quar_surv": {
-        "mean": 95.833,
-        "std": 0.0
+        "mean": 90.833,
+        "std": 3.118
       },
       "collision": {
-        "mean": 4.167,
-        "std": 0.0
+        "mean": 5.833,
+        "std": 2.041
       },
       "distance_m": {
-        "mean": 83.466,
-        "std": 15.32
+        "mean": 83.747,
+        "std": 21.474
       },
       "jerk": {
-        "mean": 4.523,
-        "std": 0.745
+        "mean": 4.684,
+        "std": 0.589
       },
       "qp_feasible_pct": {
-        "mean": 93.037,
-        "std": 0.436
+        "mean": 93.296,
+        "std": 0.667
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 6.963,
-        "std": 0.436
+        "mean": 6.704,
+        "std": 0.667
       }
     },
     "RecurrentShield-INT8": {
       "auroc": {
-        "mean": 0.945,
-        "std": 0.006
+        "mean": 0.984,
+        "std": 0.005
       },
       "delay_ms": {
-        "mean": 722.206,
-        "std": 69.256
+        "mean": 812.059,
+        "std": 159.155
       },
       "miss_pct": {
-        "mean": 0.833,
-        "std": 1.667
+        "mean": 5.833,
+        "std": 2.041
       },
       "fa_pct": {
-        "mean": 10.833,
-        "std": 7.265
+        "mean": 1.667,
+        "std": 2.041
       },
       "survival": {
-        "mean": 95.833,
-        "std": 0.0
+        "mean": 95.0,
+        "std": 1.667
       },
       "quar_surv": {
-        "mean": 95.833,
-        "std": 0.0
+        "mean": 91.667,
+        "std": 3.727
       },
       "collision": {
-        "mean": 4.167,
-        "std": 0.0
+        "mean": 5.0,
+        "std": 1.667
       },
       "distance_m": {
-        "mean": 83.886,
-        "std": 15.455
+        "mean": 83.308,
+        "std": 22.022
       },
       "jerk": {
-        "mean": 4.407,
-        "std": 0.662
+        "mean": 4.674,
+        "std": 0.578
       },
       "qp_feasible_pct": {
-        "mean": 93.011,
-        "std": 0.491
+        "mean": 93.327,
+        "std": 0.608
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 6.989,
-        "std": 0.491
+        "mean": 6.673,
+        "std": 0.608
       }
     },
-    "Shield-Only (No IDS)": {
+    "Onboard-Only (No V2X)": {
       "auroc": {
-        "mean": 0.95,
-        "std": 0.004
+        "mean": null,
+        "std": null
       },
       "delay_ms": {
         "mean": null,
         "std": null
       },
       "miss_pct": {
-        "mean": 100.0,
-        "std": 0.0
+        "mean": null,
+        "std": null
       },
       "fa_pct": {
-        "mean": 0.0,
-        "std": 0.0
+        "mean": null,
+        "std": null
       },
       "survival": {
-        "mean": 95.833,
-        "std": 0.0
+        "mean": 93.333,
+        "std": 3.333
       },
       "quar_surv": {
-        "mean": 0.0,
-        "std": 0.0
+        "mean": 93.333,
+        "std": 3.333
       },
       "collision": {
-        "mean": 4.167,
-        "std": 0.0
+        "mean": 6.667,
+        "std": 3.333
       },
       "distance_m": {
-        "mean": 65.76,
-        "std": 12.792
+        "mean": 86.734,
+        "std": 20.242
       },
       "jerk": {
-        "mean": 7.205,
-        "std": 0.974
+        "mean": 3.719,
+        "std": 0.477
       },
       "qp_feasible_pct": {
-        "mean": 78.417,
-        "std": 1.373
+        "mean": 93.667,
+        "std": 0.694
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 21.583,
-        "std": 1.373
+        "mean": 6.333,
+        "std": 0.694
+      }
+    },
+    "Shield-Only (No IDS)": {
+      "auroc": {
+        "mean": null,
+        "std": null
+      },
+      "delay_ms": {
+        "mean": null,
+        "std": null
+      },
+      "miss_pct": {
+        "mean": null,
+        "std": null
+      },
+      "fa_pct": {
+        "mean": null,
+        "std": null
+      },
+      "survival": {
+        "mean": 95.0,
+        "std": 1.667
+      },
+      "quar_surv": {
+        "mean": 95.0,
+        "std": 1.667
+      },
+      "collision": {
+        "mean": 5.0,
+        "std": 1.667
+      },
+      "distance_m": {
+        "mean": 64.575,
+        "std": 16.42
+      },
+      "jerk": {
+        "mean": 7.301,
+        "std": 1.23
+      },
+      "qp_feasible_pct": {
+        "mean": 78.431,
+        "std": 1.312
+      },
+      "cbf_feasible_sat_pct": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "fallback_pct": {
+        "mean": 21.569,
+        "std": 1.312
       }
     },
     "First-Order CBF + BC": {
       "auroc": {
-        "mean": 0.944,
+        "mean": 0.984,
         "std": 0.006
       },
       "delay_ms": {
-        "mean": 640.897,
-        "std": 135.333
+        "mean": 873.924,
+        "std": 124.339
       },
       "miss_pct": {
-        "mean": 0.833,
-        "std": 1.667
+        "mean": 5.833,
+        "std": 2.041
       },
       "fa_pct": {
-        "mean": 10.833,
-        "std": 7.265
+        "mean": 1.667,
+        "std": 2.041
       },
       "survival": {
-        "mean": 95.833,
-        "std": 0.0
+        "mean": 95.0,
+        "std": 1.667
       },
       "quar_surv": {
-        "mean": 95.833,
-        "std": 0.0
+        "mean": 91.667,
+        "std": 3.727
       },
       "collision": {
-        "mean": 4.167,
-        "std": 0.0
+        "mean": 5.0,
+        "std": 1.667
       },
       "distance_m": {
-        "mean": 83.323,
-        "std": 15.299
+        "mean": 83.606,
+        "std": 21.427
       },
       "jerk": {
-        "mean": 4.397,
-        "std": 0.75
+        "mean": 4.498,
+        "std": 0.583
       },
       "qp_feasible_pct": {
-        "mean": 93.518,
-        "std": 0.386
+        "mean": 93.767,
+        "std": 0.565
       },
       "cbf_feasible_sat_pct": {
-        "mean": 98.556,
-        "std": 0.48
+        "mean": 97.896,
+        "std": 1.529
       },
       "fallback_pct": {
-        "mean": 6.482,
-        "std": 0.386
+        "mean": 6.233,
+        "std": 0.565
       }
     },
     "No-Shield Ablation": {
       "auroc": {
-        "mean": 0.953,
-        "std": 0.014
+        "mean": 0.977,
+        "std": 0.012
       },
       "delay_ms": {
-        "mean": 828.834,
-        "std": 135.133
+        "mean": 795.937,
+        "std": 233.746
       },
       "miss_pct": {
-        "mean": 3.333,
-        "std": 3.118
+        "mean": 13.333,
+        "std": 5.528
       },
       "fa_pct": {
-        "mean": 13.333,
-        "std": 7.169
+        "mean": 1.667,
+        "std": 2.041
       },
       "survival": {
-        "mean": 63.333,
-        "std": 19.614
+        "mean": 62.5,
+        "std": 21.731
       },
       "quar_surv": {
-        "mean": 63.333,
-        "std": 19.614
+        "mean": 58.333,
+        "std": 24.008
       },
       "collision": {
-        "mean": 36.667,
-        "std": 19.614
+        "mean": 37.5,
+        "std": 21.731
       },
       "distance_m": {
-        "mean": 91.778,
-        "std": 12.926
+        "mean": 88.645,
+        "std": 17.173
       },
       "jerk": {
-        "mean": 1.634,
-        "std": 0.292
+        "mean": 1.647,
+        "std": 0.29
       },
       "qp_feasible_pct": {
         "mean": 100.0,
@@ -2981,228 +3312,228 @@
     },
     "TCN-Residual IDS": {
       "auroc": {
-        "mean": 0.939,
-        "std": 0.004
+        "mean": 0.974,
+        "std": 0.01
       },
       "delay_ms": {
-        "mean": 1332.55,
-        "std": 476.527
+        "mean": 1366.996,
+        "std": 228.623
       },
       "miss_pct": {
-        "mean": 2.5,
+        "mean": 5.833,
         "std": 3.333
       },
       "fa_pct": {
-        "mean": 6.667,
-        "std": 6.77
+        "mean": 0.833,
+        "std": 1.667
       },
       "survival": {
-        "mean": 95.833,
-        "std": 3.727
+        "mean": 95.0,
+        "std": 4.082
       },
       "quar_surv": {
-        "mean": 95.0,
-        "std": 4.859
+        "mean": 92.5,
+        "std": 4.082
       },
       "collision": {
-        "mean": 4.167,
-        "std": 3.727
+        "mean": 5.0,
+        "std": 4.082
       },
       "distance_m": {
-        "mean": 86.75,
-        "std": 7.574
+        "mean": 97.343,
+        "std": 10.522
       },
       "jerk": {
-        "mean": 4.932,
-        "std": 0.837
+        "mean": 4.898,
+        "std": 0.334
       },
       "qp_feasible_pct": {
-        "mean": 89.577,
-        "std": 1.313
+        "mean": 91.79,
+        "std": 1.702
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 10.423,
-        "std": 1.313
+        "mean": 8.21,
+        "std": 1.702
       }
     },
     "Tiny-Transformer IDS": {
       "auroc": {
-        "mean": 0.939,
-        "std": 0.002
+        "mean": 0.982,
+        "std": 0.007
       },
       "delay_ms": {
-        "mean": 1112.609,
-        "std": 125.955
+        "mean": 1235.44,
+        "std": 327.866
       },
       "miss_pct": {
-        "mean": 1.667,
-        "std": 2.041
+        "mean": 3.333,
+        "std": 1.667
       },
       "fa_pct": {
-        "mean": 5.0,
-        "std": 4.082
+        "mean": 1.667,
+        "std": 3.333
       },
       "survival": {
-        "mean": 90.0,
-        "std": 3.333
+        "mean": 95.0,
+        "std": 3.118
       },
       "quar_surv": {
-        "mean": 89.167,
-        "std": 4.249
+        "mean": 92.5,
+        "std": 4.082
       },
       "collision": {
-        "mean": 10.0,
-        "std": 3.333
+        "mean": 5.0,
+        "std": 3.118
       },
       "distance_m": {
-        "mean": 88.753,
-        "std": 8.183
+        "mean": 102.457,
+        "std": 7.544
       },
       "jerk": {
-        "mean": 5.165,
-        "std": 0.795
+        "mean": 5.285,
+        "std": 0.764
       },
       "qp_feasible_pct": {
-        "mean": 90.355,
-        "std": 1.91
+        "mean": 92.251,
+        "std": 1.49
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 9.645,
-        "std": 1.91
+        "mean": 7.749,
+        "std": 1.49
       }
     },
     "Stateless BC": {
       "auroc": {
-        "mean": 0.949,
-        "std": 0.01
+        "mean": 0.984,
+        "std": 0.002
       },
       "delay_ms": {
-        "mean": 1030.657,
-        "std": 132.675
+        "mean": 1334.173,
+        "std": 308.715
       },
       "miss_pct": {
-        "mean": 1.667,
+        "mean": 2.5,
         "std": 2.041
       },
       "fa_pct": {
-        "mean": 5.0,
-        "std": 4.859
-      },
-      "survival": {
-        "mean": 97.5,
-        "std": 3.333
-      },
-      "quar_surv": {
-        "mean": 97.5,
-        "std": 3.333
-      },
-      "collision": {
         "mean": 2.5,
         "std": 3.333
       },
+      "survival": {
+        "mean": 96.667,
+        "std": 4.859
+      },
+      "quar_surv": {
+        "mean": 95.0,
+        "std": 4.082
+      },
+      "collision": {
+        "mean": 3.333,
+        "std": 4.859
+      },
       "distance_m": {
-        "mean": 40.079,
-        "std": 16.813
+        "mean": 40.192,
+        "std": 17.809
       },
       "jerk": {
-        "mean": 3.957,
-        "std": 0.904
+        "mean": 3.807,
+        "std": 0.869
       },
       "qp_feasible_pct": {
-        "mean": 91.872,
-        "std": 1.057
+        "mean": 93.67,
+        "std": 1.224
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 8.128,
-        "std": 1.057
+        "mean": 6.33,
+        "std": 1.224
       }
     },
     "EKF-CUSUM + BC": {
       "auroc": {
-        "mean": 0.905,
-        "std": 0.013
+        "mean": 0.986,
+        "std": 0.003
       },
       "delay_ms": {
-        "mean": 4319.617,
-        "std": 283.525
+        "mean": 3368.185,
+        "std": 341.708
       },
       "miss_pct": {
-        "mean": 17.5,
-        "std": 3.118
+        "mean": 4.167,
+        "std": 2.635
       },
       "fa_pct": {
         "mean": 0.0,
         "std": 0.0
       },
       "survival": {
-        "mean": 95.833,
-        "std": 0.0
+        "mean": 94.167,
+        "std": 2.041
       },
       "quar_surv": {
-        "mean": 80.833,
-        "std": 3.333
+        "mean": 93.333,
+        "std": 2.041
       },
       "collision": {
-        "mean": 4.167,
-        "std": 0.0
+        "mean": 5.833,
+        "std": 2.041
       },
       "distance_m": {
-        "mean": 68.875,
-        "std": 14.176
+        "mean": 71.885,
+        "std": 19.482
       },
       "jerk": {
-        "mean": 6.1,
-        "std": 0.831
+        "mean": 5.222,
+        "std": 0.798
       },
       "qp_feasible_pct": {
-        "mean": 84.188,
-        "std": 1.365
+        "mean": 91.521,
+        "std": 1.105
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 15.812,
-        "std": 1.365
+        "mean": 8.479,
+        "std": 1.105
       }
     },
     "IDM-ACC + AEB": {
       "auroc": {
-        "mean": 0.5,
-        "std": 0.0
+        "mean": null,
+        "std": null
       },
       "delay_ms": {
         "mean": null,
         "std": null
       },
       "miss_pct": {
-        "mean": 100.0,
-        "std": 0.0
+        "mean": null,
+        "std": null
       },
       "fa_pct": {
-        "mean": 0.0,
-        "std": 0.0
+        "mean": null,
+        "std": null
       },
       "survival": {
         "mean": 86.667,
         "std": 6.124
       },
       "quar_surv": {
-        "mean": 0.0,
-        "std": 0.0
+        "mean": 86.667,
+        "std": 6.124
       },
       "collision": {
         "mean": 13.333,
@@ -3231,292 +3562,342 @@
     },
     "Emergency-Stop": {
       "auroc": {
-        "mean": 0.951,
+        "mean": 0.991,
         "std": 0.002
       },
       "delay_ms": {
-        "mean": 619.657,
-        "std": 127.117
+        "mean": 981.304,
+        "std": 138.659
       },
       "miss_pct": {
-        "mean": 2.5,
-        "std": 2.041
+        "mean": 5.833,
+        "std": 3.333
       },
       "fa_pct": {
-        "mean": 13.333,
-        "std": 7.169
+        "mean": 0.0,
+        "std": 0.0
       },
       "survival": {
-        "mean": 93.333,
-        "std": 2.041
+        "mean": 91.667,
+        "std": 4.564
       },
       "quar_surv": {
-        "mean": 93.333,
-        "std": 2.041
+        "mean": 88.333,
+        "std": 4.082
       },
       "collision": {
-        "mean": 6.667,
-        "std": 2.041
+        "mean": 8.333,
+        "std": 4.564
       },
       "distance_m": {
-        "mean": 53.439,
-        "std": 4.794
+        "mean": 60.604,
+        "std": 5.473
       },
       "jerk": {
-        "mean": 5.904,
-        "std": 0.265
+        "mean": 6.013,
+        "std": 0.45
       },
       "qp_feasible_pct": {
-        "mean": 90.733,
-        "std": 1.31
+        "mean": 91.413,
+        "std": 1.185
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 9.267,
-        "std": 1.31
+        "mean": 8.587,
+        "std": 1.185
       }
     }
   },
   "lankershim": {
     "RecurrentShield-BC": {
       "auroc": {
-        "mean": 0.979,
-        "std": 0.01
+        "mean": 0.99,
+        "std": 0.005
       },
       "delay_ms": {
-        "mean": 292.599,
-        "std": 100.821
+        "mean": 793.872,
+        "std": 246.224
       },
       "miss_pct": {
-        "mean": 0.833,
-        "std": 1.667
+        "mean": 5.833,
+        "std": 2.041
       },
       "fa_pct": {
-        "mean": 21.667,
-        "std": 10.341
+        "mean": 1.667,
+        "std": 2.041
       },
       "survival": {
         "mean": 85.0,
-        "std": 10.069
+        "std": 9.354
       },
       "quar_surv": {
-        "mean": 85.0,
-        "std": 10.069
+        "mean": 80.833,
+        "std": 7.728
       },
       "collision": {
         "mean": 15.0,
-        "std": 10.069
+        "std": 9.354
       },
       "distance_m": {
-        "mean": 65.415,
-        "std": 23.001
+        "mean": 60.836,
+        "std": 12.649
       },
       "jerk": {
-        "mean": 4.261,
-        "std": 0.627
+        "mean": 4.661,
+        "std": 0.444
       },
       "qp_feasible_pct": {
-        "mean": 96.957,
-        "std": 0.814
+        "mean": 97.037,
+        "std": 1.112
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 3.043,
-        "std": 0.814
+        "mean": 2.963,
+        "std": 1.112
       }
     },
     "RecurrentShield-INT8": {
       "auroc": {
-        "mean": 0.98,
-        "std": 0.01
+        "mean": 0.989,
+        "std": 0.005
       },
       "delay_ms": {
-        "mean": 295.711,
-        "std": 100.681
+        "mean": 817.852,
+        "std": 254.432
       },
       "miss_pct": {
-        "mean": 0.833,
-        "std": 1.667
+        "mean": 6.667,
+        "std": 2.041
       },
       "fa_pct": {
-        "mean": 24.167,
-        "std": 10.0
+        "mean": 1.667,
+        "std": 2.041
       },
       "survival": {
-        "mean": 85.0,
-        "std": 9.718
+        "mean": 84.167,
+        "std": 8.898
       },
       "quar_surv": {
-        "mean": 85.0,
-        "std": 9.718
+        "mean": 80.0,
+        "std": 7.169
       },
       "collision": {
-        "mean": 15.0,
-        "std": 9.718
+        "mean": 15.833,
+        "std": 8.898
       },
       "distance_m": {
-        "mean": 66.131,
-        "std": 23.334
+        "mean": 60.069,
+        "std": 12.718
       },
       "jerk": {
-        "mean": 4.249,
-        "std": 0.743
+        "mean": 4.773,
+        "std": 0.481
       },
       "qp_feasible_pct": {
-        "mean": 96.977,
-        "std": 0.935
+        "mean": 97.026,
+        "std": 1.119
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 3.023,
-        "std": 0.935
+        "mean": 2.974,
+        "std": 1.119
       }
     },
-    "Shield-Only (No IDS)": {
+    "Onboard-Only (No V2X)": {
       "auroc": {
-        "mean": 0.98,
-        "std": 0.007
+        "mean": null,
+        "std": null
       },
       "delay_ms": {
         "mean": null,
         "std": null
       },
       "miss_pct": {
-        "mean": 100.0,
-        "std": 0.0
+        "mean": null,
+        "std": null
       },
       "fa_pct": {
-        "mean": 0.0,
-        "std": 0.0
+        "mean": null,
+        "std": null
       },
       "survival": {
-        "mean": 81.667,
-        "std": 8.58
+        "mean": 85.0,
+        "std": 10.069
       },
       "quar_surv": {
-        "mean": 0.0,
-        "std": 0.0
+        "mean": 85.0,
+        "std": 10.069
       },
       "collision": {
-        "mean": 18.333,
-        "std": 8.58
+        "mean": 15.0,
+        "std": 10.069
       },
       "distance_m": {
-        "mean": 50.604,
-        "std": 17.409
+        "mean": 62.981,
+        "std": 12.731
       },
       "jerk": {
-        "mean": 6.826,
-        "std": 0.641
+        "mean": 3.837,
+        "std": 0.712
       },
       "qp_feasible_pct": {
-        "mean": 82.706,
-        "std": 1.338
+        "mean": 97.304,
+        "std": 0.852
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 17.294,
-        "std": 1.338
+        "mean": 2.696,
+        "std": 0.852
+      }
+    },
+    "Shield-Only (No IDS)": {
+      "auroc": {
+        "mean": null,
+        "std": null
+      },
+      "delay_ms": {
+        "mean": null,
+        "std": null
+      },
+      "miss_pct": {
+        "mean": null,
+        "std": null
+      },
+      "fa_pct": {
+        "mean": null,
+        "std": null
+      },
+      "survival": {
+        "mean": 83.333,
+        "std": 8.74
+      },
+      "quar_surv": {
+        "mean": 83.333,
+        "std": 8.74
+      },
+      "collision": {
+        "mean": 16.667,
+        "std": 8.74
+      },
+      "distance_m": {
+        "mean": 47.683,
+        "std": 7.218
+      },
+      "jerk": {
+        "mean": 7.137,
+        "std": 0.672
+      },
+      "qp_feasible_pct": {
+        "mean": 82.853,
+        "std": 0.778
+      },
+      "cbf_feasible_sat_pct": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "fallback_pct": {
+        "mean": 17.147,
+        "std": 0.778
       }
     },
     "First-Order CBF + BC": {
       "auroc": {
-        "mean": 0.978,
-        "std": 0.008
+        "mean": 0.99,
+        "std": 0.005
       },
       "delay_ms": {
-        "mean": 286.427,
-        "std": 107.001
+        "mean": 795.793,
+        "std": 245.456
       },
       "miss_pct": {
-        "mean": 0.833,
-        "std": 1.667
+        "mean": 5.833,
+        "std": 2.041
       },
       "fa_pct": {
-        "mean": 20.833,
-        "std": 10.206
+        "mean": 2.5,
+        "std": 2.041
       },
       "survival": {
         "mean": 83.333,
-        "std": 9.501
+        "std": 9.129
       },
       "quar_surv": {
-        "mean": 83.333,
-        "std": 9.501
+        "mean": 79.167,
+        "std": 7.906
       },
       "collision": {
         "mean": 16.667,
-        "std": 9.501
+        "std": 9.129
       },
       "distance_m": {
-        "mean": 63.847,
-        "std": 22.077
+        "mean": 59.431,
+        "std": 11.851
       },
       "jerk": {
-        "mean": 4.18,
-        "std": 0.735
+        "mean": 4.551,
+        "std": 0.645
       },
       "qp_feasible_pct": {
-        "mean": 97.393,
-        "std": 0.696
+        "mean": 97.348,
+        "std": 1.083
       },
       "cbf_feasible_sat_pct": {
-        "mean": 99.244,
-        "std": 0.804
+        "mean": 99.236,
+        "std": 0.833
       },
       "fallback_pct": {
-        "mean": 2.607,
-        "std": 0.696
+        "mean": 2.652,
+        "std": 1.083
       }
     },
     "No-Shield Ablation": {
       "auroc": {
-        "mean": 0.981,
-        "std": 0.005
+        "mean": 0.991,
+        "std": 0.004
       },
       "delay_ms": {
-        "mean": 174.409,
-        "std": 44.569
+        "mean": 804.372,
+        "std": 288.68
       },
       "miss_pct": {
+        "mean": 10.833,
+        "std": 3.333
+      },
+      "fa_pct": {
         "mean": 1.667,
         "std": 2.041
       },
-      "fa_pct": {
-        "mean": 25.0,
-        "std": 10.865
-      },
       "survival": {
-        "mean": 68.333,
-        "std": 13.591
+        "mean": 67.5,
+        "std": 11.304
       },
       "quar_surv": {
-        "mean": 68.333,
-        "std": 13.591
+        "mean": 64.167,
+        "std": 9.718
       },
       "collision": {
-        "mean": 31.667,
-        "std": 13.591
+        "mean": 32.5,
+        "std": 11.304
       },
       "distance_m": {
-        "mean": 73.496,
-        "std": 29.711
+        "mean": 67.46,
+        "std": 13.762
       },
       "jerk": {
-        "mean": 1.897,
-        "std": 0.327
+        "mean": 2.021,
+        "std": 0.25
       },
       "qp_feasible_pct": {
         "mean": 100.0,
@@ -3533,228 +3914,228 @@
     },
     "TCN-Residual IDS": {
       "auroc": {
-        "mean": 0.969,
-        "std": 0.015
+        "mean": 0.986,
+        "std": 0.006
       },
       "delay_ms": {
-        "mean": 572.765,
-        "std": 436.835
+        "mean": 1092.729,
+        "std": 140.551
       },
       "miss_pct": {
-        "mean": 2.5,
-        "std": 3.333
-      },
-      "fa_pct": {
-        "mean": 25.833,
-        "std": 31.885
-      },
-      "survival": {
-        "mean": 86.667,
+        "mean": 9.167,
         "std": 4.859
       },
+      "fa_pct": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "survival": {
+        "mean": 87.5,
+        "std": 5.27
+      },
       "quar_surv": {
-        "mean": 85.833,
+        "mean": 80.833,
         "std": 4.249
       },
       "collision": {
-        "mean": 13.333,
-        "std": 4.859
+        "mean": 12.5,
+        "std": 5.27
       },
       "distance_m": {
-        "mean": 138.677,
-        "std": 21.212
+        "mean": 139.322,
+        "std": 27.002
       },
       "jerk": {
-        "mean": 4.892,
-        "std": 1.183
+        "mean": 5.144,
+        "std": 0.928
       },
       "qp_feasible_pct": {
-        "mean": 95.771,
-        "std": 1.777
+        "mean": 96.064,
+        "std": 1.496
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 4.229,
-        "std": 1.777
+        "mean": 3.936,
+        "std": 1.496
       }
     },
     "Tiny-Transformer IDS": {
       "auroc": {
-        "mean": 0.976,
-        "std": 0.01
-      },
-      "delay_ms": {
-        "mean": 269.562,
-        "std": 76.635
-      },
-      "miss_pct": {
-        "mean": 1.667,
-        "std": 3.333
-      },
-      "fa_pct": {
-        "mean": 21.667,
-        "std": 14.767
-      },
-      "survival": {
-        "mean": 83.333,
-        "std": 6.972
-      },
-      "quar_surv": {
-        "mean": 82.5,
-        "std": 6.124
-      },
-      "collision": {
-        "mean": 16.667,
-        "std": 6.972
-      },
-      "distance_m": {
-        "mean": 124.732,
-        "std": 12.353
-      },
-      "jerk": {
-        "mean": 4.468,
-        "std": 0.813
-      },
-      "qp_feasible_pct": {
-        "mean": 96.118,
-        "std": 1.083
-      },
-      "cbf_feasible_sat_pct": {
-        "mean": 100.0,
-        "std": 0.0
-      },
-      "fallback_pct": {
-        "mean": 3.882,
-        "std": 1.083
-      }
-    },
-    "Stateless BC": {
-      "auroc": {
-        "mean": 0.975,
-        "std": 0.014
-      },
-      "delay_ms": {
-        "mean": 367.017,
-        "std": 183.691
-      },
-      "miss_pct": {
-        "mean": 2.5,
-        "std": 2.041
-      },
-      "fa_pct": {
-        "mean": 23.333,
-        "std": 14.093
-      },
-      "survival": {
-        "mean": 81.667,
-        "std": 9.718
-      },
-      "quar_surv": {
-        "mean": 81.667,
-        "std": 9.718
-      },
-      "collision": {
-        "mean": 18.333,
-        "std": 9.718
-      },
-      "distance_m": {
-        "mean": 72.972,
-        "std": 35.578
-      },
-      "jerk": {
-        "mean": 4.47,
-        "std": 1.288
-      },
-      "qp_feasible_pct": {
-        "mean": 96.223,
-        "std": 1.673
-      },
-      "cbf_feasible_sat_pct": {
-        "mean": 100.0,
-        "std": 0.0
-      },
-      "fallback_pct": {
-        "mean": 3.777,
-        "std": 1.673
-      }
-    },
-    "EKF-CUSUM + BC": {
-      "auroc": {
-        "mean": 0.976,
+        "mean": 0.987,
         "std": 0.004
       },
       "delay_ms": {
-        "mean": 3365.989,
-        "std": 181.829
+        "mean": 1156.67,
+        "std": 346.645
       },
       "miss_pct": {
         "mean": 8.333,
         "std": 2.635
       },
       "fa_pct": {
-        "mean": 0.0,
-        "std": 0.0
+        "mean": 0.833,
+        "std": 1.667
       },
       "survival": {
-        "mean": 84.167,
-        "std": 9.28
+        "mean": 87.5,
+        "std": 7.454
       },
       "quar_surv": {
-        "mean": 82.5,
-        "std": 8.498
+        "mean": 83.333,
+        "std": 5.893
       },
       "collision": {
-        "mean": 15.833,
-        "std": 9.28
+        "mean": 12.5,
+        "std": 7.454
       },
       "distance_m": {
-        "mean": 57.802,
-        "std": 21.178
+        "mean": 137.473,
+        "std": 15.829
       },
       "jerk": {
-        "mean": 4.703,
-        "std": 0.501
+        "mean": 4.911,
+        "std": 0.581
       },
       "qp_feasible_pct": {
-        "mean": 95.761,
-        "std": 1.014
+        "mean": 96.045,
+        "std": 0.99
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 4.239,
-        "std": 1.014
+        "mean": 3.955,
+        "std": 0.99
       }
     },
-    "IDM-ACC + AEB": {
+    "Stateless BC": {
       "auroc": {
-        "mean": 0.5,
-        "std": 0.0
+        "mean": 0.988,
+        "std": 0.005
       },
       "delay_ms": {
-        "mean": null,
-        "std": null
+        "mean": 1147.108,
+        "std": 304.057
       },
       "miss_pct": {
+        "mean": 9.167,
+        "std": 4.859
+      },
+      "fa_pct": {
+        "mean": 2.5,
+        "std": 3.333
+      },
+      "survival": {
+        "mean": 79.167,
+        "std": 10.865
+      },
+      "quar_surv": {
+        "mean": 74.167,
+        "std": 9.647
+      },
+      "collision": {
+        "mean": 20.833,
+        "std": 10.865
+      },
+      "distance_m": {
+        "mean": 68.161,
+        "std": 38.372
+      },
+      "jerk": {
+        "mean": 4.411,
+        "std": 0.955
+      },
+      "qp_feasible_pct": {
+        "mean": 96.453,
+        "std": 1.18
+      },
+      "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
+      },
+      "fallback_pct": {
+        "mean": 3.547,
+        "std": 1.18
+      }
+    },
+    "EKF-CUSUM + BC": {
+      "auroc": {
+        "mean": 0.985,
+        "std": 0.008
+      },
+      "delay_ms": {
+        "mean": 3167.941,
+        "std": 271.722
+      },
+      "miss_pct": {
+        "mean": 5.0,
+        "std": 3.118
       },
       "fa_pct": {
         "mean": 0.0,
         "std": 0.0
       },
       "survival": {
+        "mean": 85.0,
+        "std": 7.728
+      },
+      "quar_surv": {
+        "mean": 84.167,
+        "std": 7.169
+      },
+      "collision": {
+        "mean": 15.0,
+        "std": 7.728
+      },
+      "distance_m": {
+        "mean": 53.164,
+        "std": 9.707
+      },
+      "jerk": {
+        "mean": 5.054,
+        "std": 0.33
+      },
+      "qp_feasible_pct": {
+        "mean": 95.619,
+        "std": 1.176
+      },
+      "cbf_feasible_sat_pct": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "fallback_pct": {
+        "mean": 4.381,
+        "std": 1.176
+      }
+    },
+    "IDM-ACC + AEB": {
+      "auroc": {
+        "mean": null,
+        "std": null
+      },
+      "delay_ms": {
+        "mean": null,
+        "std": null
+      },
+      "miss_pct": {
+        "mean": null,
+        "std": null
+      },
+      "fa_pct": {
+        "mean": null,
+        "std": null
+      },
+      "survival": {
         "mean": 82.5,
         "std": 9.647
       },
       "quar_surv": {
-        "mean": 0.0,
-        "std": 0.0
+        "mean": 82.5,
+        "std": 9.647
       },
       "collision": {
         "mean": 17.5,
@@ -3783,52 +4164,52 @@
     },
     "Emergency-Stop": {
       "auroc": {
-        "mean": 0.977,
-        "std": 0.014
+        "mean": 0.988,
+        "std": 0.006
       },
       "delay_ms": {
-        "mean": 218.392,
-        "std": 100.887
+        "mean": 756.601,
+        "std": 127.149
       },
       "miss_pct": {
-        "mean": 1.667,
+        "mean": 6.667,
         "std": 2.041
       },
       "fa_pct": {
-        "mean": 32.5,
-        "std": 11.304
+        "mean": 0.0,
+        "std": 0.0
       },
       "survival": {
-        "mean": 80.0,
-        "std": 8.898
+        "mean": 80.833,
+        "std": 7.265
       },
       "quar_surv": {
-        "mean": 80.0,
-        "std": 8.898
+        "mean": 76.667,
+        "std": 7.265
       },
       "collision": {
-        "mean": 20.0,
-        "std": 8.898
+        "mean": 19.167,
+        "std": 7.265
       },
       "distance_m": {
-        "mean": 60.242,
-        "std": 7.454
+        "mean": 81.766,
+        "std": 9.385
       },
       "jerk": {
-        "mean": 6.435,
-        "std": 0.826
+        "mean": 6.224,
+        "std": 0.772
       },
       "qp_feasible_pct": {
-        "mean": 96.251,
-        "std": 1.545
+        "mean": 95.958,
+        "std": 1.856
       },
       "cbf_feasible_sat_pct": {
         "mean": 100.0,
         "std": 0.0
       },
       "fallback_pct": {
-        "mean": 3.749,
-        "std": 1.545
+        "mean": 4.042,
+        "std": 1.856
       }
     }
   }

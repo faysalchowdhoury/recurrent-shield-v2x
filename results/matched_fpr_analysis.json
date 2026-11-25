@@ -1,0 +1,228 @@
+{
+  "posthoc_matched_4pct_fpr": {
+    "us-101_test": {
+      "RecurrentShield-BC": {
+        "matched_tau": 3.125,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 85.8,
+        "det_delay_ms": 1013.2,
+        "miss_pct": 2.5,
+        "pre_fa_pct": 2.5
+      },
+      "TCN-Residual IDS": {
+        "matched_tau": 3.444,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 76.2,
+        "det_delay_ms": 1403.5,
+        "miss_pct": 5.0,
+        "pre_fa_pct": 0.8
+      },
+      "Tiny-Transformer IDS": {
+        "matched_tau": 3.244,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 77.4,
+        "det_delay_ms": 1211.2,
+        "miss_pct": 3.3,
+        "pre_fa_pct": 0.0
+      },
+      "Stateless BC": {
+        "matched_tau": 3.335,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 81.7,
+        "det_delay_ms": 1221.6,
+        "miss_pct": 2.5,
+        "pre_fa_pct": 0.8
+      },
+      "EKF-CUSUM + BC": {
+        "matched_tau": 115.743,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 80.3,
+        "det_delay_ms": 3299.2,
+        "miss_pct": 0.0,
+        "pre_fa_pct": 0.0
+      }
+    },
+    "i-80": {
+      "RecurrentShield-BC": {
+        "matched_tau": 3.077,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 91.8,
+        "det_delay_ms": 901.9,
+        "miss_pct": 6.7,
+        "pre_fa_pct": 3.3
+      },
+      "TCN-Residual IDS": {
+        "matched_tau": 3.557,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 82.2,
+        "det_delay_ms": 1463.7,
+        "miss_pct": 5.8,
+        "pre_fa_pct": 0.0
+      },
+      "Tiny-Transformer IDS": {
+        "matched_tau": 3.122,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 81.3,
+        "det_delay_ms": 1340.2,
+        "miss_pct": 2.5,
+        "pre_fa_pct": 0.0
+      },
+      "Stateless BC": {
+        "matched_tau": 3.314,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 83.2,
+        "det_delay_ms": 1353.0,
+        "miss_pct": 2.5,
+        "pre_fa_pct": 1.7
+      },
+      "EKF-CUSUM + BC": {
+        "matched_tau": 44.538,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 91.3,
+        "det_delay_ms": 1539.7,
+        "miss_pct": 3.3,
+        "pre_fa_pct": 0.0
+      }
+    },
+    "lankershim": {
+      "RecurrentShield-BC": {
+        "matched_tau": 3.091,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 97.8,
+        "det_delay_ms": 865.4,
+        "miss_pct": 7.5,
+        "pre_fa_pct": 5.8
+      },
+      "TCN-Residual IDS": {
+        "matched_tau": 3.552,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 94.0,
+        "det_delay_ms": 1142.6,
+        "miss_pct": 10.0,
+        "pre_fa_pct": 0.0
+      },
+      "Tiny-Transformer IDS": {
+        "matched_tau": 3.187,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 92.7,
+        "det_delay_ms": 1215.5,
+        "miss_pct": 7.5,
+        "pre_fa_pct": 0.8
+      },
+      "Stateless BC": {
+        "matched_tau": 3.44,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 94.5,
+        "det_delay_ms": 1229.9,
+        "miss_pct": 10.0,
+        "pre_fa_pct": 0.8
+      },
+      "EKF-CUSUM + BC": {
+        "matched_tau": 32.028,
+        "clean_ep_fpr_pct": 4.0,
+        "step_tpr_at_4pct_fpr": 94.4,
+        "det_delay_ms": 1115.8,
+        "miss_pct": 2.5,
+        "pre_fa_pct": 2.5
+      }
+    }
+  },
+  "unsupervised_target_adapt": {
+    "us-101_test": {
+      "RecurrentShield-BC": {
+        "clean_fpr_pct": 6.7,
+        "det_delay_ms": 852.2,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0
+      },
+      "TCN-Residual IDS": {
+        "clean_fpr_pct": 20.0,
+        "det_delay_ms": 1130.4,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0
+      },
+      "Tiny-Transformer IDS": {
+        "clean_fpr_pct": 0.0,
+        "det_delay_ms": 678.3,
+        "miss_pct": 0.0,
+        "surv_pct": 95.8
+      },
+      "Stateless BC": {
+        "clean_fpr_pct": 33.3,
+        "det_delay_ms": 1278.3,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0
+      },
+      "EKF-CUSUM + BC": {
+        "clean_fpr_pct": 0.0,
+        "det_delay_ms": 3516.7,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0
+      }
+    },
+    "i-80": {
+      "RecurrentShield-BC": {
+        "clean_fpr_pct": 13.3,
+        "det_delay_ms": 368.2,
+        "miss_pct": 0.0,
+        "surv_pct": 91.7
+      },
+      "TCN-Residual IDS": {
+        "clean_fpr_pct": 6.7,
+        "det_delay_ms": 1169.6,
+        "miss_pct": 4.2,
+        "surv_pct": 95.8
+      },
+      "Tiny-Transformer IDS": {
+        "clean_fpr_pct": 0.0,
+        "det_delay_ms": 752.4,
+        "miss_pct": 4.2,
+        "surv_pct": 95.8
+      },
+      "Stateless BC": {
+        "clean_fpr_pct": 46.7,
+        "det_delay_ms": 1284.2,
+        "miss_pct": 4.2,
+        "surv_pct": 100.0
+      },
+      "EKF-CUSUM + BC": {
+        "clean_fpr_pct": 6.7,
+        "det_delay_ms": 1734.8,
+        "miss_pct": 4.2,
+        "surv_pct": 91.7
+      }
+    },
+    "lankershim": {
+      "RecurrentShield-BC": {
+        "clean_fpr_pct": 0.0,
+        "det_delay_ms": 621.7,
+        "miss_pct": 4.2,
+        "surv_pct": 66.7
+      },
+      "TCN-Residual IDS": {
+        "clean_fpr_pct": 13.3,
+        "det_delay_ms": 1095.5,
+        "miss_pct": 8.3,
+        "surv_pct": 91.7
+      },
+      "Tiny-Transformer IDS": {
+        "clean_fpr_pct": 6.7,
+        "det_delay_ms": 987.0,
+        "miss_pct": 4.2,
+        "surv_pct": 91.7
+      },
+      "Stateless BC": {
+        "clean_fpr_pct": 0.0,
+        "det_delay_ms": 790.9,
+        "miss_pct": 4.2,
+        "surv_pct": 75.0
+      },
+      "EKF-CUSUM + BC": {
+        "clean_fpr_pct": 0.0,
+        "det_delay_ms": 1366.7,
+        "miss_pct": 0.0,
+        "surv_pct": 70.8
+      }
+    }
+  }
+}

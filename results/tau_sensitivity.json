@@ -1,23 +1,23 @@
 {
   "target_fpr=0.01": {
-    "tau_rec": 2.137,
-    "pre_onset_fa_pct": 0.0,
+    "tau_rec": 3.105,
+    "pre_onset_fa_pct": 5.56,
     "miss_pct": 11.11,
-    "detected_delay_ms": 475.0,
+    "detected_delay_ms": 626.7,
     "quar_surv_pct": 88.89
   },
   "target_fpr=0.04": {
-    "tau_rec": 2.13,
-    "pre_onset_fa_pct": 0.0,
+    "tau_rec": 2.998,
+    "pre_onset_fa_pct": 5.56,
     "miss_pct": 11.11,
-    "detected_delay_ms": 437.5,
+    "detected_delay_ms": 626.7,
     "quar_surv_pct": 88.89
   },
   "target_fpr=0.08": {
-    "tau_rec": 2.078,
-    "pre_onset_fa_pct": 0.0,
+    "tau_rec": 2.888,
+    "pre_onset_fa_pct": 11.11,
     "miss_pct": 11.11,
-    "detected_delay_ms": 437.5,
-    "quar_surv_pct": 88.89
+    "detected_delay_ms": 664.3,
+    "quar_surv_pct": 83.33
   }
 }

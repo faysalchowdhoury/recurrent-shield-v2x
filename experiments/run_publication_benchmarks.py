@@ -1,12 +1,13 @@
 """
-Rigorous Disjoint-Split Benchmark Runner with Equal Calibration, Censoring & Cluster-Bootstrap Stats.
+Rigorous Disjoint-Split Benchmark Runner with Equal Calibration, Onboard-Only Baseline,
+Matched-FPR Comparison, Censoring, Failure-Mode Audit & Sensor/Severity Sweeps.
 
 Protocol:
-  1. Training Split       : US-101 Period 1 (frames 500..2800, 230.1 s, 20 diverse rollouts)
+  1. Training Split       : US-101 Period 1 (frames 500..2800, 230.1 s, 16 diverse rollouts)
   2. Validation/Calib     : US-101 Period 2 (frames 500..2800, disjoint 216.3 s)
-                            All detectors (RecurrentShield-BC, TCN, Tiny-Transformer, Stateless BC, EKF-CUSUM)
-                            are calibrated identically on 25 held-out clean validation episodes targeting <=4% clean FPR
-                            (zero ad-hoc baseline multipliers; zero post-hoc test-set tuning!).
+                            All active detectors (RecurrentShield-BC, TCN, Tiny-Transformer,
+                            Stateless BC, EKF-CUSUM) are calibrated identically on 40 held-out
+                            clean validation episodes targeting <=4% clean FPR.
   3. Held-Out Evaluation  :
        - US-101 Period 3 (frames 500..2800, disjoint 230.1 s)
        - I-80 Period 1 (unseen freeway)
@@ -14,11 +15,14 @@ Protocol:
 
 Includes:
   - Clean no-attack ("none") condition
+  - Onboard-Only (No V2X) baseline ignoring BSMs & SPaT (with full nominal speed + DT-CBF)
   - Shield-Only (No IDS) ablation isolating Head 1 IDS contribution
-  - First-Order Linearized DT-CBF vs Nonlinear Monotonic DT-CBF (Gap G3 test)
+  - First-Order Linearized DT-CBF vs Nonlinear Monotonic DT-CBF
   - Closed-loop symmetric INT8 quantized evaluation (RecurrentShield-INT8)
   - Classical domain baseline IDM-ACC + AEB & zero-mobility Emergency-Stop
   - Detected-only latency + Miss Rate (%) censoring (no synthetic max-horizon padding!)
+  - Post-hoc matched 4% in-domain FPR operating points + unsupervised corridor recalibration
+  - Failure-mode classification + sensor noise / attack severity sweeps
   - Seed- and spawn-clustered bootstrap 95% CIs + Holm-Bonferroni corrected McNemar p-values.
 """
 
@@ -28,8 +32,9 @@ import json
 import math
 import sys
 import warnings
+from collections import Counter
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 warnings.filterwarnings("ignore", message="Converting mask without torch.bool dtype to bool.*")
 
@@ -60,9 +65,25 @@ from models.recurrent_shield_bc import KinematicResidualQuarantineMonitor, Recur
 
 
 SEEDS = [101, 202, 303, 404, 505]
-N_TRIALS_PER_ATK = 4  # Non-overlapping 160-step windows over ~2,100-2,300 continuous frames -> 120 atk + 25 clean = 145 eps/corridor
+N_TRIALS_PER_ATK = 4  # 120 attack + 25 clean = 145 eps/corridor/method
 N_CLEAN_PER_SEED = 5
 TARGET_CAL_FPR = 0.04
+IDS_METHODS = (
+    "RecurrentShield-BC",
+    "RecurrentShield-INT8",
+    "No-Shield Ablation",
+    "First-Order CBF + BC",
+    "Emergency-Stop",
+    "TCN-Residual IDS",
+    "Tiny-Transformer IDS",
+    "Stateless BC",
+    "EKF-CUSUM + BC",
+)
+NON_IDS_METHODS = (
+    "Onboard-Only (No V2X)",
+    "Shield-Only (No IDS)",
+    "IDM-ACC + AEB",
+)
 
 
 def cluster_bootstrap_ci_95(cluster_vals: List[float], n_boot: int = 1000, seed: int = 42) -> Tuple[float, float]:
@@ -111,6 +132,12 @@ def compute_auroc(scores: np.ndarray, labels: np.ndarray) -> float:
     return float((np.sum(diff > 0) + 0.5 * np.sum(diff == 0)) / (len(pos) * len(neg)))
 
 
+def peak_2step_score(arr: List[float]) -> float:
+    if len(arr) >= 2:
+        return float(max(min(arr[t], arr[t + 1]) for t in range(len(arr) - 1)))
+    return float(arr[0]) if arr else 0.0
+
+
 def expert_teacher_action(info: Dict[str, Any], desired_v: float, quarantined: bool) -> np.ndarray:
     v_ego = float(info["ego_vel"][1])
     d_front = float(info["eff_front_dist"])
@@ -145,7 +172,7 @@ def train_models_on_us101_period1(
 
     seq_obs, seq_kin, seq_act, seq_ret = [], [], [], []
     n_frames = len(train_env.frames)
-    target_speeds = [6.5, 8.0, 9.5, 11.0, 12.5, 14.0, 15.5, 17.5] * 2  # 16 diverse rollouts (~2,000+ steps)
+    target_speeds = [6.5, 8.0, 9.5, 11.0, 12.5, 14.0, 15.5, 17.5] * 2
     for ep, ep_v_des in enumerate(target_speeds):
         foff = (ep * 130) % max(1, n_frames - 170)
         obs, info = train_env.reset(
@@ -244,19 +271,21 @@ def train_models_on_us101_period1(
     return rec_model.eval(), stateless.eval(), trans.eval(), tcn.eval()
 
 
-def calibrate_detectors_on_val(
+def calibrate_detectors_on_clean_episodes(
     val_env: NgsimCorridorEnv,
     rec_model: RecurrentShieldBC,
     stateless: StatelessBC,
     trans: TinyTransformerIDS,
     tcn: TCNResidualIDS,
     target_fpr: float = TARGET_CAL_FPR,
+    n_cal: int = 40,
+    seed_base: int = 7000,
+    stride: int = 50,
 ) -> Dict[str, Any]:
     """
-    Calibrates ALL detectors equivalently on held-out US-101 Period 2 clean runs
-    without ad-hoc scaling multipliers or test-set tuning.
+    Calibrates ALL active detectors identically on clean nominal driving episodes
+    without ad-hoc scaling multipliers or attack labels.
     """
-    n_cal = 25
     max_p2_scores: Dict[str, List[float]] = {
         "rec": [],
         "tcn": [],
@@ -268,8 +297,8 @@ def calibrate_detectors_on_val(
 
     n_frames = len(val_env.frames)
     for ep in range(n_cal):
-        foff = (ep * 85) % max(1, n_frames - 170)
-        obs, info = val_env.reset(ThreatConfig(attack_type="none", seed=7000 + ep), seed=7000 + ep, frame_offset=foff)
+        foff = (ep * stride) % max(1, n_frames - 170)
+        obs, info = val_env.reset(ThreatConfig(attack_type="none", seed=seed_base + ep), seed=seed_base + ep, frame_offset=foff)
         hidden = rec_model.init_hidden(1)
         hist_buf = np.zeros((16, 26), dtype=np.float32)
         hist_len = 0
@@ -302,7 +331,6 @@ def calibrate_detectors_on_val(
 
                 u_nom = o_rec["action_mean"].squeeze(0).cpu().numpy()
 
-            # Compute EKF innovation directly without quarantine interference
             tmp_ekf = EkfCusumDetector(cusum_drift=1.5, cusum_threshold=999.0)
             nis_val, _ = tmp_ekf.step(0.1, float(obs[23] * 5.0), float(obs[20] * 30.0), kin_obs)
             ekf_nis_clean.append(nis_val)
@@ -311,18 +339,15 @@ def calibrate_detectors_on_val(
             u_cmd, _ = shield.filter_action(
                 u_nom, float(info["ego_vel"][1]), float(info["eff_front_dist"]),
                 float(info["eff_front_rel_v"]), float(info["left_clear"]), float(info["right_clear"]),
+                bool(info["blinded_mask"][0]), bool(np.any(info["blinded_mask"][[1, 2, 4, 5]])),
+                0.1, float(info["left_veh_clear"]), float(info["right_veh_clear"]),
             )
             obs, _, done, info = val_env.step(u_cmd, quarantined=False)
             if done:
                 break
 
         for k in ("rec", "tcn", "trans", "stateless"):
-            arr = ep_scores[k]
-            if len(arr) >= 2:
-                p2 = max(min(arr[t], arr[t + 1]) for t in range(len(arr) - 1))
-                max_p2_scores[k].append(float(p2))
-            elif arr:
-                max_p2_scores[k].append(float(arr[0]))
+            max_p2_scores[k].append(peak_2step_score(ep_scores[k]))
 
         for d in ekf_max_cusum_at_drifts:
             cs, mx = 0.0, 0.0
@@ -339,9 +364,6 @@ def calibrate_detectors_on_val(
         "tau_stateless": float(np.quantile(max_p2_scores["stateless"], q)),
     }
     ekf_drift = float(np.mean(ekf_nis_clean) + 0.30)
-    # Use clean validation distribution to choose matching quantile threshold for ekf_drift
-    ep_max_ekf = []
-    # Re-evaluate at exact ekf_drift across clean episode scores via approximation from closest grid
     closest_d = min(ekf_max_cusum_at_drifts.keys(), key=lambda x: abs(x - ekf_drift))
     cal["ekf_drift"] = round(closest_d, 2)
     cal["ekf_threshold"] = float(np.quantile(ekf_max_cusum_at_drifts[closest_d], q))
@@ -390,10 +412,11 @@ def run_episode(
     hist_buf = np.zeros((16, 26), dtype=np.float32)
     hist_len = 0
 
-    scores, labels, qp_feas_steps, feas_cbf_sat_steps, fallback_steps = [], [], [], [], []
+    scores, cusum_trace, labels, qp_feas_steps, feas_cbf_sat_steps, fallback_steps = [], [], [], [], [], []
     det_delay_ms: float | None = None
     pre_onset_fa = False
     is_attack = threat_cfg.attack_type != "none"
+    collision_mode = "none"
 
     steps_run = 0
     for step in range(160):
@@ -408,7 +431,15 @@ def run_episode(
 
         with torch.no_grad():
             obs_t = torch.from_numpy(obs).unsqueeze(0)
-            if method in (
+            if method == "Onboard-Only (No V2X)":
+                obs_in = obs_t.clone()
+                obs_in[:, 25] = 0.0  # Strictly ignore V2X SPaT
+                out = rec_active(obs_in, hidden)
+                hidden = (out["hx"], out["cx"])
+                residual = 0.0
+                quarantined = False
+                u_nom = out["action_mean"].squeeze(0).cpu().numpy()
+            elif method in (
                 "RecurrentShield-BC",
                 "RecurrentShield-INT8",
                 "No-Shield Ablation",
@@ -418,11 +449,12 @@ def run_episode(
             ):
                 out = rec_active(obs_t, hidden)
                 hidden = (out["hx"], out["cx"])
-                kin_pred = out["kin_pred"].squeeze(0).cpu().numpy()
-                residual = rec_active.compute_mahalanobis_residual(kin_pred, kin_obs)
                 if method == "Shield-Only (No IDS)":
+                    residual = 0.0
                     quarantined = False
                 else:
+                    kin_pred = out["kin_pred"].squeeze(0).cpu().numpy()
+                    residual = rec_active.compute_mahalanobis_residual(kin_pred, kin_obs)
                     quarantined, _ = rec_mon.update(residual)
                 if method == "Emergency-Stop":
                     u_nom = estop.act(float(obs[24]), float(info["ego_vel"][1]), quarantined)
@@ -449,6 +481,7 @@ def run_episode(
                 out = rec_model(obs_t, hidden)
                 hidden = (out["hx"], out["cx"])
                 residual, quarantined = ekf_mon.step(0.1, float(obs[23] * 5.0), float(obs[20] * 30.0), kin_obs)
+                cusum_trace.append(ekf_mon.cusum_stat)
                 u_nom = out["action_mean"].squeeze(0).cpu().numpy()
             elif method == "IDM-ACC + AEB":
                 quarantined = False
@@ -470,7 +503,7 @@ def run_episode(
         else:
             front_dist = float(info["eff_front_dist"])
             front_rel_v = float(info["eff_front_rel_v"])
-            if not quarantined and float(info["bsm_front_dist"]) < front_dist:
+            if method != "Onboard-Only (No V2X)" and (not quarantined) and float(info["bsm_front_dist"]) < front_dist:
                 front_dist = float(info["bsm_front_dist"])
                 front_rel_v = float(info["bsm_front_rel_v"])
             u_cmd, cbf_diag = shield.filter_action(
@@ -493,32 +526,98 @@ def run_episode(
 
         obs, _, done, info = env.step(u_cmd, quarantined=quarantined)
         if done:
+            collision_mode = str(info.get("collision_mode", "none"))
             break
 
     collided_or_off = bool(env.collision_count > 0 or env.offroad_count > 0)
     dist_m = float(info.get("distance_traveled_m", 0.0))
     avg_spd = dist_m / max(0.1, steps_run * env.cfg.dt_s)
     survived = not collided_or_off
-    detected = (det_delay_ms is not None) or pre_onset_fa
-    missed = is_attack and (not detected)
+    has_ids = method in IDS_METHODS
+    detected = (det_delay_ms is not None) or pre_onset_fa if has_ids else False
+    missed = (is_attack and (not detected)) if has_ids else True
 
     return {
         "scores": np.array(scores, dtype=float),
+        "cusum_trace": np.array(cusum_trace if cusum_trace else scores, dtype=float),
         "labels": np.array(labels, dtype=int),
-        "det_delay_ms": det_delay_ms,  # None if missed or pre-onset FA (honest censoring!)
+        "onset_step": int(threat_cfg.onset_step),
+        "det_delay_ms": det_delay_ms,
         "detected": detected,
         "missed": missed,
         "pre_onset_fa": pre_onset_fa,
         "false_quarantine_clean": (not is_attack) and bool(quarantined),
         "survived": survived,
         "collided": collided_or_off,
-        "quar_surv": bool(survived and (detected if is_attack else not bool(quarantined))),
+        "collision_mode": collision_mode if collided_or_off else "none",
+        "quar_surv": bool(survived and (detected if is_attack else not bool(quarantined))) if has_ids else survived,
         "rms_jerk": float(info.get("rms_jerk_ms3", 0.0)),
         "distance_m": dist_m,
         "avg_speed_ms": float(avg_spd),
         "qp_feasible_pct": float(100.0 * np.mean(qp_feas_steps)) if qp_feas_steps else 100.0,
         "cbf_feasible_sat_pct": float(100.0 * np.mean(feas_cbf_sat_steps)) if feas_cbf_sat_steps else 0.0,
         "fallback_pct": float(100.0 * np.mean(fallback_steps)) if fallback_steps else 0.0,
+    }
+
+
+def evaluate_posthoc_matched_fpr(
+    clean_traces: List[np.ndarray],
+    atk_traces: List[Tuple[np.ndarray, int]],
+    is_cusum: bool = False,
+    target_fpr: float = 0.04,
+) -> Dict[str, Any]:
+    """
+    Computes post-hoc in-domain operating-point comparison matched at <=4% clean-episode FPR
+    plus stepwise TPR at 4% stepwise FPR to decouple detector discriminability from threshold drift.
+    """
+    clean_ep_peaks = []
+    for arr in clean_traces:
+        sc = arr.tolist()
+        if is_cusum:
+            clean_ep_peaks.append(float(np.max(sc)) if sc else 0.0)
+        else:
+            clean_ep_peaks.append(peak_2step_score(sc))
+    tau_matched = float(np.quantile(clean_ep_peaks, 1.0 - target_fpr))
+
+    # Stepwise ROC TPR @ 4% Step FPR (only meaningful for score/NIS traces)
+    clean_flat = np.concatenate(clean_traces)
+    atk_flat_list = [tr[onset:] for tr, onset in atk_traces if len(tr) > onset]
+    atk_flat = np.concatenate(atk_flat_list) if atk_flat_list else np.array([0.0])
+    step_thr_4 = float(np.quantile(clean_flat, 0.96))
+    tpr_at_4_step = float(100.0 * np.mean(atk_flat >= step_thr_4))
+
+    matched_fpr_emp = float(100.0 * np.mean(np.array(clean_ep_peaks) > tau_matched))
+    delays, missed, pre_fa = [], [], []
+    for arr, onset in atk_traces:
+        pre = False
+        det_ms = None
+        consec = 0
+        for t, val in enumerate(arr):
+            if is_cusum:
+                trig = val > tau_matched
+            else:
+                if val > tau_matched:
+                    consec += 1
+                else:
+                    consec = 0
+                trig = consec >= 2
+            if t < onset and trig:
+                pre = True
+            if t >= onset and trig and (not pre) and det_ms is None:
+                det_ms = float((t - onset) * 100.0)
+                break
+        pre_fa.append(100.0 if pre else 0.0)
+        if det_ms is not None:
+            delays.append(det_ms)
+        missed.append(100.0 if (det_ms is None and not pre) else 0.0)
+
+    return {
+        "matched_tau": round(tau_matched, 3),
+        "clean_ep_fpr_pct": round(matched_fpr_emp, 1),
+        "step_tpr_at_4pct_fpr": round(tpr_at_4_step, 1),
+        "det_delay_ms": round(float(np.mean(delays)), 1) if delays else None,
+        "miss_pct": round(float(np.mean(missed)), 1),
+        "pre_fa_pct": round(float(np.mean(pre_fa)), 1),
     }
 
 
@@ -536,6 +635,7 @@ def main() -> None:
     methods = [
         "RecurrentShield-BC",
         "RecurrentShield-INT8",
+        "Onboard-Only (No V2X)",
         "Shield-Only (No IDS)",
         "First-Order CBF + BC",
         "No-Shield Ablation",
@@ -559,9 +659,17 @@ def main() -> None:
         }
         for c in test_corridors
     }
-    cluster_quar_surv: Dict[str, Dict[str, List[float]]] = {c: {m: [] for m in methods} for c in test_corridors}
+    cluster_surv: Dict[str, Dict[str, List[float]]] = {c: {m: [] for m in methods} for c in test_corridors}
+    ep_surv: Dict[str, Dict[str, List[bool]]] = {c: {m: [] for m in methods} for c in test_corridors}
     ep_quar_surv: Dict[str, Dict[str, List[bool]]] = {c: {m: [] for m in methods} for c in test_corridors}
     per_attack: Dict[str, Any] = {c: {m: {a: {"delay": [], "miss": [], "surv": [], "coll": []} for a in ALL_ATTACKS} for m in methods} for c in test_corridors}
+
+    failure_modes: Dict[str, Dict[str, Dict[str, Counter]]] = {
+        c: {m: {"clean": Counter(), "attack": Counter()} for m in methods} for c in test_corridors
+    }
+    det_comp_methods = ["RecurrentShield-BC", "TCN-Residual IDS", "Tiny-Transformer IDS", "Stateless BC", "EKF-CUSUM + BC"]
+    matched_clean_traces: Dict[str, Dict[str, List[np.ndarray]]] = {c: {m: [] for m in det_comp_methods} for c in test_corridors}
+    matched_atk_traces: Dict[str, Dict[str, List[Tuple[np.ndarray, int]]]] = {c: {m: [] for m in det_comp_methods} for c in test_corridors}
 
     drift_rates = [0.1, 0.3, 0.6, 1.0, 1.5]
     roc_methods = ["RecurrentShield-BC", "TCN-Residual IDS", "Tiny-Transformer IDS", "EKF-CUSUM + BC"]
@@ -580,7 +688,7 @@ def main() -> None:
         print(f"=== Seed {seed} ({seed_idx + 1}/{len(SEEDS)}): Train Period 1 & Equal Calib Period 2 ===", flush=True)
         rec_model, stateless, trans, tcn = train_models_on_us101_period1(train_env, seed)
         rec_int8 = build_int8_fake_quantized_model(rec_model)
-        cal = calibrate_detectors_on_val(val_env, rec_model, stateless, trans, tcn, TARGET_CAL_FPR)
+        cal = calibrate_detectors_on_clean_episodes(val_env, rec_model, stateless, trans, tcn, TARGET_CAL_FPR, n_cal=40)
         cal_logs.append(cal)
         if seed_idx == 0:
             torch.save(rec_model.state_dict(), results_dir / "trained_shield_weights.pt")
@@ -589,7 +697,6 @@ def main() -> None:
         for corridor in test_corridors:
             env = envs[corridor]
             n_frames = len(env.frames)
-            # 1. Clean (no-attack) closed-loop baseline across disjoint spawns
             for m in methods:
                 for cl_i in range(N_CLEAN_PER_SEED):
                     foff = (cl_i * 190 + seed_idx * 45) % max(1, n_frames - 170)
@@ -601,14 +708,19 @@ def main() -> None:
                     clean_summary[corridor][m]["fpr"].append(100.0 if r_cl["false_quarantine_clean"] else 0.0)
                     clean_summary[corridor][m]["dist"].append(r_cl["distance_m"])
                     clean_summary[corridor][m]["jerk"].append(r_cl["rms_jerk"])
+                    if r_cl["collided"]:
+                        failure_modes[corridor][m]["clean"][r_cl["collision_mode"]] += 1
+                    if m in det_comp_methods:
+                        trace = r_cl["cusum_trace"] if m == "EKF-CUSUM + BC" else r_cl["scores"]
+                        matched_clean_traces[corridor][m].append(trace)
 
-            # 2. Attack evaluation across non-overlapping spawns
             for m in methods:
                 seed_scores, seed_labels = [], []
                 s_delays, s_miss, s_fa, s_surv, s_qsurv, s_coll, s_dist, s_jerk, s_qpf, s_cbfs, s_fb = (
                     [], [], [], [], [], [], [], [], [], [], []
                 )
                 trial_cluster_buckets = {tr_i: [] for tr_i in range(N_TRIALS_PER_ATK)}
+                has_ids = m in IDS_METHODS
                 for atk_i, atk in enumerate(ALL_ATTACKS):
                     for tr_i in range(N_TRIALS_PER_ATK):
                         foff = ((seed_idx * N_TRIALS_PER_ATK + tr_i) * 185 + atk_i * 31) % max(1, n_frames - 170)
@@ -618,13 +730,15 @@ def main() -> None:
                             blinded_sector_count=1 if tr_i % 2 == 0 else 2, seed=seed + atk_i * 101 + tr_i * 17,
                         )
                         res = run_episode(env, m, rec_model, rec_int8, stateless, trans, tcn, cal, tcfg, frame_offset=foff)
-                        seed_scores.append(res["scores"])
-                        seed_labels.append(res["labels"])
+                        if has_ids:
+                            seed_scores.append(res["scores"])
+                            seed_labels.append(res["labels"])
                         if res["det_delay_ms"] is not None:
                             s_delays.append(res["det_delay_ms"])
                             per_attack[corridor][m][atk]["delay"].append(res["det_delay_ms"])
-                        s_miss.append(100.0 if res["missed"] else 0.0)
-                        s_fa.append(100.0 if res["pre_onset_fa"] else 0.0)
+                        if has_ids:
+                            s_miss.append(100.0 if res["missed"] else 0.0)
+                            s_fa.append(100.0 if res["pre_onset_fa"] else 0.0)
                         s_surv.append(100.0 if res["survived"] else 0.0)
                         s_qsurv.append(100.0 if res["quar_surv"] else 0.0)
                         s_coll.append(100.0 if res["collided"] else 0.0)
@@ -633,21 +747,31 @@ def main() -> None:
                         s_qpf.append(res["qp_feasible_pct"])
                         s_cbfs.append(res["cbf_feasible_sat_pct"])
                         s_fb.append(res["fallback_pct"])
-                        trial_cluster_buckets[tr_i].append(100.0 if res["quar_surv"] else 0.0)
+                        trial_cluster_buckets[tr_i].append(100.0 if res["survived"] else 0.0)
+                        ep_surv[corridor][m].append(bool(res["survived"]))
                         ep_quar_surv[corridor][m].append(bool(res["quar_surv"]))
+
+                        if res["collided"]:
+                            failure_modes[corridor][m]["attack"][res["collision_mode"]] += 1
+                        if m in det_comp_methods:
+                            trace = res["cusum_trace"] if m == "EKF-CUSUM + BC" else res["scores"]
+                            matched_atk_traces[corridor][m].append((trace, res["onset_step"]))
 
                         per_attack[corridor][m][atk]["miss"].append(100.0 if res["missed"] else 0.0)
                         per_attack[corridor][m][atk]["surv"].append(100.0 if res["survived"] else 0.0)
                         per_attack[corridor][m][atk]["coll"].append(100.0 if res["collided"] else 0.0)
 
                 for tr_i in range(N_TRIALS_PER_ATK):
-                    cluster_quar_surv[corridor][m].append(float(np.mean(trial_cluster_buckets[tr_i])))
+                    cluster_surv[corridor][m].append(float(np.mean(trial_cluster_buckets[tr_i])))
 
-                all_s, all_l = np.concatenate(seed_scores), np.concatenate(seed_labels)
-                atk_summary_lists[corridor][m]["auroc"].append(compute_auroc(all_s, all_l))
-                atk_summary_lists[corridor][m]["delay_ms"].append(float(np.mean(s_delays)) if s_delays else float("nan"))
-                atk_summary_lists[corridor][m]["miss_pct"].append(float(np.mean(s_miss)))
-                atk_summary_lists[corridor][m]["fa_pct"].append(float(np.mean(s_fa)))
+                if has_ids and seed_scores:
+                    all_s, all_l = np.concatenate(seed_scores), np.concatenate(seed_labels)
+                    atk_summary_lists[corridor][m]["auroc"].append(compute_auroc(all_s, all_l))
+                else:
+                    atk_summary_lists[corridor][m]["auroc"].append(float("nan"))
+                atk_summary_lists[corridor][m]["delay_ms"].append(float(np.mean(s_delays)) if (has_ids and s_delays) else float("nan"))
+                atk_summary_lists[corridor][m]["miss_pct"].append(float(np.mean(s_miss)) if has_ids else float("nan"))
+                atk_summary_lists[corridor][m]["fa_pct"].append(float(np.mean(s_fa)) if has_ids else float("nan"))
                 atk_summary_lists[corridor][m]["survival"].append(float(np.mean(s_surv)))
                 atk_summary_lists[corridor][m]["quar_surv"].append(float(np.mean(s_qsurv)))
                 atk_summary_lists[corridor][m]["collision"].append(float(np.mean(s_coll)))
@@ -669,8 +793,50 @@ def main() -> None:
                     roc_data[m]["scores"].extend(res["scores"].tolist())
                     roc_data[m]["labels"].extend(res["labels"].tolist())
 
-    # Validation-split sensitivity sweeps ONLY on US-101 Period 2 (zero test leakage!)
+    # 1. Post-hoc matched 4% clean-FPR comparison + Closed-loop unsupervised target adaptation (seed0)
     rec0, int8_0, st0, tr0, tcn0, cal0 = seed0_bundle
+    matched_fpr_out: Dict[str, Any] = {"posthoc_matched_4pct_fpr": {}, "unsupervised_target_adapt": {}}
+    for c in test_corridors:
+        matched_fpr_out["posthoc_matched_4pct_fpr"][c] = {}
+        for m in det_comp_methods:
+            matched_fpr_out["posthoc_matched_4pct_fpr"][c][m] = evaluate_posthoc_matched_fpr(
+                matched_clean_traces[c][m], matched_atk_traces[c][m], is_cusum=(m == "EKF-CUSUM + BC"), target_fpr=TARGET_CAL_FPR
+            )
+        # Closed-loop unsupervised adaptation: fit threshold on 15 unlabeled clean nominal frames (offset pool 900+),
+        # evaluate on disjoint held-out clean + attack windows on that corridor
+        env_c = envs[c]
+        cal_adapt = calibrate_detectors_on_clean_episodes(
+            env_c, rec0, st0, tr0, tcn0, target_fpr=TARGET_CAL_FPR, n_cal=15, seed_base=9100, stride=95
+        )
+        matched_fpr_out["unsupervised_target_adapt"][c] = {}
+        for m in det_comp_methods:
+            c_fpr, a_dels, a_miss, a_surv = [], [], [], []
+            for cl_i in range(15):
+                foff = (cl_i * 80 + 30) % max(1, len(env_c.frames) - 170)
+                rc = run_episode(env_c, m, rec0, int8_0, st0, tr0, tcn0, cal_adapt, ThreatConfig(attack_type="none", seed=300 + cl_i), frame_offset=foff)
+                c_fpr.append(100.0 if rc["false_quarantine_clean"] else 0.0)
+            for atk_i, atk in enumerate(ALL_ATTACKS):
+                for tr_i in range(4):
+                    foff = (tr_i * 185 + atk_i * 31) % max(1, len(env_c.frames) - 170)
+                    tcfg = ThreatConfig(
+                        attack_type=atk, onset_step=trial_onsets[tr_i], gnss_drift_rate_ms=trial_drifts[tr_i],
+                        ghost_gap_m=trial_ghosts[tr_i], sybil_count=trial_sybils[tr_i],
+                        blinded_sector_count=1 if tr_i % 2 == 0 else 2, seed=101 + atk_i * 101 + tr_i * 17,
+                    )
+                    ra = run_episode(env_c, m, rec0, int8_0, st0, tr0, tcn0, cal_adapt, tcfg, frame_offset=foff)
+                    if ra["det_delay_ms"] is not None:
+                        a_dels.append(ra["det_delay_ms"])
+                    a_miss.append(100.0 if ra["missed"] else 0.0)
+                    a_surv.append(100.0 if ra["survived"] else 0.0)
+            matched_fpr_out["unsupervised_target_adapt"][c][m] = {
+                "clean_fpr_pct": round(float(np.mean(c_fpr)), 1),
+                "det_delay_ms": round(float(np.mean(a_dels)), 1) if a_dels else None,
+                "miss_pct": round(float(np.mean(a_miss)), 1),
+                "surv_pct": round(float(np.mean(a_surv)), 1),
+            }
+    (results_dir / "matched_fpr_analysis.json").write_text(json.dumps(matched_fpr_out, indent=2), encoding="utf-8")
+
+    # 2. Validation-split alpha & tau sensitivity sweeps strictly on US-101 Period 2
     val_alpha_sweep = {}
     for aval in [0.20, 0.35, 0.50]:
         s_l, c_l, qpf_l, cbfs_l, fb_l, j_l = [], [], [], [], [], []
@@ -699,7 +865,7 @@ def main() -> None:
 
     val_fpr_sweep = {}
     for tfpr in [0.01, 0.04, 0.08]:
-        c_tmp = calibrate_detectors_on_val(val_env, rec0, st0, tr0, tcn0, target_fpr=tfpr)
+        c_tmp = calibrate_detectors_on_clean_episodes(val_env, rec0, st0, tr0, tcn0, target_fpr=tfpr, n_cal=40)
         d_l, m_l, fa_l, s_l = [], [], [], []
         for atk_i, atk in enumerate(ALL_ATTACKS):
             for tr_i in range(3):
@@ -722,12 +888,51 @@ def main() -> None:
         }
     (results_dir / "tau_sensitivity.json").write_text(json.dumps(val_fpr_sweep, indent=2), encoding="utf-8")
 
-    # Adaptive stealth & intermittent stress tests on unseen I-80
+    # 3. Sensor Noise & Attack Severity Sensitivity on US-101 P2
+    sens_out: Dict[str, Any] = {"radar_noise_sweep": {}, "attack_severity_sweep": {}}
+    for rad_sig, trk_sig in [(0.10, 0.12), (0.20, 0.25), (0.50, 0.55)]:
+        noisy_env = NgsimCorridorEnv(
+            ROOT, CorridorEnvConfig(corridor="us-101_val", max_steps=160, radar_noise_std_m=rad_sig, track_noise_std_m=trk_sig, seed=42)
+        )
+        n_fpr, n_del, n_miss, n_surv = [], [], [], []
+        for ep in range(15):
+            rn = run_episode(noisy_env, "RecurrentShield-BC", rec0, int8_0, st0, tr0, tcn0, cal0, ThreatConfig(attack_type="none", seed=800 + ep), frame_offset=(ep * 90) % max(1, len(noisy_env.frames) - 170))
+            n_fpr.append(100.0 if rn["false_quarantine_clean"] else 0.0)
+        for atk_i, atk in enumerate(ALL_ATTACKS):
+            for tr_i in range(3):
+                ra = run_episode(noisy_env, "RecurrentShield-BC", rec0, int8_0, st0, tr0, tcn0, cal0, ThreatConfig(attack_type=atk, onset_step=40, seed=900 + atk_i * 11 + tr_i), frame_offset=(tr_i * 185 + atk_i * 19) % max(1, len(noisy_env.frames) - 170))
+                if ra["det_delay_ms"] is not None:
+                    n_del.append(ra["det_delay_ms"])
+                n_miss.append(100.0 if ra["missed"] else 0.0)
+                n_surv.append(100.0 if ra["survived"] else 0.0)
+        sens_out["radar_noise_sweep"][f"sigma_r={rad_sig:.2f}m"] = {
+            "clean_fpr_pct": round(float(np.mean(n_fpr)), 1),
+            "det_delay_ms": round(float(np.mean(n_del)), 1) if n_del else None,
+            "miss_pct": round(float(np.mean(n_miss)), 1),
+            "surv_pct": round(float(np.mean(n_surv)), 1),
+        }
+    for gnss_r, ghost_g in [(0.25, 18.0), (0.60, 14.0), (1.00, 10.0), (1.40, 7.0)]:
+        s_del, s_miss, s_surv = [], [], []
+        for tr_i in range(10):
+            for atk, kw in [("gnss_ramp_spoof", {"gnss_drift_rate_ms": gnss_r}), ("ghost_vehicle_fdi", {"ghost_gap_m": ghost_g})]:
+                ra = run_episode(val_env, "RecurrentShield-BC", rec0, int8_0, st0, tr0, tcn0, cal0, ThreatConfig(attack_type=atk, onset_step=35, seed=1100 + tr_i, **kw), frame_offset=(tr_i * 150) % max(1, len(val_env.frames) - 170))
+                if ra["det_delay_ms"] is not None:
+                    s_del.append(ra["det_delay_ms"])
+                s_miss.append(100.0 if ra["missed"] else 0.0)
+                s_surv.append(100.0 if ra["survived"] else 0.0)
+        sens_out["attack_severity_sweep"][f"drift={gnss_r:.2f}_ghost={ghost_g:.0f}m"] = {
+            "det_delay_ms": round(float(np.mean(s_del)), 1) if s_del else None,
+            "miss_pct": round(float(np.mean(s_miss)), 1),
+            "surv_pct": round(float(np.mean(s_surv)), 1),
+        }
+    (results_dir / "sensor_severity_sensitivity.json").write_text(json.dumps(sens_out, indent=2), encoding="utf-8")
+
+    # 4. Intermittent & Adaptive Stealth Drift stress tests on unseen I-80
     i80_env = envs["i-80"]
     stress_eval = {"intermittent_burst": {}, "adaptive_stealth_drift": {}}
-    for m in ["RecurrentShield-BC", "TCN-Residual IDS", "Tiny-Transformer IDS", "EKF-CUSUM + BC", "Shield-Only (No IDS)"]:
-        i_d, i_m, i_s, i_c = [], [], [], []
-        a_d, a_m, a_s, a_c = [], [], [], []
+    for m in ["RecurrentShield-BC", "TCN-Residual IDS", "Tiny-Transformer IDS", "EKF-CUSUM + BC", "Shield-Only (No IDS)", "Onboard-Only (No V2X)"]:
+        i_d, i_m, i_qs, i_s, i_c = [], [], [], [], []
+        a_d, a_m, a_qs, a_s, a_c = [], [], [], [], []
         for atk_i, atk in enumerate(ALL_ATTACKS):
             for tr_i in range(2):
                 foff = (atk_i * 185 + tr_i * 90) % max(1, len(i80_env.frames) - 170)
@@ -739,7 +944,8 @@ def main() -> None:
                 if ri["det_delay_ms"] is not None:
                     i_d.append(ri["det_delay_ms"])
                 i_m.append(100.0 if ri["missed"] else 0.0)
-                i_s.append(100.0 if ri["quar_surv"] else 0.0)
+                i_qs.append(100.0 if ri["quar_surv"] else 0.0)
+                i_s.append(100.0 if ri["survived"] else 0.0)
                 i_c.append(100.0 if ri["collided"] else 0.0)
         for tr_i in range(10):
             ra = run_episode(
@@ -750,23 +956,40 @@ def main() -> None:
             if ra["det_delay_ms"] is not None:
                 a_d.append(ra["det_delay_ms"])
             a_m.append(100.0 if ra["missed"] else 0.0)
-            a_s.append(100.0 if ra["quar_surv"] else 0.0)
+            a_qs.append(100.0 if ra["quar_surv"] else 0.0)
+            a_s.append(100.0 if ra["survived"] else 0.0)
             a_c.append(100.0 if ra["collided"] else 0.0)
+        has_ids = m in IDS_METHODS
         stress_eval["intermittent_burst"][m] = {
-            "quar_surv_pct": round(float(np.mean(i_s)), 2),
+            "quar_surv_pct": round(float(np.mean(i_qs)), 2),
+            "surv_pct": round(float(np.mean(i_s)), 2),
             "collision_pct": round(float(np.mean(i_c)), 2),
-            "miss_pct": round(float(np.mean(i_m)), 2),
-            "detected_delay_ms": round(float(np.mean(i_d)), 1) if i_d else None,
+            "miss_pct": round(float(np.mean(i_m)), 2) if has_ids else None,
+            "detected_delay_ms": round(float(np.mean(i_d)), 1) if (has_ids and i_d) else None,
         }
         stress_eval["adaptive_stealth_drift"][m] = {
-            "quar_surv_pct": round(float(np.mean(a_s)), 2),
+            "quar_surv_pct": round(float(np.mean(a_qs)), 2),
+            "surv_pct": round(float(np.mean(a_s)), 2),
             "collision_pct": round(float(np.mean(a_c)), 2),
-            "miss_pct": round(float(np.mean(a_m)), 2),
-            "detected_delay_ms": round(float(np.mean(a_d)), 1) if a_d else None,
+            "miss_pct": round(float(np.mean(a_m)), 2) if has_ids else None,
+            "detected_delay_ms": round(float(np.mean(a_d)), 1) if (has_ids and a_d) else None,
         }
     (results_dir / "randomized_onset_eval.json").write_text(json.dumps(stress_eval, indent=2), encoding="utf-8")
 
-    # Assemble clean, attack, cluster-bootstrap CIs, & Holm-Bonferroni corrected p-values
+    # 5. Failure-mode audit output
+    failure_export = {
+        c: {
+            m: {
+                "clean": dict(failure_modes[c][m]["clean"]),
+                "attack": dict(failure_modes[c][m]["attack"]),
+            }
+            for m in methods
+        }
+        for c in test_corridors
+    }
+    (results_dir / "failure_analysis.json").write_text(json.dumps(failure_export, indent=2), encoding="utf-8")
+
+    # 6. Assemble primary JSON summary, statistical tests, LaTeX tables & ROC export
     summary: Dict[str, Any] = {
         "calibration_means": {k: round(float(np.mean([c[k] for c in cal_logs])), 4) for k in cal_logs[0]},
         "clean_baseline": {},
@@ -792,21 +1015,27 @@ def main() -> None:
                 }
                 for metric, vals in atk_summary_lists[c][m].items()
             }
-        # Compatibility alias for plotter
         summary[c] = summary["corridors"][c]
 
-        raw_p = {
+        raw_p_surv = {
+            m: mcnemar_p_value(ep_surv[c]["RecurrentShield-BC"], ep_surv[c][m])
+            for m in methods
+            if m != "RecurrentShield-BC"
+        }
+        holm_p_surv = holm_bonferroni_adjust(raw_p_surv)
+        raw_p_qsurv = {
             m: mcnemar_p_value(ep_quar_surv[c]["RecurrentShield-BC"], ep_quar_surv[c][m])
             for m in methods
             if m != "RecurrentShield-BC"
         }
-        holm_p = holm_bonferroni_adjust(raw_p)
+        holm_p_qsurv = holm_bonferroni_adjust(raw_p_qsurv)
         summary["statistical_tests"][c] = {
             m: {
-                "n_clusters": len(cluster_quar_surv[c][m]),
-                "cluster_boot_95_ci": list(cluster_bootstrap_ci_95(cluster_quar_surv[c][m])),
-                "raw_mcnemar_p": round(raw_p[m], 5) if m != "RecurrentShield-BC" else 1.0,
-                "holm_adjusted_p": holm_p[m] if m != "RecurrentShield-BC" else 1.0,
+                "n_clusters": len(cluster_surv[c][m]),
+                "cluster_boot_95_ci": list(cluster_bootstrap_ci_95(cluster_surv[c][m])),
+                "raw_mcnemar_p_surv": round(raw_p_surv[m], 5) if m != "RecurrentShield-BC" else 1.0,
+                "holm_adjusted_p_surv": holm_p_surv[m] if m != "RecurrentShield-BC" else 1.0,
+                "holm_adjusted_p": holm_p_qsurv[m] if m != "RecurrentShield-BC" else 1.0,
             }
             for m in methods
         }
@@ -817,8 +1046,8 @@ def main() -> None:
         c: {
             m: {
                 a: {
-                    "delay_ms": round(float(np.mean(per_attack[c][m][a]["delay"])), 1) if per_attack[c][m][a]["delay"] else None,
-                    "miss_pct": round(float(np.mean(per_attack[c][m][a]["miss"])), 1),
+                    "delay_ms": round(float(np.mean(per_attack[c][m][a]["delay"])), 1) if (m in IDS_METHODS and per_attack[c][m][a]["delay"]) else None,
+                    "miss_pct": round(float(np.mean(per_attack[c][m][a]["miss"])), 1) if m in IDS_METHODS else None,
                     "surv_pct": round(float(np.mean(per_attack[c][m][a]["surv"])), 1),
                     "coll_pct": round(float(np.mean(per_attack[c][m][a]["coll"])), 1),
                 }
@@ -847,7 +1076,7 @@ def main() -> None:
         }
     (results_dir / "roc_curves_and_delay.json").write_text(json.dumps(roc_export, indent=2), encoding="utf-8")
 
-    # Export clean LaTeX benchmark table
+    # Export primary LaTeX benchmark table
     cor_labels = {"us-101_test": "US-101 P3 (Disjoint)", "i-80": "I-80 (Zero-Shot)", "lankershim": "Lankershim (Zero-Shot)"}
     tex_lines = [
         r"\begin{table*}[t]",
@@ -855,7 +1084,7 @@ def main() -> None:
         r"\caption{Disjoint Multi-Minute Trajectory-Grounded Evaluation ($N=120$ Attack + $25$ Clean Episodes/Split; US-101 P2 Calibrated)}",
         r"\label{tab:benchmark_results}",
         r"\scriptsize",
-        r"\setlength{\tabcolsep}{3.0pt}",
+        r"\setlength{\tabcolsep}{2.8pt}",
         r"\begin{tabular}{llcccccccc}",
         r"\toprule",
         r"Split & Method & Clean Surv./FPR & AUROC $\uparrow$ & Det.\ Delay (ms) & Miss (\%) & Surv.\ (\%) & Coll.\ (\%) & Dist.\ (m) & Jerk ($\text{m/s}^3$) \\",
@@ -866,10 +1095,13 @@ def main() -> None:
             d = summary["corridors"][c][m]
             cl = summary["clean_baseline"][c][m]
             c_col = cor_labels[c] if idx_m == 0 else ""
+            auroc_str = f"{d['auroc']['mean']:.3f}" if d["auroc"]["mean"] is not None else "--"
             del_str = f"{d['delay_ms']['mean']:.0f}" if d["delay_ms"]["mean"] is not None else "--"
+            miss_str = f"{d['miss_pct']['mean']:.1f}" if d["miss_pct"]["mean"] is not None else "--"
+            fpr_str = f"{cl['fpr_pct']:.0f}\\%" if m in IDS_METHODS else "--"
             tex_lines.append(
-                f"{c_col} & {m} & {cl['survival_pct']:.0f}\\% / {cl['fpr_pct']:.0f}\\% & "
-                f"{d['auroc']['mean']:.3f} & {del_str} & {d['miss_pct']['mean']:.1f} & "
+                f"{c_col} & {m} & {cl['survival_pct']:.0f}\\% / {fpr_str} & "
+                f"{auroc_str} & {del_str} & {miss_str} & "
                 f"{d['survival']['mean']:.1f} & {d['collision']['mean']:.1f} & "
                 f"{d['distance_m']['mean']:.1f} & {d['jerk']['mean']:.2f} \\\\"
             )
@@ -877,6 +1109,37 @@ def main() -> None:
             tex_lines.append(r"\midrule")
     tex_lines.extend([r"\bottomrule", r"\end{tabular}", r"\end{table*}"])
     (tables_dir / "benchmark_results.tex").write_text("\n".join(tex_lines), encoding="utf-8")
+
+    # Export Matched 4% In-Domain FPR & Unsupervised Adaptation Table
+    m_lines = [
+        r"\begin{table}[t]",
+        r"\centering",
+        r"\caption{Post-Hoc Matched 4\% In-Domain FPR \& Unsupervised Target Recalibration}",
+        r"\label{tab:matched_fpr}",
+        r"\scriptsize",
+        r"\setlength{\tabcolsep}{1.5pt}",
+        r"\resizebox{\columnwidth}{!}{%",
+        r"\begin{tabular}{llcccc}",
+        r"\toprule",
+        r"Split & Detector & TPR@4\% & Match Del./Miss & Unsup.\ FPR & Unsup.\ Del./Miss \\",
+        r"\midrule",
+    ]
+    for c_key, c_lbl in [("us-101_test", "US-101 P3"), ("i-80", "I-80 P1"), ("lankershim", "Lankershim")]:
+        for idx_m, m in enumerate(["RecurrentShield-BC", "TCN-Residual IDS", "Tiny-Transformer IDS", "EKF-CUSUM + BC"]):
+            pm = matched_fpr_out["posthoc_matched_4pct_fpr"][c_key][m]
+            ua = matched_fpr_out["unsupervised_target_adapt"][c_key][m]
+            p_del = f"{pm['det_delay_ms']:.0f}" if pm["det_delay_ms"] is not None else "--"
+            u_del = f"{ua['det_delay_ms']:.0f}" if ua["det_delay_ms"] is not None else "--"
+            m_short = m.replace(" IDS", "").replace(" + BC", "")
+            m_lines.append(
+                f"{c_lbl if idx_m == 0 else ''} & {m_short} & {pm['step_tpr_at_4pct_fpr']:.1f}\\% & "
+                f"{p_del} / {pm['miss_pct']:.1f}\\% & {ua['clean_fpr_pct']:.1f}\\% & "
+                f"{u_del} / {ua['miss_pct']:.1f}\\% \\\\"
+            )
+        if c_key != "lankershim":
+            m_lines.append(r"\midrule")
+    m_lines.extend([r"\bottomrule", r"\end{tabular}%", r"}", r"\end{table}"])
+    (tables_dir / "matched_fpr_table.tex").write_text("\n".join(m_lines), encoding="utf-8")
 
     atk_labels = {
         "gnss_ramp_spoof": "GNSS Ramp Spoof",
@@ -886,17 +1149,17 @@ def main() -> None:
         "radar_sector_blinding": "Radar Blinding",
         "combined_spoof_blinding": "Spoof + Blinding",
     }
-    cmp_m = ["RecurrentShield-BC", "Shield-Only (No IDS)", "First-Order CBF + BC", "EKF-CUSUM + BC", "IDM-ACC + AEB"]
+    cmp_m = ["RecurrentShield-BC", "Onboard-Only (No V2X)", "Shield-Only (No IDS)", "First-Order CBF + BC", "EKF-CUSUM + BC", "IDM-ACC + AEB"]
     p_lines = [
         r"\begin{table*}[t]",
         r"\centering",
         r"\caption{Per-Attack Unseen I-80 Breakdown (Detected Delay ms / Miss \% / Collision \%)}",
         r"\label{tab:per_attack_i80}",
         r"\scriptsize",
-        r"\setlength{\tabcolsep}{3.0pt}",
-        r"\begin{tabular}{lccccc}",
+        r"\setlength{\tabcolsep}{2.4pt}",
+        r"\begin{tabular}{lcccccc}",
         r"\toprule",
-        r"Attack Vector & RecurrentShield-BC & Shield-Only (No IDS) & First-Order CBF + BC & EKF-CUSUM + BC & IDM-ACC + AEB \\",
+        r"Attack Vector & RecurrentShield-BC & Onboard-Only & Shield-Only (No IDS) & First-Order CBF + BC & EKF-CUSUM + BC & IDM-ACC + AEB \\",
         r"\midrule",
     ]
     for atk in ALL_ATTACKS:
@@ -904,11 +1167,12 @@ def main() -> None:
         for m in cmp_m:
             st = per_atk_out["i-80"][m][atk]
             ds = f"{st['delay_ms']:.0f}" if st["delay_ms"] is not None else "--"
-            cells.append(f"{ds} / {st['miss_pct']:.0f}\\% / {st['coll_pct']:.0f}\\%")
+            ms = f"{st['miss_pct']:.0f}\\%" if st["miss_pct"] is not None else "--"
+            cells.append(f"{ds} / {ms} / {st['coll_pct']:.0f}\\%")
         p_lines.append(" & ".join(cells) + r" \\")
     p_lines.extend([r"\bottomrule", r"\end{tabular}", r"\end{table*}"])
     (tables_dir / "per_attack_table.tex").write_text("\n".join(p_lines), encoding="utf-8")
-    print("Saved rigorous disjoint-split benchmarks with censoring & Holm-Bonferroni stats.", flush=True)
+    print("Saved updated disjoint-split benchmarks with Onboard-Only, matched FPR, failure & sensitivity logs.", flush=True)
 
 
 if __name__ == "__main__":

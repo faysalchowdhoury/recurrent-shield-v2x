@@ -1,0 +1,44 @@
+{
+  "radar_noise_sweep": {
+    "sigma_r=0.10m": {
+      "clean_fpr_pct": 0.0,
+      "det_delay_ms": 437.5,
+      "miss_pct": 11.1,
+      "surv_pct": 83.3
+    },
+    "sigma_r=0.20m": {
+      "clean_fpr_pct": 0.0,
+      "det_delay_ms": 425.0,
+      "miss_pct": 11.1,
+      "surv_pct": 83.3
+    },
+    "sigma_r=0.50m": {
+      "clean_fpr_pct": 6.7,
+      "det_delay_ms": 340.0,
+      "miss_pct": 11.1,
+      "surv_pct": 88.9
+    }
+  },
+  "attack_severity_sweep": {
+    "drift=0.25_ghost=18m": {
+      "det_delay_ms": 3547.4,
+      "miss_pct": 5.0,
+      "surv_pct": 90.0
+    },
+    "drift=0.60_ghost=14m": {
+      "det_delay_ms": 1563.2,
+      "miss_pct": 5.0,
+      "surv_pct": 90.0
+    },
+    "drift=1.00_ghost=10m": {
+      "det_delay_ms": 940.0,
+      "miss_pct": 0.0,
+      "surv_pct": 90.0
+    },
+    "drift=1.40_ghost=7m": {
+      "det_delay_ms": 235.0,
+      "miss_pct": 0.0,
+      "surv_pct": 90.0
+    }
+  }
+}

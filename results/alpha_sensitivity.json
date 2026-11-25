@@ -2,25 +2,25 @@
   "0.20": {
     "quar_surv_pct": 91.67,
     "collision_pct": 8.33,
-    "qp_feasible_pct": 97.32,
+    "qp_feasible_pct": 97.19,
     "cbf_feasible_sat_pct": 100.0,
-    "fallback_pct": 2.68,
-    "rms_jerk": 3.37
+    "fallback_pct": 2.81,
+    "rms_jerk": 3.293
   },
   "0.35": {
     "quar_surv_pct": 91.67,
     "collision_pct": 8.33,
-    "qp_feasible_pct": 97.27,
+    "qp_feasible_pct": 97.03,
     "cbf_feasible_sat_pct": 100.0,
-    "fallback_pct": 2.73,
-    "rms_jerk": 3.968
+    "fallback_pct": 2.97,
+    "rms_jerk": 3.841
   },
   "0.50": {
     "quar_surv_pct": 91.67,
     "collision_pct": 8.33,
-    "qp_feasible_pct": 96.29,
+    "qp_feasible_pct": 96.13,
     "cbf_feasible_sat_pct": 100.0,
-    "fallback_pct": 3.71,
-    "rms_jerk": 4.399
+    "fallback_pct": 3.87,
+    "rms_jerk": 4.054
   }
 }
