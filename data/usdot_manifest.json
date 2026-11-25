@@ -1,0 +1,88 @@
+{
+  "primary_dataset": {
+    "name": "USDOT NGSIM Vehicle Trajectories",
+    "endpoint": "https://data.transportation.gov/resource/8ect-6jqj.json",
+    "doi": "10.21949/1504477",
+    "units_converted": "imperial (ft, ft/s, ft/s^2) -> SI (m, m/s, m/s^2)"
+  },
+  "secondary_schema": {
+    "name": "USDOT Safety Pilot Model Deployment (SPMD) SAE J2735 BSM Schema",
+    "doi": "10.21949/1504482",
+    "fields": [
+      "msgCnt",
+      "id",
+      "lat",
+      "lon",
+      "speed",
+      "heading",
+      "accelSet"
+    ]
+  },
+  "corridors": {
+    "us-101": {
+      "name": "US-101 (Hollywood Freeway, Los Angeles, CA)",
+      "type": "highway",
+      "records": 33395,
+      "unique_vehicles": 227,
+      "unique_frames": 171,
+      "frame_min": 500,
+      "frame_max": 670,
+      "lanes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "raw_sha256": "8da1254ce4ff05b93caf69be9885b9f47dbac5ab61e636b4227c65e87b0465c3",
+      "bsm_csv_sha256": "d411a0a5052620973e8c71e55fd4c6dc124ae4f410d8cf9b9bf2ca1f2d883051"
+    },
+    "i-80": {
+      "name": "I-80 (Emeryville, CA)",
+      "type": "highway",
+      "records": 48397,
+      "unique_vehicles": 289,
+      "unique_frames": 222,
+      "frame_min": 500,
+      "frame_max": 721,
+      "lanes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "raw_sha256": "2c097fac4f5939098a638a3de06542b89e1e1a48c3a98b53b05a0af99c4bcd66",
+      "bsm_csv_sha256": "87c9559d8ea9a018d822e348f13b88386d416a77dd808507f0d4537b2b57234a"
+    },
+    "lankershim": {
+      "name": "Lankershim Blvd (Universal City, CA)",
+      "type": "arterial",
+      "records": 43142,
+      "unique_vehicles": 157,
+      "unique_frames": 357,
+      "frame_min": 500,
+      "frame_max": 856,
+      "lanes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        11,
+        12,
+        31,
+        101
+      ],
+      "raw_sha256": "20180d01aae2cc5a456044e5ba6d97bfb0ca1a816d87bd27363c879ec1ec7be9",
+      "bsm_csv_sha256": "23417f9bfa86b21da6a772b2f1c04597dd6e401e6afa0dd6c4fe05c73d5a985a"
+    }
+  },
+  "primary_sample_records": 49949,
+  "primary_sample_sha256": "63633ddc7febbe2a93eac127b617acc08d77665a7f98c0370f7278039f03a9a1"
+}

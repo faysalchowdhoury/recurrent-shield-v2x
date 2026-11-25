@@ -1,0 +1,21 @@
+# Raw USDOT caches (reproducible via data/fetch_real_usdot_data.py)
+data/raw/*.json
+data/raw/*.csv
+data/raw/*.parquet
+
+# Python & PyTorch artifacts
+__pycache__/
+*.py[cod]
+*.pt
+*.pth
+*.onnx
+.pytest_cache/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# IDE & OS
+.vscode/
+.DS_Store
+Thumbs.db

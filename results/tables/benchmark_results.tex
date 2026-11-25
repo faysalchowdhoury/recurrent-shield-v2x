@@ -1,0 +1,28 @@
+\begin{table*}[t]
+\centering
+\caption{Zero-Shot Corridor Transfer & Threat Resilience Across 5 Seeds (Trained on Real USDOT US-101 NGSIM)}
+\label{tab:benchmark_results}
+\begin{tabular}{llccccc}
+\toprule
+Corridor (Split) & Method & AUROC $\uparrow$ & Det. Delay (ms) $\downarrow$ & Limp-Home (\%) $\uparrow$ & Collision (\%) $\downarrow$ & RMS Jerk ($\text{m/s}^3$) $\downarrow$ \\
+\midrule
+US-101 (In-Dist.) & RecurrentShield-V2X & 0.957$\pm$0.033 & 642.6$\pm$33.5 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 5.76$\pm$0.82 \\
+ & Ablation (No DT-CBF) & 0.980$\pm$0.011 & 642.6$\pm$33.5 & 76.0$\pm$32.0 & 24.0$\pm$32.0 & 1.82$\pm$0.10 \\
+ & Tiny-Transformer IDS & 0.988$\pm$0.008 & 822.6$\pm$12.6 & 96.0$\pm$8.0 & 4.0$\pm$8.0 & 6.60$\pm$2.17 \\
+ & Stateless PPO & 0.983$\pm$0.004 & 866.6$\pm$49.6 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 2.49$\pm$0.33 \\
+ & EKF-CUSUM + DT-CBF & 0.980$\pm$0.002 & 234.6$\pm$24.0 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 7.89$\pm$0.33 \\
+\midrule
+I-80 (Zero-Shot) & RecurrentShield-V2X & 0.923$\pm$0.009 & 1858.6$\pm$48.0 & 96.0$\pm$8.0 & 4.0$\pm$8.0 & 3.67$\pm$1.56 \\
+ & Ablation (No DT-CBF) & 0.908$\pm$0.012 & 2838.2$\pm$348.8 & 80.0$\pm$12.6 & 4.0$\pm$8.0 & 1.14$\pm$0.32 \\
+ & Tiny-Transformer IDS & 0.922$\pm$0.010 & 2342.5$\pm$477.1 & 88.0$\pm$9.8 & 12.0$\pm$9.8 & 3.86$\pm$1.75 \\
+ & Stateless PPO & 0.916$\pm$0.006 & 2814.4$\pm$617.1 & 88.0$\pm$9.8 & 4.0$\pm$8.0 & 2.06$\pm$0.42 \\
+ & EKF-CUSUM + DT-CBF & 0.930$\pm$0.005 & 1702.6$\pm$12.6 & 96.0$\pm$8.0 & 4.0$\pm$8.0 & 3.56$\pm$0.32 \\
+\midrule
+Lankershim (Zero-Shot) & RecurrentShield-V2X & 0.996$\pm$0.001 & 642.6$\pm$33.5 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 1.42$\pm$0.36 \\
+ & Ablation (No DT-CBF) & 0.995$\pm$0.002 & 642.6$\pm$33.5 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 0.87$\pm$0.10 \\
+ & Tiny-Transformer IDS & 0.996$\pm$0.002 & 798.6$\pm$38.8 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 1.07$\pm$0.28 \\
+ & Stateless PPO & 0.998$\pm$0.002 & 866.6$\pm$49.6 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 2.20$\pm$0.65 \\
+ & EKF-CUSUM + DT-CBF & 1.000$\pm$0.000 & 274.6$\pm$24.0 & 100.0$\pm$0.0 & 0.0$\pm$0.0 & 4.57$\pm$0.05 \\
+\bottomrule
+\end{tabular}
+\end{table*}

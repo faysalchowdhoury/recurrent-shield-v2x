@@ -1,0 +1,338 @@
+{
+  "us-101": {
+    "RecurrentShield-V2X": {
+      "auroc": {
+        "mean": 0.957,
+        "std": 0.033
+      },
+      "delay_ms": {
+        "mean": 642.6,
+        "std": 33.466
+      },
+      "success": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "collision": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "jerk": {
+        "mean": 5.76,
+        "std": 0.819
+      }
+    },
+    "Ablation (No DT-CBF)": {
+      "auroc": {
+        "mean": 0.98,
+        "std": 0.011
+      },
+      "delay_ms": {
+        "mean": 642.6,
+        "std": 33.466
+      },
+      "success": {
+        "mean": 76.0,
+        "std": 32.0
+      },
+      "collision": {
+        "mean": 24.0,
+        "std": 32.0
+      },
+      "jerk": {
+        "mean": 1.824,
+        "std": 0.103
+      }
+    },
+    "Tiny-Transformer IDS": {
+      "auroc": {
+        "mean": 0.988,
+        "std": 0.008
+      },
+      "delay_ms": {
+        "mean": 822.6,
+        "std": 12.649
+      },
+      "success": {
+        "mean": 96.0,
+        "std": 8.0
+      },
+      "collision": {
+        "mean": 4.0,
+        "std": 8.0
+      },
+      "jerk": {
+        "mean": 6.602,
+        "std": 2.167
+      }
+    },
+    "Stateless PPO": {
+      "auroc": {
+        "mean": 0.983,
+        "std": 0.004
+      },
+      "delay_ms": {
+        "mean": 866.6,
+        "std": 49.639
+      },
+      "success": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "collision": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "jerk": {
+        "mean": 2.486,
+        "std": 0.329
+      }
+    },
+    "EKF-CUSUM + DT-CBF": {
+      "auroc": {
+        "mean": 0.98,
+        "std": 0.002
+      },
+      "delay_ms": {
+        "mean": 234.6,
+        "std": 24.0
+      },
+      "success": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "collision": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "jerk": {
+        "mean": 7.895,
+        "std": 0.334
+      }
+    }
+  },
+  "i-80": {
+    "RecurrentShield-V2X": {
+      "auroc": {
+        "mean": 0.923,
+        "std": 0.009
+      },
+      "delay_ms": {
+        "mean": 1858.6,
+        "std": 48.0
+      },
+      "success": {
+        "mean": 96.0,
+        "std": 8.0
+      },
+      "collision": {
+        "mean": 4.0,
+        "std": 8.0
+      },
+      "jerk": {
+        "mean": 3.672,
+        "std": 1.559
+      }
+    },
+    "Ablation (No DT-CBF)": {
+      "auroc": {
+        "mean": 0.908,
+        "std": 0.012
+      },
+      "delay_ms": {
+        "mean": 2838.184,
+        "std": 348.826
+      },
+      "success": {
+        "mean": 80.0,
+        "std": 12.649
+      },
+      "collision": {
+        "mean": 4.0,
+        "std": 8.0
+      },
+      "jerk": {
+        "mean": 1.135,
+        "std": 0.322
+      }
+    },
+    "Tiny-Transformer IDS": {
+      "auroc": {
+        "mean": 0.922,
+        "std": 0.01
+      },
+      "delay_ms": {
+        "mean": 2342.496,
+        "std": 477.121
+      },
+      "success": {
+        "mean": 88.0,
+        "std": 9.798
+      },
+      "collision": {
+        "mean": 12.0,
+        "std": 9.798
+      },
+      "jerk": {
+        "mean": 3.864,
+        "std": 1.753
+      }
+    },
+    "Stateless PPO": {
+      "auroc": {
+        "mean": 0.916,
+        "std": 0.006
+      },
+      "delay_ms": {
+        "mean": 2814.392,
+        "std": 617.126
+      },
+      "success": {
+        "mean": 88.0,
+        "std": 9.798
+      },
+      "collision": {
+        "mean": 4.0,
+        "std": 8.0
+      },
+      "jerk": {
+        "mean": 2.061,
+        "std": 0.417
+      }
+    },
+    "EKF-CUSUM + DT-CBF": {
+      "auroc": {
+        "mean": 0.93,
+        "std": 0.005
+      },
+      "delay_ms": {
+        "mean": 1702.6,
+        "std": 12.649
+      },
+      "success": {
+        "mean": 96.0,
+        "std": 8.0
+      },
+      "collision": {
+        "mean": 4.0,
+        "std": 8.0
+      },
+      "jerk": {
+        "mean": 3.56,
+        "std": 0.315
+      }
+    }
+  },
+  "lankershim": {
+    "RecurrentShield-V2X": {
+      "auroc": {
+        "mean": 0.996,
+        "std": 0.001
+      },
+      "delay_ms": {
+        "mean": 642.6,
+        "std": 33.466
+      },
+      "success": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "collision": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "jerk": {
+        "mean": 1.42,
+        "std": 0.358
+      }
+    },
+    "Ablation (No DT-CBF)": {
+      "auroc": {
+        "mean": 0.995,
+        "std": 0.002
+      },
+      "delay_ms": {
+        "mean": 642.6,
+        "std": 33.466
+      },
+      "success": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "collision": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "jerk": {
+        "mean": 0.868,
+        "std": 0.099
+      }
+    },
+    "Tiny-Transformer IDS": {
+      "auroc": {
+        "mean": 0.996,
+        "std": 0.002
+      },
+      "delay_ms": {
+        "mean": 798.6,
+        "std": 38.781
+      },
+      "success": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "collision": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "jerk": {
+        "mean": 1.073,
+        "std": 0.28
+      }
+    },
+    "Stateless PPO": {
+      "auroc": {
+        "mean": 0.998,
+        "std": 0.002
+      },
+      "delay_ms": {
+        "mean": 866.6,
+        "std": 49.639
+      },
+      "success": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "collision": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "jerk": {
+        "mean": 2.201,
+        "std": 0.647
+      }
+    },
+    "EKF-CUSUM + DT-CBF": {
+      "auroc": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "delay_ms": {
+        "mean": 274.6,
+        "std": 24.0
+      },
+      "success": {
+        "mean": 100.0,
+        "std": 0.0
+      },
+      "collision": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "jerk": {
+        "mean": 4.568,
+        "std": 0.05
+      }
+    }
+  }
+}

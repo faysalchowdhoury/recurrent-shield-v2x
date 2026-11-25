@@ -1,0 +1,210 @@
+{
+  "target_mcu": "ESP32-S3 (Dual-Core Xtensa LX7 @ 240 MHz, 512 KB SRAM)",
+  "total_parameters": 84505,
+  "macs_per_step": 83360,
+  "fp32": {
+    "weights_kb": 330.1,
+    "onnx_file_kb": 329.4,
+    "peak_sram_kb": 372.1,
+    "esp32_latency_ms": 4.71,
+    "energy_mj": 1.6,
+    "host_cpu_median_ms": 0.516
+  },
+  "int8": {
+    "weights_kb": 82.6,
+    "cc_file": "edge_deploy\\esp32_s3_firmware\\model_weights.cc",
+    "peak_sram_kb": 107.1,
+    "esp32_latency_ms": 1.7,
+    "energy_mj": 0.579
+  },
+  "layers": [
+    {
+      "name": "kin_log_var",
+      "shape": [
+        6
+      ],
+      "params": 6,
+      "fp32_kb": 0.023,
+      "int8_kb": 0.006
+    },
+    {
+      "name": "actor_log_std",
+      "shape": [
+        2
+      ],
+      "params": 2,
+      "fp32_kb": 0.008,
+      "int8_kb": 0.002
+    },
+    {
+      "name": "relational_encoder.0.weight",
+      "shape": [
+        24,
+        26
+      ],
+      "params": 624,
+      "fp32_kb": 2.438,
+      "int8_kb": 0.609
+    },
+    {
+      "name": "relational_encoder.0.bias",
+      "shape": [
+        24
+      ],
+      "params": 24,
+      "fp32_kb": 0.094,
+      "int8_kb": 0.023
+    },
+    {
+      "name": "relational_encoder.1.weight",
+      "shape": [
+        24
+      ],
+      "params": 24,
+      "fp32_kb": 0.094,
+      "int8_kb": 0.023
+    },
+    {
+      "name": "relational_encoder.1.bias",
+      "shape": [
+        24
+      ],
+      "params": 24,
+      "fp32_kb": 0.094,
+      "int8_kb": 0.023
+    },
+    {
+      "name": "lstm.weight_ih_l0",
+      "shape": [
+        512,
+        24
+      ],
+      "params": 12288,
+      "fp32_kb": 48.0,
+      "int8_kb": 12.0
+    },
+    {
+      "name": "lstm.weight_hh_l0",
+      "shape": [
+        512,
+        128
+      ],
+      "params": 65536,
+      "fp32_kb": 256.0,
+      "int8_kb": 64.0
+    },
+    {
+      "name": "lstm.bias_ih_l0",
+      "shape": [
+        512
+      ],
+      "params": 512,
+      "fp32_kb": 2.0,
+      "int8_kb": 0.5
+    },
+    {
+      "name": "lstm.bias_hh_l0",
+      "shape": [
+        512
+      ],
+      "params": 512,
+      "fp32_kb": 2.0,
+      "int8_kb": 0.5
+    },
+    {
+      "name": "kinematic_head.weight",
+      "shape": [
+        6,
+        128
+      ],
+      "params": 768,
+      "fp32_kb": 3.0,
+      "int8_kb": 0.75
+    },
+    {
+      "name": "kinematic_head.bias",
+      "shape": [
+        6
+      ],
+      "params": 6,
+      "fp32_kb": 0.023,
+      "int8_kb": 0.006
+    },
+    {
+      "name": "actor_head.0.weight",
+      "shape": [
+        16,
+        128
+      ],
+      "params": 2048,
+      "fp32_kb": 8.0,
+      "int8_kb": 2.0
+    },
+    {
+      "name": "actor_head.0.bias",
+      "shape": [
+        16
+      ],
+      "params": 16,
+      "fp32_kb": 0.062,
+      "int8_kb": 0.016
+    },
+    {
+      "name": "actor_head.2.weight",
+      "shape": [
+        2,
+        16
+      ],
+      "params": 32,
+      "fp32_kb": 0.125,
+      "int8_kb": 0.031
+    },
+    {
+      "name": "actor_head.2.bias",
+      "shape": [
+        2
+      ],
+      "params": 2,
+      "fp32_kb": 0.008,
+      "int8_kb": 0.002
+    },
+    {
+      "name": "critic_head.0.weight",
+      "shape": [
+        16,
+        128
+      ],
+      "params": 2048,
+      "fp32_kb": 8.0,
+      "int8_kb": 2.0
+    },
+    {
+      "name": "critic_head.0.bias",
+      "shape": [
+        16
+      ],
+      "params": 16,
+      "fp32_kb": 0.062,
+      "int8_kb": 0.016
+    },
+    {
+      "name": "critic_head.2.weight",
+      "shape": [
+        1,
+        16
+      ],
+      "params": 16,
+      "fp32_kb": 0.062,
+      "int8_kb": 0.016
+    },
+    {
+      "name": "critic_head.2.bias",
+      "shape": [
+        1
+      ],
+      "params": 1,
+      "fp32_kb": 0.004,
+      "int8_kb": 0.001
+    }
+  ]
+}
