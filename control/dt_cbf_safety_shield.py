@@ -1,18 +1,19 @@
 """
-Nonlinear Discrete-Time Control Barrier Function (DT-CBF) Safety Shield.
+Conditional Nonlinear Discrete-Time Control Barrier Function (DT-CBF) Safety Shield.
 
 Architecture timing clarification:
-  - Outer policy & perception cycle runs at 10 Hz (dt = 0.1 s, matched to NGSIM camera frames).
-  - Inner DT-CBF verification evaluates a 20-substep (dt_sub = 0.005 s, 200 Hz numerical
-    sub-stepping) forward reachability integration over each 0.1 s control hold interval.
+  - Outer policy, perception & actuation cycle runs at 10 Hz (dt = 0.1 s, matched to NGSIM frames).
+  - Inner DT-CBF verification evaluates a 20-substep (dt_sub = 0.005 s) constant-acceleration
+    open-loop Euler prediction to verify the endpoint barrier h(x_{t+0.1}) >= (1 - alpha) h(x_t),
+    NOT closed-loop 200 Hz actuation.
 
 Mathematical formulation:
-  - Barrier h_long(x) includes explicit discretization margin eps_disc alongside eps_radar
-    so first-order/nonlinear stopping-distance variation is strictly upper-bounded.
-  - Because h_long(x_{t+1}(a)) is monotonically decreasing in constant acceleration command a
-    over [ -a_brake, a_max ], exact feasible KKT projection computes a_upper by checking the
-    exact nonlinear 200 Hz barrier (closed-form / tight monotonic bisection with zero slack),
-    eliminating linearization gaps and removing all artificial tolerance/infeasible masking.
+  - Separable weighted projection over [-a_brake, a_max] x [-v_y,max, v_y,max] solved via
+    18-step 1D monotonic bisection on acceleration + closed-form lateral clearance clipping.
+  - Because simulated radar noise is Gaussian (unbounded support), fixed eps_radar holds
+    probabilistically (4.25-sigma nominal bound under sigma_r = 0.20 m) rather than deterministically,
+    and blinded propagation assumes bounded unknown lead closing dynamics; infeasible sets log
+    qp_feasible=0 and apply conditional deceleration (-1.8 vs -6.5 m/s^2) + lateral midpoint centering.
 """
 
 from __future__ import annotations

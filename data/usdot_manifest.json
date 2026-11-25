@@ -39,7 +39,7 @@
         8
       ],
       "raw_sha256": "72986b6a4e12a990f64454c3ee10779f574f55ee467b99f0bf4bd35108641229",
-      "bsm_csv_sha256": "53cd13dc2fac43df0d4a494b6ecd2d4c31ef2a0c1ec25e1e14b2e647eac7078f"
+      "bsm_csv_sha256": "f82a25d164ee6b789ccda9ebcf8e16dad926e0e35103cc57101954fbfe1619e0"
     },
     "us-101_val": {
       "name": "US-101 Period 2 Calibration (Hollywood Fwy, LA, 8:05-8:20 AM)",
@@ -61,7 +61,7 @@
         8
       ],
       "raw_sha256": "d23f163ad05dad24ac41b4ad1e4bea53b49c12a248e14c3230e01b70c104bc59",
-      "bsm_csv_sha256": "4b01abccf61a4610f0639107e8641b0c6dce47fe9dd22a74c750efb54c70e540"
+      "bsm_csv_sha256": "c357803abbf261b7926548e8d0475de1aeed83e440b9388ccc40ef8ac32184e1"
     },
     "us-101_test": {
       "name": "US-101 Period 3 Held-Out Test (Hollywood Fwy, LA, 8:20-8:35 AM)",
@@ -83,7 +83,7 @@
         8
       ],
       "raw_sha256": "23d40b8452390026f7228c73379e266f9c48a769c1b3b48ae73ae4070d04c41a",
-      "bsm_csv_sha256": "3ec6c4c5eb76615854273d55c0b3d2d9fb9e724fce36607641d80a21dd8a7fc9"
+      "bsm_csv_sha256": "2e26cc064134041c91a7080a7706e02cc9b8c51e558a50782250c2b469aaef2e"
     },
     "i-80": {
       "name": "I-80 Period 1 Zero-Shot (Emeryville, CA)",
@@ -104,7 +104,7 @@
         7
       ],
       "raw_sha256": "37621f42b6c484cf3dd51d1441f1926a70aaf69830c5d978f2513af556530d7a",
-      "bsm_csv_sha256": "8234cec0ba4821138e0fff39a77250b37d23f55df4ec12e4e2f98e56c0264039"
+      "bsm_csv_sha256": "cd37b301137f4a455ef5bbbcc4369417efa96ea30219449b7f7093e07cb9bc01"
     },
     "lankershim": {
       "name": "Lankershim Blvd Period 1 Zero-Shot (Universal City, CA)",
@@ -127,7 +127,72 @@
         101
       ],
       "raw_sha256": "c453bda36b458730eeb76be31f3d532aa262c7e705e9846977893d24c152606d",
-      "bsm_csv_sha256": "ef80dcba5692644517ab2714f07fe89b2406c1b63ef5b47a589137de4763e36e"
+      "bsm_csv_sha256": "74212fc4027e35646c0335cd37e803e74ac69a741bdb5e44f785542b2b2c8ed7"
+    },
+    "us-101_fresh": {
+      "name": "US-101 Period 3 Fresh Post-Freeze Test (frames 3200-6200, 300.1 s)",
+      "type": "highway",
+      "records": 512835,
+      "unique_vehicles": 801,
+      "unique_frames": 3001,
+      "frame_min": 3200,
+      "frame_max": 6200,
+      "duration_s": 300.1,
+      "lanes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "raw_sha256": "6196c9a986baf2de35000d56a9a1fe7fc87f2b154075cdfe651edee93150b9cb",
+      "bsm_csv_sha256": "f3996ed29dbee4e934843da94bb7399d8494a2b220be8ad3992a1c547187798d"
+    },
+    "i-80_fresh": {
+      "name": "I-80 Period 2 Fresh Post-Freeze Zero-Shot (5:00-5:15 PM, frames 1000-4000, 300.1 s)",
+      "type": "highway",
+      "records": 460257,
+      "unique_vehicles": 818,
+      "unique_frames": 3001,
+      "frame_min": 1000,
+      "frame_max": 4000,
+      "duration_s": 300.1,
+      "lanes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "raw_sha256": "e40f7d87c58c9674959d635af202c10c618b8a498b17c5b6d51cc52a89ded8ba",
+      "bsm_csv_sha256": "d71f61d0488a350b330cecb80fcda3df5db0c39c92a929302869cb43b1c2fa60"
+    },
+    "lankershim_fresh": {
+      "name": "Lankershim Period 2 Fresh Post-Freeze Zero-Shot (frames 1000-4000, 300.1 s)",
+      "type": "arterial",
+      "records": 303336,
+      "unique_vehicles": 485,
+      "unique_frames": 3001,
+      "frame_min": 1000,
+      "frame_max": 4000,
+      "duration_s": 300.1,
+      "lanes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        11,
+        12,
+        31
+      ],
+      "raw_sha256": "04be6b0379fd6715eed7147e1605b947f6475289dc9726d1f000f3bfdba55a57",
+      "bsm_csv_sha256": "28b70c45b12ec63bf78efbf108d8f54d3868cb56f73d026cf6ef6dfc3afad2da"
     }
   }
 }

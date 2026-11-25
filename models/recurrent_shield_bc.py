@@ -2,11 +2,11 @@
 RecurrentShield-BC: Compact Dual-Head Multi-Task Behavior Cloning + 128-Unit LSTM.
 
 Architecture budget:
-  - Total parameters: 84,505 (~330.1 KB FP32 / ~82.6 KB INT8 weights)
-  - Topological Relational Encoder (26 -> 24) for zero-shot corridor transfer
-  - 128-unit LSTM temporal memory backbone
-  - Head 1: Heteroscedastic Kinematic Residual Anomaly Detector (Mahalanobis r_t)
-  - Head 2: Topological Relational Policy & Value Predictor for Tactical MRM / Limp-Home
+  - Total parameters: 84,505 (~330.1 KB FP32 / ~82.6 KB weight-only INT8 storage)
+  - Compact MLP Feature Encoder (Linear 26 -> 24 + LayerNorm + Tanh)
+  - 128-unit LSTM temporal state tracker
+  - Head 1: Kinematic Residual Anomaly Detector (6D learned global diagonal variance Gaussian NLL, Mahalanobis r_t)
+  - Head 2: BC Actor & Value Predictor (uses V2X input gating + external DT-CBF fallback under quarantine)
 """
 
 from __future__ import annotations
@@ -45,14 +45,14 @@ class RecurrentShieldBC(nn.Module):
         super().__init__()
         self.cfg = cfg or RecurrentShieldConfig()
 
-        # Topological Relational Encoder: maps ego-centric sector & boundary geometry
+        # Compact MLP Feature Encoder (Linear -> LayerNorm -> Tanh)
         self.relational_encoder = nn.Sequential(
             nn.Linear(self.cfg.obs_dim, self.cfg.rel_dim),
             nn.LayerNorm(self.cfg.rel_dim),
             nn.Tanh(),
         )
 
-        # 128-unit LSTM temporal state tracker (GNSS/V2X-denied memory)
+        # 128-unit LSTM temporal state tracker
         self.lstm = nn.LSTM(
             input_size=self.cfg.rel_dim,
             hidden_size=self.cfg.lstm_hidden,
@@ -60,11 +60,11 @@ class RecurrentShieldBC(nn.Module):
             batch_first=True,
         )
 
-        # Head 1: Heteroscedastic Kinematic Residual Anomaly Detector (6D discrepancy envelope)
+        # Head 1: Kinematic Residual Predictor with learned global 6D diagonal log-variance (stationary per-channel NLL)
         self.kinematic_head = nn.Linear(self.cfg.lstm_hidden, self.cfg.kin_dim)
         self.kin_log_var = nn.Parameter(torch.zeros(self.cfg.kin_dim))
 
-        # Head 2: Topological Relational Actor & Value Predictor
+        # Head 2: BC Actor & Value Predictor
         self.actor_head = nn.Sequential(
             nn.Linear(self.cfg.lstm_hidden, 16),
             nn.Tanh(),

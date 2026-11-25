@@ -83,6 +83,44 @@ Primary attacks (`6`): `gnss_ramp_spoof`, `ghost_vehicle_fdi`, `spat_phase_inver
 
 ---
 
+## Post-Freeze Validation on Untouched USDOT Periods
+
+Three strictly post-freeze USDOT periods — never seen during training, calibration, or original benchmark construction — evaluated with **frozen `58bcc08` geometry and detector thresholds** (no re-tuning):
+
+| Split | Method | ClFPR | AUROC | PostDet | PreFA | Surv | Dist |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **US-101 fresh** (3200–6200, 300.1s, 801 vehs) | **RecurrentShield-BC** | 5.6% | 0.980 | 95.8% | 4.2% | 95.8% | 76.8m |
+| US-101 fresh | Direct Raw Norm (No LSTM) | **0.0%** | 0.975 | **100.0%** | **0.0%** | 95.8% | 76.9m |
+| US-101 fresh | EKF-CUSUM + BC | **0.0%** | 0.980 | **100.0%** | **0.0%** | **100.0%** | 62.8m |
+| US-101 fresh | Onboard-Only (No V2X) | — | — | — | — | 91.7% | **81.4m** |
+| **I-80 fresh** (P2 1000–4000, 300.1s, 818 vehs) | **RecurrentShield-BC** | 16.7% [3.6%, 41.4%] | 0.988 | **100.0%** | **0.0%** | **100.0%** | 60.1m |
+| I-80 fresh | Direct Raw Norm (No LSTM) | **0.0%** | 0.982 | 91.7% | **0.0%** | **100.0%** | 60.1m |
+| I-80 fresh | EKF-CUSUM + BC | **0.0%** | 0.982 | **100.0%** | **0.0%** | **100.0%** | 52.6m |
+| I-80 fresh | Onboard-Only (No V2X) | — | — | — | — | **100.0%** | **62.8m** |
+| **Lankershim fresh** (P2 1000–4000, 300.1s, 485 vehs) | **RecurrentShield-BC** | **0.0%** | 0.985 | **100.0%** | **0.0%** | 87.5% | 59.5m |
+| Lankershim fresh | Direct Raw Norm (No LSTM) | **0.0%** | 0.979 | 95.8% | **0.0%** | 87.5% | 59.5m |
+| Lankershim fresh | EKF-CUSUM + BC | **0.0%** | 0.989 | 95.8% | **0.0%** | 87.5% | 54.9m |
+| Lankershim fresh | Onboard-Only (No V2X) | — | — | — | — | 87.5% | **59.8m** |
+
+**Key finding:** `Direct Raw Norm (No LSTM)` achieves 0.0% clean FPR on all three fresh splits; `RecurrentShield-BC`'s recurrent threshold incurs 5.6%/16.7% FPR on US-101/I-80 fresh periods at the benefit of 100% post-onset attack recall on I-80. The 16.7% I-80 fresh FPR (95% CI [3.6%, 41.4%]) is an honest limitation of the frozen threshold applied to an unseen highway period without re-calibration.
+
+---
+
+## V2X-Necessary BLOS Stopped-Queue Benchmark
+
+The clearest demonstration that IDS quarantine (not the barrier filter alone) adds safety value: ego at **18 m/s**, radar limited to **22 m**, stopped queue at **65 m** (well beyond radar range). `Shield-Only` (V2X trusted without filtering) is deceived by a ghost-BSM spoofed leading vehicle that the 22 m radar cannot see, triggering an acceleration surge that reduces safe stopping margin by **13.0 m**.
+
+| Method | Clean Surv | Ghost-Atk Surv | Ghost-Atk Dist | Jerk |
+| :--- | :---: | :---: | :---: | :---: |
+| **RecurrentShield-BC** | **100.0%** | **100.0%** | **37.9m** | 7.28 |
+| Direct Raw Norm (No LSTM) | **100.0%** | **100.0%** | **37.9m** | 7.28 |
+| Onboard-Only (No V2X) | **100.0%** | **100.0%** | **37.9m** | 7.28 |
+| **Shield-Only (No IDS)** | **100.0%** | **100.0%** | **24.9m** ⚠️ | 7.27 |
+
+`RecurrentShield-BC` quarantines the ghost-BSM before the barrier filter acts, preventing the 13.0 m reduction in stopping margin seen when V2X is blindly trusted (`Shield-Only`). Raw JSON: [`results/fresh_and_v2x_necessary_eval.json`](results/fresh_and_v2x_necessary_eval.json).
+
+---
+
 ## Reproduction
 
 ```bash
@@ -91,6 +129,7 @@ python data/fetch_real_usdot_data.py
 pytest -v
 python experiments/run_publication_benchmarks.py
 python experiments/run_supplementary_validation.py
+python experiments/run_v2x_necessary_and_fresh_eval.py
 python edge_deploy/esp32_s3_export.py
 python experiments/plot_ieee_figures.py
 ```

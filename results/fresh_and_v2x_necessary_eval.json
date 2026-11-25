@@ -1,0 +1,522 @@
+{
+  "calibration_non_overlapping": {
+    "n_disjoint_cal": 13,
+    "tau_rec": 2.902356716553854,
+    "tau_raw": 3.645259599685669,
+    "tau_stateless": 2.996998891830444,
+    "ekf_drift": 1.5,
+    "ekf_threshold": 194.88540034746228
+  },
+  "fresh_untouched_splits": {
+    "us-101_fresh": {
+      "RecurrentShield-BC": {
+        "clean_n": 18,
+        "clean_surv_pct": 94.4,
+        "clean_fpr_pct": 5.6,
+        "clean_fpr_cp95_ci": [
+          0.1,
+          27.3
+        ],
+        "clean_dist_m": 94.1,
+        "auroc": 0.98,
+        "post_onset_det_pct": 95.8,
+        "pre_onset_fa_pct": 4.2,
+        "post_onset_miss_pct": 0.0,
+        "det_delay_mean_ms": 417.4,
+        "det_delay_median_ms": 100.0,
+        "atk_surv_pct": 95.8,
+        "atk_dist_m": 76.8,
+        "atk_jerk": 3.43
+      },
+      "Direct Raw Norm (No LSTM)": {
+        "clean_n": 18,
+        "clean_surv_pct": 94.4,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          18.5
+        ],
+        "clean_dist_m": 94.1,
+        "auroc": 0.975,
+        "post_onset_det_pct": 100.0,
+        "pre_onset_fa_pct": 0.0,
+        "post_onset_miss_pct": 0.0,
+        "det_delay_mean_ms": 933.3,
+        "det_delay_median_ms": 100.0,
+        "atk_surv_pct": 95.8,
+        "atk_dist_m": 76.9,
+        "atk_jerk": 3.43
+      },
+      "Stateless BC": {
+        "clean_n": 18,
+        "clean_surv_pct": 100.0,
+        "clean_fpr_pct": 44.4,
+        "clean_fpr_cp95_ci": [
+          21.5,
+          69.2
+        ],
+        "clean_dist_m": 27.8,
+        "auroc": 0.985,
+        "post_onset_det_pct": 87.5,
+        "pre_onset_fa_pct": 12.5,
+        "post_onset_miss_pct": 0.0,
+        "det_delay_mean_ms": 371.4,
+        "det_delay_median_ms": 100.0,
+        "atk_surv_pct": 100.0,
+        "atk_dist_m": 31.4,
+        "atk_jerk": 2.44
+      },
+      "EKF-CUSUM + BC": {
+        "clean_n": 18,
+        "clean_surv_pct": 94.4,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          18.5
+        ],
+        "clean_dist_m": 94.1,
+        "auroc": 0.98,
+        "post_onset_det_pct": 100.0,
+        "pre_onset_fa_pct": 0.0,
+        "post_onset_miss_pct": 0.0,
+        "det_delay_mean_ms": 5112.5,
+        "det_delay_median_ms": 4600.0,
+        "atk_surv_pct": 100.0,
+        "atk_dist_m": 62.8,
+        "atk_jerk": 4.22
+      },
+      "Onboard-Only (No V2X)": {
+        "clean_n": 18,
+        "clean_surv_pct": 94.4,
+        "clean_fpr_pct": null,
+        "clean_fpr_cp95_ci": null,
+        "clean_dist_m": 94.1,
+        "auroc": null,
+        "post_onset_det_pct": null,
+        "pre_onset_fa_pct": null,
+        "post_onset_miss_pct": null,
+        "det_delay_mean_ms": null,
+        "det_delay_median_ms": null,
+        "atk_surv_pct": 91.7,
+        "atk_dist_m": 81.4,
+        "atk_jerk": 2.41
+      },
+      "Shield-Only (No IDS)": {
+        "clean_n": 18,
+        "clean_surv_pct": 94.4,
+        "clean_fpr_pct": null,
+        "clean_fpr_cp95_ci": null,
+        "clean_dist_m": 94.1,
+        "auroc": null,
+        "post_onset_det_pct": null,
+        "pre_onset_fa_pct": null,
+        "post_onset_miss_pct": null,
+        "det_delay_mean_ms": null,
+        "det_delay_median_ms": null,
+        "atk_surv_pct": 100.0,
+        "atk_dist_m": 60.9,
+        "atk_jerk": 5.3
+      },
+      "IDM-ACC + AEB": {
+        "clean_n": 18,
+        "clean_surv_pct": 100.0,
+        "clean_fpr_pct": null,
+        "clean_fpr_cp95_ci": null,
+        "clean_dist_m": 151.9,
+        "auroc": null,
+        "post_onset_det_pct": null,
+        "pre_onset_fa_pct": null,
+        "post_onset_miss_pct": null,
+        "det_delay_mean_ms": null,
+        "det_delay_median_ms": null,
+        "atk_surv_pct": 91.7,
+        "atk_dist_m": 95.8,
+        "atk_jerk": 9.39
+      }
+    },
+    "i-80_fresh": {
+      "RecurrentShield-BC": {
+        "clean_n": 18,
+        "clean_surv_pct": 100.0,
+        "clean_fpr_pct": 16.7,
+        "clean_fpr_cp95_ci": [
+          3.6,
+          41.4
+        ],
+        "clean_dist_m": 54.0,
+        "auroc": 0.988,
+        "post_onset_det_pct": 100.0,
+        "pre_onset_fa_pct": 0.0,
+        "post_onset_miss_pct": 0.0,
+        "det_delay_mean_ms": 741.7,
+        "det_delay_median_ms": 100.0,
+        "atk_surv_pct": 100.0,
+        "atk_dist_m": 60.1,
+        "atk_jerk": 3.76
+      },
+      "Direct Raw Norm (No LSTM)": {
+        "clean_n": 18,
+        "clean_surv_pct": 100.0,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          18.5
+        ],
+        "clean_dist_m": 54.0,
+        "auroc": 0.982,
+        "post_onset_det_pct": 91.7,
+        "pre_onset_fa_pct": 0.0,
+        "post_onset_miss_pct": 8.3,
+        "det_delay_mean_ms": 1490.9,
+        "det_delay_median_ms": 100.0,
+        "atk_surv_pct": 100.0,
+        "atk_dist_m": 60.1,
+        "atk_jerk": 3.76
+      },
+      "Stateless BC": {
+        "clean_n": 18,
+        "clean_surv_pct": 100.0,
+        "clean_fpr_pct": 61.1,
+        "clean_fpr_cp95_ci": [
+          35.7,
+          82.7
+        ],
+        "clean_dist_m": 21.9,
+        "auroc": 0.983,
+        "post_onset_det_pct": 87.5,
+        "pre_onset_fa_pct": 8.3,
+        "post_onset_miss_pct": 4.2,
+        "det_delay_mean_ms": 1190.5,
+        "det_delay_median_ms": 100.0,
+        "atk_surv_pct": 100.0,
+        "atk_dist_m": 21.9,
+        "atk_jerk": 2.64
+      },
+      "EKF-CUSUM + BC": {
+        "clean_n": 18,
+        "clean_surv_pct": 100.0,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          18.5
+        ],
+        "clean_dist_m": 54.0,
+        "auroc": 0.982,
+        "post_onset_det_pct": 100.0,
+        "pre_onset_fa_pct": 0.0,
+        "post_onset_miss_pct": 0.0,
+        "det_delay_mean_ms": 5408.3,
+        "det_delay_median_ms": 4800.0,
+        "atk_surv_pct": 100.0,
+        "atk_dist_m": 52.6,
+        "atk_jerk": 4.31
+      },
+      "Onboard-Only (No V2X)": {
+        "clean_n": 18,
+        "clean_surv_pct": 100.0,
+        "clean_fpr_pct": null,
+        "clean_fpr_cp95_ci": null,
+        "clean_dist_m": 54.0,
+        "auroc": null,
+        "post_onset_det_pct": null,
+        "pre_onset_fa_pct": null,
+        "post_onset_miss_pct": null,
+        "det_delay_mean_ms": null,
+        "det_delay_median_ms": null,
+        "atk_surv_pct": 100.0,
+        "atk_dist_m": 62.8,
+        "atk_jerk": 2.82
+      },
+      "Shield-Only (No IDS)": {
+        "clean_n": 18,
+        "clean_surv_pct": 100.0,
+        "clean_fpr_pct": null,
+        "clean_fpr_cp95_ci": null,
+        "clean_dist_m": 54.0,
+        "auroc": null,
+        "post_onset_det_pct": null,
+        "pre_onset_fa_pct": null,
+        "post_onset_miss_pct": null,
+        "det_delay_mean_ms": null,
+        "det_delay_median_ms": null,
+        "atk_surv_pct": 100.0,
+        "atk_dist_m": 50.1,
+        "atk_jerk": 5.19
+      },
+      "IDM-ACC + AEB": {
+        "clean_n": 18,
+        "clean_surv_pct": 83.3,
+        "clean_fpr_pct": null,
+        "clean_fpr_cp95_ci": null,
+        "clean_dist_m": 111.2,
+        "auroc": null,
+        "post_onset_det_pct": null,
+        "pre_onset_fa_pct": null,
+        "post_onset_miss_pct": null,
+        "det_delay_mean_ms": null,
+        "det_delay_median_ms": null,
+        "atk_surv_pct": 83.3,
+        "atk_dist_m": 75.2,
+        "atk_jerk": 10.31
+      }
+    },
+    "lankershim_fresh": {
+      "RecurrentShield-BC": {
+        "clean_n": 18,
+        "clean_surv_pct": 100.0,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          18.5
+        ],
+        "clean_dist_m": 44.4,
+        "auroc": 0.985,
+        "post_onset_det_pct": 100.0,
+        "pre_onset_fa_pct": 0.0,
+        "post_onset_miss_pct": 0.0,
+        "det_delay_mean_ms": 583.3,
+        "det_delay_median_ms": 100.0,
+        "atk_surv_pct": 87.5,
+        "atk_dist_m": 59.5,
+        "atk_jerk": 3.63
+      },
+      "Direct Raw Norm (No LSTM)": {
+        "clean_n": 18,
+        "clean_surv_pct": 100.0,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          18.5
+        ],
+        "clean_dist_m": 44.4,
+        "auroc": 0.979,
+        "post_onset_det_pct": 95.8,
+        "pre_onset_fa_pct": 0.0,
+        "post_onset_miss_pct": 4.2,
+        "det_delay_mean_ms": 1269.6,
+        "det_delay_median_ms": 100.0,
+        "atk_surv_pct": 87.5,
+        "atk_dist_m": 59.5,
+        "atk_jerk": 3.63
+      },
+      "Stateless BC": {
+        "clean_n": 18,
+        "clean_surv_pct": 100.0,
+        "clean_fpr_pct": 27.8,
+        "clean_fpr_cp95_ci": [
+          9.7,
+          53.5
+        ],
+        "clean_dist_m": 34.8,
+        "auroc": 0.988,
+        "post_onset_det_pct": 70.8,
+        "pre_onset_fa_pct": 25.0,
+        "post_onset_miss_pct": 4.2,
+        "det_delay_mean_ms": 1105.9,
+        "det_delay_median_ms": 100.0,
+        "atk_surv_pct": 79.2,
+        "atk_dist_m": 23.3,
+        "atk_jerk": 2.7
+      },
+      "EKF-CUSUM + BC": {
+        "clean_n": 18,
+        "clean_surv_pct": 100.0,
+        "clean_fpr_pct": 0.0,
+        "clean_fpr_cp95_ci": [
+          0.0,
+          18.5
+        ],
+        "clean_dist_m": 44.4,
+        "auroc": 0.989,
+        "post_onset_det_pct": 95.8,
+        "pre_onset_fa_pct": 0.0,
+        "post_onset_miss_pct": 4.2,
+        "det_delay_mean_ms": 4860.9,
+        "det_delay_median_ms": 4500.0,
+        "atk_surv_pct": 87.5,
+        "atk_dist_m": 54.9,
+        "atk_jerk": 3.95
+      },
+      "Onboard-Only (No V2X)": {
+        "clean_n": 18,
+        "clean_surv_pct": 100.0,
+        "clean_fpr_pct": null,
+        "clean_fpr_cp95_ci": null,
+        "clean_dist_m": 44.4,
+        "auroc": null,
+        "post_onset_det_pct": null,
+        "pre_onset_fa_pct": null,
+        "post_onset_miss_pct": null,
+        "det_delay_mean_ms": null,
+        "det_delay_median_ms": null,
+        "atk_surv_pct": 87.5,
+        "atk_dist_m": 59.8,
+        "atk_jerk": 2.81
+      },
+      "Shield-Only (No IDS)": {
+        "clean_n": 18,
+        "clean_surv_pct": 100.0,
+        "clean_fpr_pct": null,
+        "clean_fpr_cp95_ci": null,
+        "clean_dist_m": 44.4,
+        "auroc": null,
+        "post_onset_det_pct": null,
+        "pre_onset_fa_pct": null,
+        "post_onset_miss_pct": null,
+        "det_delay_mean_ms": null,
+        "det_delay_median_ms": null,
+        "atk_surv_pct": 87.5,
+        "atk_dist_m": 53.2,
+        "atk_jerk": 4.87
+      },
+      "IDM-ACC + AEB": {
+        "clean_n": 18,
+        "clean_surv_pct": 66.7,
+        "clean_fpr_pct": null,
+        "clean_fpr_cp95_ci": null,
+        "clean_dist_m": 133.4,
+        "auroc": null,
+        "post_onset_det_pct": null,
+        "pre_onset_fa_pct": null,
+        "post_onset_miss_pct": null,
+        "det_delay_mean_ms": null,
+        "det_delay_median_ms": null,
+        "atk_surv_pct": 79.2,
+        "atk_dist_m": 85.7,
+        "atk_jerk": 9.72
+      }
+    }
+  },
+  "v2x_necessary_occluded_25m": {
+    "i-80_fresh": {
+      "RecurrentShield-BC": {
+        "clean_surv_pct": 94.4,
+        "clean_dist_m": 64.2,
+        "clean_fallback_pct": 1.14,
+        "clean_red_viol_pct": 0.0,
+        "atk_surv_pct": 100.0,
+        "atk_dist_m": 71.4,
+        "atk_jerk": 4.13,
+        "atk_fallback_pct": 4.84,
+        "post_onset_det_pct": 100.0,
+        "pre_onset_fa_pct": 0.0
+      },
+      "Direct Raw Norm (No LSTM)": {
+        "clean_surv_pct": 94.4,
+        "clean_dist_m": 64.2,
+        "clean_fallback_pct": 1.14,
+        "clean_red_viol_pct": 0.0,
+        "atk_surv_pct": 100.0,
+        "atk_dist_m": 69.2,
+        "atk_jerk": 4.2,
+        "atk_fallback_pct": 5.44,
+        "post_onset_det_pct": 91.7,
+        "pre_onset_fa_pct": 0.0
+      },
+      "Onboard-Only (No V2X)": {
+        "clean_surv_pct": 94.4,
+        "clean_dist_m": 64.2,
+        "clean_fallback_pct": 1.14,
+        "clean_red_viol_pct": 0.0,
+        "atk_surv_pct": 100.0,
+        "atk_dist_m": 73.3,
+        "atk_jerk": 3.04,
+        "atk_fallback_pct": 3.65,
+        "post_onset_det_pct": null,
+        "pre_onset_fa_pct": null
+      },
+      "Shield-Only (No IDS)": {
+        "clean_surv_pct": 94.4,
+        "clean_dist_m": 64.2,
+        "clean_fallback_pct": 1.14,
+        "clean_red_viol_pct": 0.0,
+        "atk_surv_pct": 100.0,
+        "atk_dist_m": 56.0,
+        "atk_jerk": 5.36,
+        "atk_fallback_pct": 19.51,
+        "post_onset_det_pct": null,
+        "pre_onset_fa_pct": null
+      }
+    },
+    "lankershim_fresh": {
+      "RecurrentShield-BC": {
+        "clean_surv_pct": 94.4,
+        "clean_dist_m": 49.9,
+        "clean_fallback_pct": 4.15,
+        "clean_red_viol_pct": 28.6,
+        "atk_surv_pct": 95.8,
+        "atk_dist_m": 56.7,
+        "atk_jerk": 5.17,
+        "atk_fallback_pct": 8.33,
+        "post_onset_det_pct": 95.8,
+        "pre_onset_fa_pct": 0.0
+      },
+      "Direct Raw Norm (No LSTM)": {
+        "clean_surv_pct": 94.4,
+        "clean_dist_m": 49.9,
+        "clean_fallback_pct": 4.15,
+        "clean_red_viol_pct": 28.6,
+        "atk_surv_pct": 95.8,
+        "atk_dist_m": 56.7,
+        "atk_jerk": 5.21,
+        "atk_fallback_pct": 6.82,
+        "post_onset_det_pct": 91.7,
+        "pre_onset_fa_pct": 0.0
+      },
+      "Onboard-Only (No V2X)": {
+        "clean_surv_pct": 94.4,
+        "clean_dist_m": 48.2,
+        "clean_fallback_pct": 4.72,
+        "clean_red_viol_pct": 26.4,
+        "atk_surv_pct": 95.8,
+        "atk_dist_m": 54.6,
+        "atk_jerk": 4.33,
+        "atk_fallback_pct": 8.33,
+        "post_onset_det_pct": null,
+        "pre_onset_fa_pct": null
+      },
+      "Shield-Only (No IDS)": {
+        "clean_surv_pct": 94.4,
+        "clean_dist_m": 49.9,
+        "clean_fallback_pct": 4.15,
+        "clean_red_viol_pct": 28.6,
+        "atk_surv_pct": 95.8,
+        "atk_dist_m": 51.1,
+        "atk_jerk": 6.55,
+        "atk_fallback_pct": 22.18,
+        "post_onset_det_pct": null,
+        "pre_onset_fa_pct": null
+      }
+    }
+  },
+  "blos_occluded_stopped_queue_22m": {
+    "RecurrentShield-BC": {
+      "clean_blos_surv_pct": 100.0,
+      "clean_blos_dist_m": 37.9,
+      "ghost_atk_surv_pct": 100.0,
+      "ghost_atk_dist_m": 37.9,
+      "ghost_atk_jerk": 7.28
+    },
+    "Direct Raw Norm (No LSTM)": {
+      "clean_blos_surv_pct": 100.0,
+      "clean_blos_dist_m": 37.9,
+      "ghost_atk_surv_pct": 100.0,
+      "ghost_atk_dist_m": 37.9,
+      "ghost_atk_jerk": 7.28
+    },
+    "Onboard-Only (No V2X)": {
+      "clean_blos_surv_pct": 100.0,
+      "clean_blos_dist_m": 37.9,
+      "ghost_atk_surv_pct": 100.0,
+      "ghost_atk_dist_m": 37.9,
+      "ghost_atk_jerk": 7.28
+    },
+    "Shield-Only (No IDS)": {
+      "clean_blos_surv_pct": 100.0,
+      "clean_blos_dist_m": 37.9,
+      "ghost_atk_surv_pct": 100.0,
+      "ghost_atk_dist_m": 24.9,
+      "ghost_atk_jerk": 7.27
+    }
+  }
+}

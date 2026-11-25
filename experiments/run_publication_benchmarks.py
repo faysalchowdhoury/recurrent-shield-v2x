@@ -534,8 +534,8 @@ def run_episode(
     avg_spd = dist_m / max(0.1, steps_run * env.cfg.dt_s)
     survived = not collided_or_off
     has_ids = method in IDS_METHODS
-    detected = (det_delay_ms is not None) or pre_onset_fa if has_ids else False
-    missed = (is_attack and (not detected)) if has_ids else True
+    post_onset_detected = (det_delay_ms is not None) if has_ids else False
+    missed = (is_attack and (not post_onset_detected) and (not pre_onset_fa)) if has_ids else True
 
     return {
         "scores": np.array(scores, dtype=float),
@@ -543,14 +543,15 @@ def run_episode(
         "labels": np.array(labels, dtype=int),
         "onset_step": int(threat_cfg.onset_step),
         "det_delay_ms": det_delay_ms,
-        "detected": detected,
+        "detected": post_onset_detected,
+        "post_onset_detected": post_onset_detected,
         "missed": missed,
         "pre_onset_fa": pre_onset_fa,
         "false_quarantine_clean": (not is_attack) and bool(quarantined),
         "survived": survived,
         "collided": collided_or_off,
         "collision_mode": collision_mode if collided_or_off else "none",
-        "quar_surv": bool(survived and (detected if is_attack else not bool(quarantined))) if has_ids else survived,
+        "quar_surv": bool(survived and (post_onset_detected if is_attack else not bool(quarantined))) if has_ids else survived,
         "rms_jerk": float(info.get("rms_jerk_ms3", 0.0)),
         "distance_m": dist_m,
         "avg_speed_ms": float(avg_spd),

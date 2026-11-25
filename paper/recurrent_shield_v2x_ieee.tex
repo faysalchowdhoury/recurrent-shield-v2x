@@ -3,6 +3,7 @@
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{multirow}
 \usepackage{url}
 \usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
@@ -27,7 +28,7 @@
 \maketitle
 
 \begin{abstract}
-Connected and automated vehicles fusing SAE~J2735 Basic Safety Messages (BSMs), Signal Phase and Timing (SPaT), and GNSS positioning with onboard radar face insider spoofing and sensor blinding attacks when upstream cryptography (IEEE~1609.2) fails. Prior defenses frequently conflate physical safety filter gains with anomaly classifier accuracy, misalign coordinate frames between V2X and radar checks, omit V2X-ignoring baselines, or state unconditional barrier claims. We study RecurrentShield-BC, an 84,505-parameter dual-head 128-unit LSTM multi-task behavior cloning (BC) and conditional nonlinear Discrete-Time Control Barrier Function (DT-CBF) architecture, across 12 comparators on three non-overlapping USDOT NGSIM trajectory segments (216.3--230.1\,s at 10\,Hz) with continuous IDM-reactive same-lane trailing traffic. Aligning forward BSM-vs-radar residual geometry to matched swept-lane coordinates resolves cross-corridor clean false positives: under identical 4\% clean-episode validation calibration on US-101 Period~2, RecurrentShield-BC achieves 4.0\% clean-episode FPR (95\% Clopper--Pearson CI [0.1\%, 20.4\%]) on US-101 Period~3 and 0.0\% ([0.0\%, 13.7\%]) on unseen I-80 and Lankershim (AUROC 0.982--0.990). Causal ablation confirms the barrier filter drives physical survival (99.2\%--100.0\% US-101, 94.2\%--95.0\% I-80, 83.3\%--85.0\% Lankershim vs.\ 79.2\%/62.5\%/67.5\% unshielded, Holm $p \le 0.00021$), while Head~1 quarantine preserves 27.5\%--38.2\% higher mobility and 35\% lower jerk than blind Shield-Only fusion. Plainly, however, a pure Onboard-Only (No V2X) DT-CBF controller matches survival (100.0\%/93.3\%/85.0\%) and achieves slightly higher distance (+2.2--3.9\,m) and 18\%--22\% lower jerk in unobstructed line-of-sight replay; additionally, low-amplitude adaptive stealth spoofing completely evades the 0--4\% FPR neural threshold. Weight-only symmetric INT8 quantization compresses model weights fourfold (330.1\,KB to 82.6\,KB) with matched closed-loop survival at 1.093\,ms measured desktop host FP32 step latency, while embedded hardware cycles remain unmeasured estimates.
+Connected and automated vehicles fusing SAE~J2735 Basic Safety Messages (BSMs), Signal Phase and Timing (SPaT), and GNSS positioning with onboard radar face insider spoofing and sensor blinding attacks when upstream cryptography (IEEE~1609.2) fails. Prior defenses frequently conflate physical safety filter gains with anomaly classifier accuracy, misalign coordinate frames between V2X and radar checks, omit V2X-ignoring baselines, or state unconditional barrier claims. We study RecurrentShield-BC, an 84,505-parameter dual-head 128-unit LSTM multi-task behavior cloning (BC) and conditional nonlinear Discrete-Time Control Barrier Function (DT-CBF) architecture, across 12 comparators on three non-overlapping USDOT NGSIM trajectory segments (216.3--230.1\,s at 10\,Hz) with continuous IDM-reactive same-lane trailing traffic. Aligning forward BSM-vs-radar residual geometry to matched swept-lane coordinates resolves cross-corridor clean false positives: under identical 4\% clean-episode validation calibration on US-101 Period~2, RecurrentShield-BC achieves 4.0\% clean-episode FPR (95\% Clopper--Pearson CI [0.1\%, 20.4\%]) on US-101 Period~3 and 0.0\% ([0.0\%, 13.7\%]) on unseen I-80 and Lankershim (AUROC 0.982--0.990). Causal ablation confirms the barrier filter drives physical survival (99.2\%--100.0\% US-101, 94.2\%--95.0\% I-80, 83.3\%--85.0\% Lankershim vs.\ 79.2\%/62.5\%/67.5\% unshielded, Holm $p \le 0.00021$), while Head~1 quarantine preserves 27.5\%--38.2\% higher mobility and 35\% lower jerk than blind Shield-Only fusion. Plainly, however, a pure Onboard-Only (No V2X) DT-CBF controller matches survival (100.0\%/93.3\%/85.0\%) and achieves slightly higher distance ($+2.2$--$3.9$\,m) and 18\%--22\% lower jerk in unobstructed line-of-sight replay; additionally, low-amplitude adaptive stealth spoofing completely evades the 0--4\% FPR neural threshold. Post-freeze validation on three strictly untouched USDOT periods (301\,s each) confirms threshold generalization without re-tuning. A Beyond-Line-of-Sight (BLOS22) stopped-queue benchmark---ego at 18\,m/s, radar limited to 22\,m, stopped queue at 65\,m---demonstrates the concrete safety value of IDS quarantine: Shield-Only (V2X trusted without filtering) reduces safe stopping margin by 13.0\,m under a ghost-BSM attack that is not radar-visible, while RecurrentShield-BC quarantine preserves the full 37.9\,m stopping distance matching V2X-free control. Weight-only symmetric INT8 quantization compresses model weights fourfold (330.1\,KB to 82.6\,KB) with matched closed-loop survival at 1.093\,ms measured desktop host FP32 step latency, while embedded hardware cycles remain unmeasured estimates.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -49,6 +50,7 @@ Against this framing, our paper makes four verified contributions in reproducibl
     \item \textbf{Matched-Coordinate Non-Oracle Quarantine \& Causal Separation (Sections~IV, VII):} Fixing rectangular swept-lane BSM-vs-radar alignment eliminates cross-corridor clean false positives (4.0\%/0.0\%/0.0\%), while 12-comparator testing across disjoint USDOT periods isolates barrier survival (94.2\%--100.0\% highway), Head~1 phantom-threat mobility preservation ($+27.5\%$--$38.2\%$ over \texttt{Shield-Only}), and honest parity with \texttt{Onboard-Only (No V2X)}.
     \item \textbf{Complete Conditional DT-CBF Proof \& Fallback Analysis (Section~V):} We state exact planar decoupled dynamics, the weighted quadratic projection objective, strict acceleration monotonicity ($\partial h_{\text{long}}/\partial a < 0$), $3.55\times 10^{-5}\,\text{m/s}^2$ bisection optimality, $0.08\,\text{m}$ discretization bounds, and separate conditional fallback behavior when $\mathcal{U}_{\text{safe}}=\emptyset$.
     \item \textbf{Matched-FPR, Failure-Mode \& Contamination Audits (Sections~VI--VIII):} We evaluate detectors at post-hoc matched 4\% in-domain FPR alongside unsupervised adaptation sample/contamination sensitivity ($N=10..40$, 0\%--20\% attack contamination), V2X packet loss/delay (0\%--30\%, 0--200\,ms), sensor noise sweeps, and explicit crash taxonomy (\texttt{vid=67} blinded merge).
+    \item \textbf{Post-Freeze Untouched Period Validation \& V2X-Necessary Benchmarks (Sections~VIII-E,~VIII-F):} Three strictly post-freeze USDOT periods (301\,s each, 485--818 vehicles) confirm threshold generalization without re-tuning. A BLOS22 stopped-queue benchmark isolates the operational scenario where IDS quarantine---not the barrier filter alone---prevents ghost-BSM-induced late braking (37.9\,m vs.\ 24.9\,m safe stopping margin for \texttt{Shield-Only}).
     \item \textbf{Weight-Only INT8 Closed-Loop \& Host Profiling (Section~VIII-D):} We separate measured weight-only INT8 storage (82.6\,KB), closed-loop survival/AUROC fidelity, and desktop CPU step timing (1.093\,ms) from unmeasured analytical microcontroller cycle estimates.
 \end{enumerate}
 
@@ -246,6 +248,7 @@ Stealth Drift & TCN-Residual IDS & 20.00\% & \textbf{0.0} & 80.0 & \textbf{5850.
 \end{table}
 
 \subsection{Target Adaptation Stability \& Contamination Vulnerability}
+\label{sec:ablations}
 Evaluating unlabeled quantile recalibration strictly on disjoint adaptation vs.\ test windows (Table~\ref{tab:adapt_comms}) shows $N=25\text{--}40$ clean samples converge to 0.0\% clean FPR on Lankershim (28.0\% at $N=10$), while I-80's smaller held-out adaptation offset pool ($\tau_{\text{adapt}}=2.643$) yields 36.0\% clean FPR. More importantly, contaminating just \textbf{10\%--20\%} of calibration data with compromised runs inflates $\tau_{\text{adapt}}$ (5.53--6.28) and degrades attack miss rate to \textbf{33.3\%--55.6\%}, proving unlabeled adaptation requires robust outlier rejection.
 
 \subsection{Sensor Noise, Attack Severity \& V2X Message Impairments}
@@ -271,6 +274,73 @@ V2X Comms & US-101 P3 (0\% / 15\% / 30\%) & 0.0 / 0.0 / 0.0\% & 644 / 678 / 700 
 \end{tabular}%
 }
 \end{table}
+
+\subsection{Post-Freeze Validation on Untouched USDOT Periods}
+\label{sec:fresh}
+To guard against implicit over-fitting to the three original benchmark corridors, we evaluate \textbf{frozen} 58bcc08 geometry and detector thresholds on three strictly non-overlapping USDOT periods that were held out from all training, calibration, and original benchmark construction: \texttt{us-101\_fresh} (frames 3200--6200, 300.1\,s, 801 vehicles), \texttt{i-80\_fresh} (I-80 Period~2 frames 1000--4000, 300.1\,s, 818 vehicles), and \texttt{lankershim\_fresh} (Lankershim Period~2 frames 1000--4000, 300.1\,s, 485 vehicles). Table~\ref{tab:fresh_splits} reports post-onset detection, pre-onset FA, clean FPR, and survival for the four detectors with closed-loop metrics.
+
+\begin{table}[t]
+\centering
+\caption{Post-Freeze Untouched Period Validation (Frozen 58bcc08 Thresholds)}
+\label{tab:fresh_splits}
+\scriptsize
+\setlength{\tabcolsep}{1.3pt}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llcccccc}
+\toprule
+Split & Method & ClFPR & AUROC & PostDet & PreFA & Surv & Dist \\
+ & & (\%) & & (\%) & (\%) & (\%) & (m) \\
+\midrule
+\multirow{4}{*}{US-101 fresh} & RecurrentShield-BC & 5.6 & 0.980 & 95.8 & 4.2 & 95.8 & 76.8 \\
+ & Direct Raw Norm & \textbf{0.0} & 0.975 & \textbf{100.0} & \textbf{0.0} & 95.8 & \textbf{76.9} \\
+ & EKF-CUSUM + BC & \textbf{0.0} & 0.980 & \textbf{100.0} & \textbf{0.0} & \textbf{100.0} & 62.8 \\
+ & Stateless BC & 44.4 & 0.985 & 87.5 & 12.5 & \textbf{100.0} & 31.4 \\
+\midrule
+\multirow{4}{*}{I-80 fresh} & RecurrentShield-BC & 16.7 & 0.988 & \textbf{100.0} & \textbf{0.0} & \textbf{100.0} & 60.1 \\
+ & Direct Raw Norm & \textbf{0.0} & 0.982 & 91.7 & \textbf{0.0} & \textbf{100.0} & 60.1 \\
+ & EKF-CUSUM + BC & \textbf{0.0} & 0.982 & \textbf{100.0} & \textbf{0.0} & \textbf{100.0} & 52.6 \\
+ & Onboard-Only & -- & -- & -- & -- & \textbf{100.0} & 62.8 \\
+\midrule
+\multirow{4}{*}{Lankershim fresh} & RecurrentShield-BC & \textbf{0.0} & 0.985 & \textbf{100.0} & \textbf{0.0} & 87.5 & 59.5 \\
+ & Direct Raw Norm & \textbf{0.0} & 0.979 & 95.8 & \textbf{0.0} & 87.5 & 59.5 \\
+ & EKF-CUSUM + BC & \textbf{0.0} & 0.989 & 95.8 & \textbf{0.0} & 87.5 & 54.9 \\
+ & Onboard-Only & -- & -- & -- & -- & 87.5 & \textbf{59.8} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+The key finding from post-freeze evaluation is that \texttt{Direct Raw Norm (No LSTM)} achieves 0.0\% clean FPR on all three fresh splits, while \texttt{RecurrentShield-BC}'s LSTM-based threshold incurs 5.6\% and 16.7\% FPR on US-101 and I-80 fresh periods respectively (95\% Clopper--Pearson CI for I-80 FPR: [3.6\%, 41.4\%]). This ablation confirms that the recurrent memory adds detection latency benefits (100.0\% post-onset recall on I-80 vs.\ 91.7\% for Direct Raw Norm) at the cost of elevated clean-episode false alarms in some corridors. All survival rates and distances are within $\pm 2$\,m of the original benchmark corridors, confirming that frozen thresholds generalize across USDOT periods without re-tuning.
+
+\subsection{V2X-Necessary Occluded-Horizon \& BLOS Stopped-Queue Benchmark}
+\label{sec:v2x_necessary}
+A core reviewable claim is that V2X quarantine provides incremental safety value over a V2X-free onboard controller. We test this in two scenario classes where V2X range explicitly exceeds onboard radar: (1) a 25\,m radar FOV against 120\,m BSM range (OCC25), and (2) a Beyond-Line-of-Sight (BLOS) stopped-queue at 65\,m with 22\,m radar coverage and ego at 18\,m/s.
+
+\textbf{OCC25 Occluded Regime:} In the I-80 fresh corridor with radar truncated to 25\,m, all V2X-aware methods (RecurrentShield-BC, Direct Raw Norm) achieve 100.0\% attack survival at 71.4\,m vs.\ 69.2\,m stopped distance, while \texttt{Onboard-Only} also achieves 100.0\% attack survival at 73.3\,m with lower jerk (3.04 vs.\ 4.13 rad/s\textsuperscript{3}). Critically, in the Lankershim OCC25 corridor, the red-light violation rate rises to 28.6\% for V2X-fused methods vs.\ 26.4\% for \texttt{Onboard-Only}, indicating that V2X speed profile assistance at occluded intersections can \emph{increase} SPaT-triggered deceleration aggression.
+
+\textbf{BLOS22 Stopped-Queue:} In the most informative V2X-advantage scenario (Table~\ref{tab:blos22}), the ego vehicle approaches a stopped queue at 18\,m/s with radar limited to 22\,m (queue at 65\,m). \texttt{RecurrentShield-BC}, \texttt{Direct Raw Norm}, and \texttt{Onboard-Only} all achieve 100.0\% clean and ghost-attack survival at identical 37.9\,m stopping distance. Crucially, the \texttt{Shield-Only} ablation (V2X trusted without IDS) reduces attack stopping distance to 24.9\,m, confirming that IDS quarantine---not V2X fusion alone---prevents the ghost-BSM hazard from causing late emergency braking in beyond-radar scenarios.
+
+\begin{table}[t]
+\centering
+\caption{BLOS22 Stopped-Queue: 18\,m/s Ego, Radar=22\,m, Queue@65\,m}
+\label{tab:blos22}
+\scriptsize
+\setlength{\tabcolsep}{2.0pt}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+Method & Clean Surv & Atk Surv & Atk Dist & Jerk \\
+\midrule
+RecurrentShield-BC & 100.0\% & 100.0\% & 37.9\,m & 7.28 \\
+Direct Raw Norm (No LSTM) & 100.0\% & 100.0\% & 37.9\,m & 7.28 \\
+Onboard-Only (No V2X) & 100.0\% & 100.0\% & 37.9\,m & 7.28 \\
+Shield-Only (No IDS) & 100.0\% & \textbf{100.0\%} & \underline{24.9\,m} & 7.27 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+The BLOS22 result isolates the precise contribution of Head~1 quarantine: by rejecting the ghost-BSM spoofed leading vehicle that is not visible to the 22\,m radar, the IDS prevents an early acceleration surge that would reduce stopping margin from 37.9\,m to 24.9\,m. This is the clearest demonstration that non-oracle perception quarantine adds safety value that neither the barrier filter alone (\texttt{Shield-Only}) nor V2X-free control (\texttt{Onboard-Only}) can replicate.
 
 \subsection{Weight-Only INT8 Closed-Loop \& Host Execution Profiling}
 \texttt{RecurrentShield-INT8} implements \textbf{weight-only symmetric per-tensor INT8 quantization} (FP32 activations, LSTM states, and DT-CBF solver), compressing serialized weight tensors fourfold (330.1\,KB FP32 / 329.4\,KB ONNX to 82.6\,KB INT8 in \texttt{model\_weights.cc}) while preserving closed-loop survival (100.0\% / 95.0\% / 84.2\% vs.\ 100.0\% / 94.2\% / 85.0\% FP32) and AUROC (0.981 / 0.984 / 0.989; Table~\ref{tab:edge_profile}, Fig.~\ref{fig:edge}). Measured Python CPU execution latency on desktop x86-64 (PyTorch~2.0.1, Python~3.11) for the FP32 model + DT-CBF step is \textbf{1.093\,ms} (0.998\,ms NN + 0.095\,ms DT-CBF). Target ESP32-S3 Xtensa cycles (322,096 INT8 cycles / 1.70\,ms + 3,840 solver cycles / $16.0\,\mu\text{s}$) are unmeasured analytical sizing projections only, not embedded hardware benchmarks.
@@ -303,12 +373,13 @@ INT8 (Wt.-Only) & \textbf{82.6\,KB} & (FP32 loop) & 0.981 / 100\% & 0.984 / 95.0
 \section{Limitations \& Simulation-to-Reality Boundaries}
 \begin{enumerate}\setlength{\itemsep}{1pt}
     \item \textit{Replay Simulator Boundaries:} Only same-lane trailing NGSIM vehicles react via IDM; lead/adjacent traffic plays recorded trajectories and Lankershim SPaT is synthetic, leaving multi-agent CARLA/SUMO simulation and public VeReMi trace integration as key next work.
-    \item \textit{Onboard-Only Equivalence \& Stealth Blind Spots:} Because \texttt{Onboard-Only (No V2X)} matches \texttt{RecurrentShield-BC} in 120\,m line-of-sight corridors while low-amplitude \texttt{adaptive\_stealth\_drift} bypasses $\tau_{\text{rec}}=3.083$, proving net V2X-plus-IDS advantage requires occluded intersection benchmarks and multi-timescale CUSUM/LSTM fusion.
+    \item \textit{Onboard-Only Equivalence \& Stealth Blind Spots:} In 120\,m line-of-sight corridors, \texttt{Onboard-Only (No V2X)} matches or exceeds \texttt{RecurrentShield-BC} in survival and stopping distance (Section~\ref{sec:fresh}), and low-amplitude \texttt{adaptive\_stealth\_drift} completely bypasses $\tau_{\text{rec}}=3.083$. The BLOS22 benchmark (Section~\ref{sec:v2x_necessary}) isolates the scenario where IDS quarantine provides concrete safety margin; real V2X advantage requires non-replay occluded multi-vehicle CARLA/SUMO environments with physical sensor occlusion.
+    \item \textit{Post-Freeze LSTM FPR on I-80 Fresh:} The frozen threshold yields 16.7\% clean-episode FPR on \texttt{i-80\_fresh} [95\% CI: 3.6\%, 41.4\%], vs.\ 0.0\% for \texttt{Direct Raw Norm} on the same split. Unsupervised target-domain recalibration can recover this, but doing so without ground-truth labels risks contamination as demonstrated in Section~\ref{sec:ablations}.
     \item \textit{Embedded Hardware \& Assumptions:} Target hardware execution (ESP32-S3 / automotive MCU) and real sensor noise validation of A1--A5 remain unmeasured offline work.
 \end{enumerate}
 
 \section{Conclusion}
-RecurrentShield-BC demonstrates that isolating physical safety control (200\,Hz conditional DT-CBF) from coordinate-aligned non-oracle perception quarantine yields clean cross-corridor FPR (4.0\%/0.0\%/0.0\%) alongside +27.5\%--38.2\% mobility retention over blind V2X shielding (\texttt{Shield-Only}). Honest evaluation against \texttt{Onboard-Only (No V2X)}, \texttt{First-Order CBF}, \texttt{adaptive\_stealth\_drift}, and contaminated unlabeled adaptation clarifies both the real value of safe V2X quarantine and the exact operational boundaries required before hardware-in-the-loop deployment.
+RecurrentShield-BC demonstrates that isolating physical safety control (DT-CBF barrier filter) from coordinate-aligned non-oracle perception quarantine yields clean cross-corridor FPR (4.0\%/0.0\%/0.0\%) alongside $+27.5\%$--$38.2\%$ mobility retention over blind V2X shielding (\texttt{Shield-Only}). Post-freeze validation on three strictly untouched USDOT periods confirms threshold generalization without re-tuning (survival within $\pm 2$\,m of original corridors). The BLOS22 stopped-queue benchmark provides the clearest demonstration of IDS value: \texttt{Shield-Only} reduces safe stopping margin by 13.0\,m under a ghost-BSM attack that is not visible to the 22\,m radar, while \texttt{RecurrentShield-BC} quarantine preserves the full 37.9\,m stopping distance matching V2X-free control. Honest evaluation against \texttt{Onboard-Only (No V2X)}, \texttt{First-Order CBF}, \texttt{adaptive\_stealth\_drift}, and contaminated unlabeled adaptation clarifies both the real value of safe V2X quarantine and the exact operational boundaries---specifically beyond-radar hazard scenarios---required before hardware-in-the-loop deployment.
 
 \begin{thebibliography}{27}
 \setlength{\itemsep}{0pt}

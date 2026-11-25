@@ -89,6 +89,30 @@ CORRIDOR_METADATA: Dict[str, Dict[str, Any]] = {
         "bearing_deg": 352.0,
         "where": "location='lankershim' AND global_time < 1118936600000 AND frame_id >= 500 AND frame_id <= 2800",
     },
+    "us-101_fresh": {
+        "name": "US-101 Period 3 Fresh Post-Freeze Test (frames 3200-6200, 300.1 s)",
+        "type": "highway",
+        "origin_lat": 34.1394,
+        "origin_lon": -118.3614,
+        "bearing_deg": 330.0,
+        "where": "location='us-101' AND global_time >= 1118848700000 AND frame_id >= 3200 AND frame_id <= 6200",
+    },
+    "i-80_fresh": {
+        "name": "I-80 Period 2 Fresh Post-Freeze Zero-Shot (5:00-5:15 PM, frames 1000-4000, 300.1 s)",
+        "type": "highway",
+        "origin_lat": 37.8403,
+        "origin_lon": -122.2974,
+        "bearing_deg": 12.0,
+        "where": "location='i-80' AND global_time >= 1113436750000 AND global_time < 1113437550000 AND frame_id >= 1000 AND frame_id <= 4000",
+    },
+    "lankershim_fresh": {
+        "name": "Lankershim Period 2 Fresh Post-Freeze Zero-Shot (frames 1000-4000, 300.1 s)",
+        "type": "arterial",
+        "origin_lat": 34.1408,
+        "origin_lon": -118.3627,
+        "bearing_deg": 352.0,
+        "where": "location='lankershim' AND global_time >= 1118936680000 AND frame_id >= 1000 AND frame_id <= 4000",
+    },
 }
 
 
@@ -100,7 +124,7 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
-def fetch_socrata_paginated(where_clause: str, page_size: int = 50000, max_rows: int = 400000) -> List[Dict[str, Any]]:
+def fetch_socrata_paginated(where_clause: str, page_size: int = 50000, max_rows: int = 800000) -> List[Dict[str, Any]]:
     all_rows: List[Dict[str, Any]] = []
     offset = 0
     while offset < max_rows:
@@ -175,6 +199,8 @@ def ngsim_to_sae_j2735_bsm(df: pd.DataFrame, corridor_key: str) -> pd.DataFrame:
     df = df.sort_values(["vehicle_id", "frame_id"]).copy()
     dx = df.groupby("vehicle_id")["x_m"].diff().fillna(0.0)
     dy = df.groupby("vehicle_id")["y_m"].diff().fillna(0.0)
+    vx = dx / 0.1
+    ax_lat = np.clip(vx.groupby(df["vehicle_id"]).diff().fillna(0.0) / 0.1, -5.0, 5.0)
     local_heading_rad = np.arctan2(dx, np.maximum(dy, 1e-3))
     world_heading_rad = bearing_rad + local_heading_rad
 
@@ -188,6 +214,7 @@ def ngsim_to_sae_j2735_bsm(df: pd.DataFrame, corridor_key: str) -> pd.DataFrame:
     bsm_df = pd.DataFrame(
         {
             "frame_id": df["frame_id"].values,
+            "global_time": df["global_time"].values if "global_time" in df.columns else np.zeros(len(df), dtype=np.int64),
             "msgCnt": (df["frame_id"].values % 128).astype(int),
             "id": [f"{corridor_key[:3].upper()}-{vid:05d}" for vid in df["vehicle_id"].values],
             "vehicle_id": df["vehicle_id"].values,
@@ -196,7 +223,7 @@ def ngsim_to_sae_j2735_bsm(df: pd.DataFrame, corridor_key: str) -> pd.DataFrame:
             "speed": np.round(df["speed_ms"].values, 3),
             "heading": np.round(np.degrees(world_heading_rad.values) % 360.0, 2),
             "accelSet_long": np.round(df["accel_ms2"].values, 3),
-            "accelSet_lat": np.round((dx.values / 0.1) * 0.25, 3),
+            "accelSet_lat": np.round(ax_lat.values, 3),
             "accelSet_vert": np.zeros(len(df), dtype=float),
             "accelSet_yaw": np.round(np.degrees(local_heading_rad.values) / 0.1, 3),
             "x_m": df["x_m"].values,
