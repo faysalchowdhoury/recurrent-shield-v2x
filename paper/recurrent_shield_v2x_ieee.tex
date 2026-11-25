@@ -150,7 +150,7 @@ Assuming upstream IEEE~1609.2 cryptographic authentication is compromised via va
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=0.88\textwidth]{../results/figures/fig1_architecture_cbf_loop.png}
+    \includegraphics[width=0.88\textwidth]{../results/figures/fig1_architecture_cbf_loop.pdf}
     \caption{\textbf{End-to-end signal isolation and safety shielding pipeline.} Local 6-sector 120~m radar, curb boundaries, wheel encoders, and 3-axis IMU ($o_t \in \mathbb{R}^{26}$) feed the $26\to 24$ topological encoder and 128-unit LSTM backbone (330.1~KB FP32 / 82.6~KB INT8), whose hidden state $h_t$ drives both Head~1 Mahalanobis quarantine ($r_t > \tau_t$ against untrusted V2X/GNSS input $y_{\text{ext}}$) and Head~2 zero-shot limp-home control ($u_{\text{nom}}$), verified at 200~Hz by the closed-form DT-CBF QP shield before reaching vehicle actuators.}
     \label{fig:arch}
 \end{figure*}
