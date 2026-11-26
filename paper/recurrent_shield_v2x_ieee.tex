@@ -55,7 +55,7 @@ Against this framing, our paper makes four verified contributions in reproducibl
 \end{enumerate}
 
 \section{Related Work}
-VANET misbehavior detection surveys~\cite{vanderheijden2019} and VeReMi benchmarks~\cite{kamel2020veremi,kamel2020tvt} motivated statistical~\cite{sharma2021iotj}, ensemble~\cite{anyanwu2023tits}, adaptive~\cite{sultana2024ladetects}, and Transformer platoon~\cite{li2025attentionguard} classifiers that largely audit logged packets offline without closed-loop control shields. Conversely, GNSS fusion monitors~\cite{shen2020drift,dasgupta2022gnss,yang2023gps} detect kinematic drift via EKF or demonstration-learned models without formal barrier filtering. In safety-critical control, discrete-time CBFs~\cite{agrawal2017dcbf,ames2019cbf}, measurement-robust and stochastic CBFs~\cite{dean2020corl,cosner2021mrcbf,cosner2023rss,cosner2024freedman}, input-to-state safety~\cite{alan2023issf}, and MPC/DRL-CBF couplings~\cite{zeng2021mpccbf,cheng2019rlcbf,zhang2025cbfdrl,udatha2023pcbf} enforce discrete barrier invariance given known sensor bounds, while TinyML studies~\cite{david2021tflm,bove2024tinyml,li2025embedded} compress neural or control footprints. Table~\ref{tab:lit_matrix} contrasts RecurrentShield-BC against the five closest methodological threads.
+VANET misbehavior detection surveys~\cite{vanderheijden2019} and VeReMi benchmarks~\cite{kamel2020veremi,kamel2020tvt} motivated statistical~\cite{sharma2021iotj}, ensemble~\cite{anyanwu2023tits}, adaptive~\cite{sultana2024ladetects}, and Transformer platoon~\cite{li2025attentionguard} classifiers that largely audit logged packets offline without closed-loop control shields. Conversely, GNSS fusion monitors~\cite{shen2020drift,dasgupta2022gnss,yang2023gps} detect kinematic drift via EKF or demonstration-learned models without formal barrier filtering. In safety-critical control, discrete-time CBFs~\cite{agrawal2017dcbf,ames2019cbf}, measurement-robust and stochastic CBFs~\cite{dean2020corl,cosner2021mrcbf,cosner2023rss,cosner2024freedman}, input-to-state safety~\cite{alan2023issf}, and MPC/DRL-CBF couplings~\cite{zeng2021mpccbf,cheng2019rlcbf,zhang2025cbfdrl,udatha2023pcbf} enforce discrete barrier invariance given known sensor bounds, while TinyML studies~\cite{david2021tflm,bove2024tinyml,li2025embedded} compress neural or control footprints. Table~\ref{tab:lit_matrix} contrasts RecurrentShield-BC against the closest methodological threads, including trust-aware event-triggered CBF coordination for adversarial CAV networks~\cite{ahmad2024trustcbf}.
 
 \begin{table}[t]
 \centering
@@ -72,6 +72,7 @@ Work / Baseline & Non-Oracle & Closed-Loop & Conditional & Failure & Weights \\
 VeReMi / AttnGuard~\cite{kamel2020veremi,li2025attentionguard} & Offline/Log & No & No & No & No \\
 Shen~\textit{et al.} / Yang~\textit{et al.}~\cite{shen2020drift,yang2023gps} & Yes & Partial & No & No & No \\
 1st-Order DCBF~\cite{agrawal2017dcbf} & No & Yes (Lin.) & No & No & No \\
+Trust-Aware Event-Triggered CBF~\cite{ahmad2024trustcbf} & Yes & Yes & Trust/Noise & No & SUMO/CARLA \\
 Stochastic / MR-CBF~\cite{dean2020corl,cosner2023rss} & No & Yes & Bounded Noise & No & No \\
 Embedded CBF~\cite{li2025embedded} & No & Yes & Hardware & No & Analytic \\
 \textbf{RecurrentShield-BC (Ours)} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} & \textbf{INT8 Wt.} \\
@@ -343,7 +344,7 @@ Shield-Only (No IDS) & 100.0\% & \textbf{100.0\%} & \underline{24.9\,m} & 7.27 \
 The BLOS22 result isolates the precise contribution of Head~1 quarantine: by rejecting the ghost-BSM spoofed leading vehicle that is not visible to the 22\,m radar, the IDS prevents an early acceleration surge that would reduce stopping margin from 37.9\,m to 24.9\,m. This is the clearest demonstration that non-oracle perception quarantine adds safety value that neither the barrier filter alone (\texttt{Shield-Only}) nor V2X-free control (\texttt{Onboard-Only}) can replicate.
 
 \subsection{Weight-Only INT8 Closed-Loop \& Host Execution Profiling}
-\texttt{RecurrentShield-INT8} implements \textbf{weight-only symmetric per-tensor INT8 quantization} (FP32 activations, LSTM states, and DT-CBF solver), compressing serialized weight tensors fourfold (330.1\,KB FP32 / 329.4\,KB ONNX to 82.6\,KB INT8 in \texttt{model\_weights.cc}) while preserving closed-loop survival (100.0\% / 95.0\% / 84.2\% vs.\ 100.0\% / 94.2\% / 85.0\% FP32) and AUROC (0.981 / 0.984 / 0.989; Table~\ref{tab:edge_profile}, Fig.~\ref{fig:edge}). Measured Python CPU execution latency on desktop x86-64 (PyTorch~2.0.1, Python~3.11) for the FP32 model + DT-CBF step is \textbf{1.031\,ms} (0.937\,ms NN + 0.094\,ms DT-CBF). Target ESP32-S3 Xtensa cycles (322,096 INT8 cycles / 1.70\,ms + 3,840 solver cycles / $16.0\,\mu\text{s}$) are unmeasured analytical sizing projections only, not embedded hardware benchmarks.
+\texttt{RecurrentShield-INT8} implements \textbf{weight-only symmetric per-tensor INT8 quantization} (FP32 activations, LSTM states, and DT-CBF solver), compressing serialized weight tensors fourfold (330.1\,KB FP32 / 329.4\,KB ONNX to 82.6\,KB INT8 in \texttt{model\_weights.cc}) while preserving closed-loop survival (100.0\% / 95.0\% / 84.2\% vs.\ 100.0\% / 94.2\% / 85.0\% FP32) and AUROC (0.981 / 0.984 / 0.989; Table~\ref{tab:edge_profile}, Fig.~\ref{fig:edge}). Measured Python CPU execution latency on desktop x86-64 (PyTorch~2.0.1, Python~3.10.11) for the FP32 model + DT-CBF step is \textbf{1.031\,ms} (0.937\,ms NN + 0.094\,ms DT-CBF). Target ESP32-S3 Xtensa cycles (322,096 INT8 cycles / 1.70\,ms + 3,840 solver cycles / $16.0\,\mu\text{s}$) are unmeasured analytical sizing projections only, not embedded hardware benchmarks.
 
 \begin{table}[t]
 \centering
@@ -428,6 +429,8 @@ R.~K. Cosner, P.~Culbertson, A.~J. Taylor, and A.~D. Ames, ``Robust safety under
 R.~K. Cosner, P.~Culbertson, and A.~D. Ames, ``Bounding stochastic safety: Leveraging Freedman's inequality with discrete-time control barrier functions,'' \textit{IEEE Control Syst. Lett.}, vol.~8, pp. 1937--1942, 2024.
 \bibitem{cheng2019rlcbf}
 R.~Cheng, G.~Orosz, R.~M. Murray, and J.~W. Burdick, ``End-to-end safe reinforcement learning through barrier functions for safety-critical continuous control tasks,'' in \textit{Proc. AAAI}, 2019.
+\bibitem{ahmad2024trustcbf}
+H.~M.~S. Ahmad, E.~Sabouni, A.~Dickson, W.~Xiao, C.~G. Cassandras, and W.~Li, ``Secure control of connected and automated vehicles using trust-aware robust event-triggered control barrier functions,'' \textit{arXiv:2401.02306}, 2024.
 \bibitem{zhang2025cbfdrl}
 C.-Z. Zhang, L.-F. Dai, H.~Zhang, and Z.-P. Wang, ``Control barrier function-guided deep reinforcement learning for decision-making of autonomous vehicle at on-ramp merging,'' \textit{IEEE Trans. Intell. Transp. Syst.}, vol.~26, no.~6, pp. 8919--8932, 2025.
 \bibitem{udatha2023pcbf}

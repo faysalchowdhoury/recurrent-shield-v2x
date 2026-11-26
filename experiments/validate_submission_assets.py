@@ -40,6 +40,20 @@ def main() -> None:
     host_ms = float(edge["host_measured"]["total_control_step_median_ms"])
     require(host_ms >= 0.0, "edge host timing must be non-negative")
 
+    blos = fresh["blos_occluded_stopped_queue_22m"]
+    recurrent_blos = blos["RecurrentShield-BC"]
+    shield_only_blos = blos["Shield-Only (No IDS)"]
+    require(recurrent_blos["ghost_atk_dist_m"] == 37.9, "BLOS22 recurrent distance changed")
+    require(shield_only_blos["ghost_atk_dist_m"] == 24.9, "BLOS22 Shield-Only distance changed")
+
+    primary = benchmark["corridors"]
+    require(primary["us-101_test"]["RecurrentShield-BC"]["survival"]["mean"] == 100.0,
+            "US-101 primary survival changed")
+    require(primary["i-80"]["RecurrentShield-BC"]["survival"]["mean"] == 94.167,
+            "I-80 primary survival changed")
+    require(primary["lankershim"]["RecurrentShield-BC"]["survival"]["mean"] == 85.0,
+            "Lankershim primary survival changed")
+
     for split in required_fresh:
         require(split in fresh["fresh_untouched_splits"], f"missing fresh result: {split}")
 
@@ -54,6 +68,7 @@ def main() -> None:
     host_text = f"{host_ms:.3f} ms"
     require(host_text in readme or f"{host_ms:.3f}\u002c" in readme, "README host timing disagrees with edge profile")
     require("1.093" not in readme and "1.093" not in paper, "obsolete host timing remains in public artifacts")
+    require("Python~3.10.11" in paper, "manuscript host runtime does not match the measured Python 3.10.11 environment")
 
     print(
         f"Submission assets validated: {len(corridors)} datasets, "

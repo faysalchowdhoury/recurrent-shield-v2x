@@ -153,3 +153,55 @@ def test_reactive_idm_env_and_baselines_offline_safe():
 
 def test_public_submission_assets_are_synchronized():
     validate_submission_assets()
+
+
+def test_dt_cbf_acceleration_monotonicity_and_grid_invariance():
+    shield = DtCbfSafetyShield(DtCbfConfig(alpha_long=0.35, alpha_lat=0.35))
+
+    rng = np.random.default_rng(5678)
+    for _ in range(500):
+        shield.reset()
+        ego_v = float(rng.uniform(4.0, 26.0))
+        front_d = float(rng.uniform(8.0, 70.0))
+        rel_v = float(rng.uniform(-8.0, 2.0))
+        clearance = float(rng.uniform(2.0, 10.0))
+        nominal = np.array([float(rng.uniform(-6.5, 2.8)), float(rng.uniform(-2.0, 2.0))])
+
+        u_safe, diag = shield.filter_action(
+            nominal,
+            ego_v,
+            front_d,
+            rel_v,
+            clearance,
+            clearance,
+        )
+
+        if diag["qp_feasible"] == 1.0:
+            assert diag["feasible_cbf_satisfied"] == 1.0
+            assert diag["cbf_satisfied"] == 1.0
+            assert diag["h_long_next"] >= (1.0 - 0.35) * diag["h_long"] - 1e-9
+        else:
+            assert diag["qp_feasible"] == 0.0
+            assert diag["emergency_fallback"] == 1.0
+            assert diag["feasible_cbf_satisfied"] == -1.0
+
+        h_values = []
+        _, _, _, d_eff, v_lead, eps_long = shield.compute_barriers(
+            ego_v, front_d, rel_v, clearance, clearance, False, False
+        )
+        accelerations = np.linspace(-6.5, 2.8, 19)
+        for acceleration in accelerations:
+            h_values.append(
+                shield._eval_h_long_substepped(
+                    ego_v,
+                    d_eff,
+                    v_lead,
+                    float(acceleration),
+                    eps_long,
+                    20,
+                    0.005,
+                )
+            )
+        assert all(right <= left + 1e-9 for left, right in zip(h_values, h_values[1:])), (
+            "longitudinal barrier violated monotonic acceleration ordering"
+        )
