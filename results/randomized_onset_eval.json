@@ -1,0 +1,90 @@
+{
+  "intermittent_burst": {
+    "RecurrentShield-BC": {
+      "quar_surv_pct": 91.67,
+      "surv_pct": 100.0,
+      "collision_pct": 0.0,
+      "miss_pct": 0.0,
+      "detected_delay_ms": 872.7
+    },
+    "TCN-Residual IDS": {
+      "quar_surv_pct": 83.33,
+      "surv_pct": 83.33,
+      "collision_pct": 16.67,
+      "miss_pct": 0.0,
+      "detected_delay_ms": 1050.0
+    },
+    "Tiny-Transformer IDS": {
+      "quar_surv_pct": 91.67,
+      "surv_pct": 91.67,
+      "collision_pct": 8.33,
+      "miss_pct": 0.0,
+      "detected_delay_ms": 950.0
+    },
+    "EKF-CUSUM + BC": {
+      "quar_surv_pct": 100.0,
+      "surv_pct": 100.0,
+      "collision_pct": 0.0,
+      "miss_pct": 0.0,
+      "detected_delay_ms": 5933.3
+    },
+    "Shield-Only (No IDS)": {
+      "quar_surv_pct": 100.0,
+      "surv_pct": 100.0,
+      "collision_pct": 0.0,
+      "miss_pct": null,
+      "detected_delay_ms": null
+    },
+    "Onboard-Only (No V2X)": {
+      "quar_surv_pct": 100.0,
+      "surv_pct": 100.0,
+      "collision_pct": 0.0,
+      "miss_pct": null,
+      "detected_delay_ms": null
+    }
+  },
+  "adaptive_stealth_drift": {
+    "RecurrentShield-BC": {
+      "quar_surv_pct": 0.0,
+      "surv_pct": 100.0,
+      "collision_pct": 0.0,
+      "miss_pct": 100.0,
+      "detected_delay_ms": null
+    },
+    "TCN-Residual IDS": {
+      "quar_surv_pct": 20.0,
+      "surv_pct": 100.0,
+      "collision_pct": 0.0,
+      "miss_pct": 80.0,
+      "detected_delay_ms": 5850.0
+    },
+    "Tiny-Transformer IDS": {
+      "quar_surv_pct": 30.0,
+      "surv_pct": 100.0,
+      "collision_pct": 0.0,
+      "miss_pct": 70.0,
+      "detected_delay_ms": 7700.0
+    },
+    "EKF-CUSUM + BC": {
+      "quar_surv_pct": 0.0,
+      "surv_pct": 100.0,
+      "collision_pct": 0.0,
+      "miss_pct": 100.0,
+      "detected_delay_ms": null
+    },
+    "Shield-Only (No IDS)": {
+      "quar_surv_pct": 100.0,
+      "surv_pct": 100.0,
+      "collision_pct": 0.0,
+      "miss_pct": null,
+      "detected_delay_ms": null
+    },
+    "Onboard-Only (No V2X)": {
+      "quar_surv_pct": 100.0,
+      "surv_pct": 100.0,
+      "collision_pct": 0.0,
+      "miss_pct": null,
+      "detected_delay_ms": null
+    }
+  }
+}

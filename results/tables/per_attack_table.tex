@@ -1,0 +1,19 @@
+\begin{table*}[t]
+\centering
+\caption{Per-Attack Unseen I-80 Breakdown (Detected Delay ms / Miss \% / Collision \%)}
+\label{tab:per_attack_i80}
+\scriptsize
+\setlength{\tabcolsep}{2.4pt}
+\begin{tabular}{lcccccc}
+\toprule
+Attack Vector & RecurrentShield-BC & Onboard-Only & Shield-Only (No IDS) & First-Order CBF + BC & EKF-CUSUM + BC & IDM-ACC + AEB \\
+\midrule
+GNSS Ramp Spoof & 2994 / 0\% / 0\% & -- / -- / 0\% & -- / -- / 0\% & 3039 / 0\% / 0\% & 5525 / 0\% / 0\% & -- / -- / 15\% \\
+Ghost BSM FDI & 580 / 0\% / 5\% & -- / -- / 10\% & -- / -- / 0\% & 585 / 0\% / 0\% & 2568 / 5\% / 5\% & -- / -- / 15\% \\
+SPaT Phase Inv. & 100 / 5\% / 10\% & -- / -- / 10\% & -- / -- / 10\% & 100 / 5\% / 10\% & 2644 / 10\% / 10\% & -- / -- / 15\% \\
+Sybil BSM Flood & 121 / 5\% / 5\% & -- / -- / 5\% & -- / -- / 5\% & 121 / 5\% / 5\% & 1963 / 5\% / 5\% & -- / -- / 10\% \\
+Radar Blinding & 1333 / 25\% / 5\% & -- / -- / 5\% & -- / -- / 5\% & 1233 / 25\% / 5\% & 4305 / 5\% / 5\% & -- / -- / 20\% \\
+Spoof + Blinding & 385 / 0\% / 10\% & -- / -- / 10\% & -- / -- / 10\% & 385 / 0\% / 10\% & 3050 / 0\% / 10\% & -- / -- / 5\% \\
+\bottomrule
+\end{tabular}
+\end{table*}

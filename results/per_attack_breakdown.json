@@ -1,0 +1,1376 @@
+{
+  "us-101_test": {
+    "RecurrentShield-BC": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 2984.2,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 380.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 185.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 1343.8,
+        "miss_pct": 15.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 445.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      }
+    },
+    "RecurrentShield-INT8": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 2826.3,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 360.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 185.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 1775.0,
+        "miss_pct": 15.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 445.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      }
+    },
+    "Onboard-Only (No V2X)": {
+      "gnss_ramp_spoof": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      }
+    },
+    "Shield-Only (No IDS)": {
+      "gnss_ramp_spoof": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      }
+    },
+    "First-Order CBF + BC": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 2973.7,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 405.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 190.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 1622.2,
+        "miss_pct": 10.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 445.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      }
+    },
+    "No-Shield Ablation": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3141.2,
+        "miss_pct": 10.0,
+        "surv_pct": 75.0,
+        "coll_pct": 25.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 464.7,
+        "miss_pct": 15.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 10.0,
+        "surv_pct": 80.0,
+        "coll_pct": 20.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 195.0,
+        "miss_pct": 0.0,
+        "surv_pct": 75.0,
+        "coll_pct": 25.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 1420.0,
+        "miss_pct": 25.0,
+        "surv_pct": 75.0,
+        "coll_pct": 25.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 457.9,
+        "miss_pct": 5.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      }
+    },
+    "TCN-Residual IDS": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 4160.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 865.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 200.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 878.6,
+        "miss_pct": 30.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 1365.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      }
+    },
+    "Tiny-Transformer IDS": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3305.3,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 925.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 225.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 1252.9,
+        "miss_pct": 15.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 775.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      }
+    },
+    "Stateless BC": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3500.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 320.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 178.9,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 2782.4,
+        "miss_pct": 10.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 1100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      }
+    },
+    "EKF-CUSUM + BC": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 5485.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 2480.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 2600.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 2000.0,
+        "miss_pct": 0.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 3980.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 2975.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      }
+    },
+    "IDM-ACC + AEB": {
+      "gnss_ramp_spoof": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    },
+    "Emergency-Stop": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3340.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 926.3,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 605.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 1042.9,
+        "miss_pct": 25.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 425.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      }
+    }
+  },
+  "i-80": {
+    "RecurrentShield-BC": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 2994.4,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 580.0,
+        "miss_pct": 0.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 5.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 121.1,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 1333.3,
+        "miss_pct": 25.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 385.0,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    },
+    "RecurrentShield-INT8": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 2994.4,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 570.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 5.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 121.1,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 913.3,
+        "miss_pct": 25.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 345.0,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    },
+    "Onboard-Only (No V2X)": {
+      "gnss_ramp_spoof": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    },
+    "Shield-Only (No IDS)": {
+      "gnss_ramp_spoof": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    },
+    "First-Order CBF + BC": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3038.9,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 585.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 5.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 121.1,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 1233.3,
+        "miss_pct": 25.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 385.0,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    },
+    "No-Shield Ablation": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3306.2,
+        "miss_pct": 10.0,
+        "surv_pct": 65.0,
+        "coll_pct": 35.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 168.8,
+        "miss_pct": 20.0,
+        "surv_pct": 50.0,
+        "coll_pct": 50.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 10.0,
+        "surv_pct": 60.0,
+        "coll_pct": 40.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 126.3,
+        "miss_pct": 5.0,
+        "surv_pct": 45.0,
+        "coll_pct": 55.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 1030.8,
+        "miss_pct": 35.0,
+        "surv_pct": 75.0,
+        "coll_pct": 25.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 385.0,
+        "miss_pct": 0.0,
+        "surv_pct": 80.0,
+        "coll_pct": 20.0
+      }
+    },
+    "TCN-Residual IDS": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 4175.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 657.9,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 173.7,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 1553.3,
+        "miss_pct": 25.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 1515.8,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      }
+    },
+    "Tiny-Transformer IDS": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3494.7,
+        "miss_pct": 0.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 650.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 278.9,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 2405.9,
+        "miss_pct": 15.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 730.0,
+        "miss_pct": 0.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      }
+    },
+    "Stateless BC": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3710.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 130.0,
+        "miss_pct": 0.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 272.2,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 2511.1,
+        "miss_pct": 10.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 1266.7,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    },
+    "EKF-CUSUM + BC": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 5525.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 2568.4,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 2644.4,
+        "miss_pct": 10.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 1963.2,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 4305.3,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 3050.0,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    },
+    "IDM-ACC + AEB": {
+      "gnss_ramp_spoof": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 80.0,
+        "coll_pct": 20.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      }
+    },
+    "Emergency-Stop": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3295.0,
+        "miss_pct": 0.0,
+        "surv_pct": 100.0,
+        "coll_pct": 0.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 647.4,
+        "miss_pct": 5.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 205.3,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 1280.0,
+        "miss_pct": 25.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 395.0,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    }
+  },
+  "lankershim": {
+    "RecurrentShield-BC": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3057.9,
+        "miss_pct": 0.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 289.5,
+        "miss_pct": 5.0,
+        "surv_pct": 75.0,
+        "coll_pct": 25.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 5.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 860.0,
+        "miss_pct": 25.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 410.5,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    },
+    "RecurrentShield-INT8": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3115.8,
+        "miss_pct": 0.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 273.7,
+        "miss_pct": 5.0,
+        "surv_pct": 75.0,
+        "coll_pct": 25.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 5.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 1007.1,
+        "miss_pct": 30.0,
+        "surv_pct": 80.0,
+        "coll_pct": 20.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 389.5,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    },
+    "Onboard-Only (No V2X)": {
+      "gnss_ramp_spoof": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 75.0,
+        "coll_pct": 25.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    },
+    "Shield-Only (No IDS)": {
+      "gnss_ramp_spoof": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 70.0,
+        "coll_pct": 30.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    },
+    "First-Order CBF + BC": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3057.9,
+        "miss_pct": 0.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 268.4,
+        "miss_pct": 5.0,
+        "surv_pct": 70.0,
+        "coll_pct": 30.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 5.0,
+        "surv_pct": 80.0,
+        "coll_pct": 20.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 860.0,
+        "miss_pct": 25.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 410.5,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    },
+    "No-Shield Ablation": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3294.1,
+        "miss_pct": 10.0,
+        "surv_pct": 70.0,
+        "coll_pct": 30.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 311.1,
+        "miss_pct": 10.0,
+        "surv_pct": 70.0,
+        "coll_pct": 30.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 5.0,
+        "surv_pct": 70.0,
+        "coll_pct": 30.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 105.3,
+        "miss_pct": 5.0,
+        "surv_pct": 65.0,
+        "coll_pct": 35.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 828.6,
+        "miss_pct": 30.0,
+        "surv_pct": 65.0,
+        "coll_pct": 35.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 422.2,
+        "miss_pct": 5.0,
+        "surv_pct": 65.0,
+        "coll_pct": 35.0
+      }
+    },
+    "TCN-Residual IDS": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 4042.1,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 236.8,
+        "miss_pct": 5.0,
+        "surv_pct": 80.0,
+        "coll_pct": 20.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 5.0,
+        "surv_pct": 80.0,
+        "coll_pct": 20.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 746.2,
+        "miss_pct": 35.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 1263.2,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      }
+    },
+    "Tiny-Transformer IDS": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3510.5,
+        "miss_pct": 5.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 247.4,
+        "miss_pct": 5.0,
+        "surv_pct": 80.0,
+        "coll_pct": 20.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 5.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 110.5,
+        "miss_pct": 0.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 2413.3,
+        "miss_pct": 25.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 827.8,
+        "miss_pct": 10.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      }
+    },
+    "Stateless BC": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 3989.5,
+        "miss_pct": 0.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 457.9,
+        "miss_pct": 0.0,
+        "surv_pct": 70.0,
+        "coll_pct": 30.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 5.0,
+        "surv_pct": 80.0,
+        "coll_pct": 20.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 94.7,
+        "miss_pct": 5.0,
+        "surv_pct": 70.0,
+        "coll_pct": 30.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 1309.1,
+        "miss_pct": 40.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 994.7,
+        "miss_pct": 5.0,
+        "surv_pct": 80.0,
+        "coll_pct": 20.0
+      }
+    },
+    "EKF-CUSUM + BC": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 5520.0,
+        "miss_pct": 0.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 2111.1,
+        "miss_pct": 10.0,
+        "surv_pct": 70.0,
+        "coll_pct": 30.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 2788.9,
+        "miss_pct": 10.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 1165.0,
+        "miss_pct": 0.0,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 4221.1,
+        "miss_pct": 5.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 3147.4,
+        "miss_pct": 5.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      }
+    },
+    "IDM-ACC + AEB": {
+      "gnss_ramp_spoof": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 70.0,
+        "coll_pct": 30.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 75.0,
+        "coll_pct": 25.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 70.0,
+        "coll_pct": 30.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": null,
+        "miss_pct": null,
+        "surv_pct": 95.0,
+        "coll_pct": 5.0
+      }
+    },
+    "Emergency-Stop": {
+      "gnss_ramp_spoof": {
+        "delay_ms": 2921.1,
+        "miss_pct": 5.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "ghost_vehicle_fdi": {
+        "delay_ms": 300.0,
+        "miss_pct": 5.0,
+        "surv_pct": 65.0,
+        "coll_pct": 35.0
+      },
+      "spat_phase_inversion": {
+        "delay_ms": 100.0,
+        "miss_pct": 5.0,
+        "surv_pct": 80.0,
+        "coll_pct": 20.0
+      },
+      "sybil_bsm_flood": {
+        "delay_ms": 100.0,
+        "miss_pct": 0.0,
+        "surv_pct": 85.0,
+        "coll_pct": 15.0
+      },
+      "radar_sector_blinding": {
+        "delay_ms": 981.2,
+        "miss_pct": 20.0,
+        "surv_pct": 90.0,
+        "coll_pct": 10.0
+      },
+      "combined_spoof_blinding": {
+        "delay_ms": 215.8,
+        "miss_pct": 5.0,
+        "surv_pct": 80.0,
+        "coll_pct": 20.0
+      }
+    }
+  }
+}

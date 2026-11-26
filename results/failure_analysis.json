@@ -1,0 +1,298 @@
+{
+  "us-101_test": {
+    "RecurrentShield-BC": {
+      "clean": {},
+      "attack": {}
+    },
+    "RecurrentShield-INT8": {
+      "clean": {},
+      "attack": {}
+    },
+    "Onboard-Only (No V2X)": {
+      "clean": {},
+      "attack": {}
+    },
+    "Shield-Only (No IDS)": {
+      "clean": {},
+      "attack": {}
+    },
+    "First-Order CBF + BC": {
+      "clean": {},
+      "attack": {}
+    },
+    "No-Shield Ablation": {
+      "clean": {
+        "front_rear_end": 5
+      },
+      "attack": {
+        "front_rear_end": 20,
+        "adjacent_merge_sideswipe": 5
+      }
+    },
+    "TCN-Residual IDS": {
+      "clean": {},
+      "attack": {}
+    },
+    "Tiny-Transformer IDS": {
+      "clean": {},
+      "attack": {
+        "adjacent_merge_sideswipe": 1
+      }
+    },
+    "Stateless BC": {
+      "clean": {
+        "adjacent_merge_sideswipe": 1
+      },
+      "attack": {
+        "reactive_rear_end": 1
+      }
+    },
+    "EKF-CUSUM + BC": {
+      "clean": {},
+      "attack": {
+        "adjacent_merge_sideswipe": 1
+      }
+    },
+    "IDM-ACC + AEB": {
+      "clean": {},
+      "attack": {
+        "front_rear_end": 1,
+        "adjacent_merge_sideswipe": 4,
+        "reactive_rear_end": 1
+      }
+    },
+    "Emergency-Stop": {
+      "clean": {},
+      "attack": {
+        "adjacent_merge_sideswipe": 2
+      }
+    }
+  },
+  "i-80": {
+    "RecurrentShield-BC": {
+      "clean": {
+        "adjacent_merge_sideswipe": 1
+      },
+      "attack": {
+        "reactive_rear_end": 2,
+        "adjacent_merge_sideswipe": 5
+      }
+    },
+    "RecurrentShield-INT8": {
+      "clean": {
+        "adjacent_merge_sideswipe": 1
+      },
+      "attack": {
+        "reactive_rear_end": 2,
+        "adjacent_merge_sideswipe": 4
+      }
+    },
+    "Onboard-Only (No V2X)": {
+      "clean": {
+        "adjacent_merge_sideswipe": 1
+      },
+      "attack": {
+        "adjacent_merge_sideswipe": 6,
+        "reactive_rear_end": 2
+      }
+    },
+    "Shield-Only (No IDS)": {
+      "clean": {
+        "adjacent_merge_sideswipe": 1
+      },
+      "attack": {
+        "reactive_rear_end": 2,
+        "adjacent_merge_sideswipe": 4
+      }
+    },
+    "First-Order CBF + BC": {
+      "clean": {
+        "adjacent_merge_sideswipe": 1
+      },
+      "attack": {
+        "reactive_rear_end": 2,
+        "adjacent_merge_sideswipe": 4
+      }
+    },
+    "No-Shield Ablation": {
+      "clean": {
+        "reactive_rear_end": 2,
+        "front_rear_end": 6,
+        "adjacent_merge_sideswipe": 2
+      },
+      "attack": {
+        "front_rear_end": 30,
+        "adjacent_merge_sideswipe": 8,
+        "reactive_rear_end": 7
+      }
+    },
+    "TCN-Residual IDS": {
+      "clean": {},
+      "attack": {
+        "adjacent_merge_sideswipe": 5,
+        "reactive_rear_end": 1
+      }
+    },
+    "Tiny-Transformer IDS": {
+      "clean": {
+        "adjacent_merge_sideswipe": 2
+      },
+      "attack": {
+        "adjacent_merge_sideswipe": 5,
+        "reactive_rear_end": 1
+      }
+    },
+    "Stateless BC": {
+      "clean": {
+        "adjacent_merge_sideswipe": 1
+      },
+      "attack": {
+        "adjacent_merge_sideswipe": 2,
+        "reactive_rear_end": 2
+      }
+    },
+    "EKF-CUSUM + BC": {
+      "clean": {
+        "adjacent_merge_sideswipe": 1
+      },
+      "attack": {
+        "reactive_rear_end": 2,
+        "adjacent_merge_sideswipe": 5
+      }
+    },
+    "IDM-ACC + AEB": {
+      "clean": {
+        "adjacent_merge_sideswipe": 4,
+        "reactive_rear_end": 1
+      },
+      "attack": {
+        "adjacent_merge_sideswipe": 9,
+        "reactive_rear_end": 7
+      }
+    },
+    "Emergency-Stop": {
+      "clean": {},
+      "attack": {
+        "reactive_rear_end": 5,
+        "adjacent_merge_sideswipe": 5
+      }
+    }
+  },
+  "lankershim": {
+    "RecurrentShield-BC": {
+      "clean": {
+        "reactive_rear_end": 4,
+        "adjacent_merge_sideswipe": 1
+      },
+      "attack": {
+        "reactive_rear_end": 13,
+        "adjacent_merge_sideswipe": 5
+      }
+    },
+    "RecurrentShield-INT8": {
+      "clean": {
+        "reactive_rear_end": 3,
+        "adjacent_merge_sideswipe": 2
+      },
+      "attack": {
+        "reactive_rear_end": 13,
+        "adjacent_merge_sideswipe": 6
+      }
+    },
+    "Onboard-Only (No V2X)": {
+      "clean": {
+        "reactive_rear_end": 4,
+        "adjacent_merge_sideswipe": 1
+      },
+      "attack": {
+        "reactive_rear_end": 14,
+        "adjacent_merge_sideswipe": 4
+      }
+    },
+    "Shield-Only (No IDS)": {
+      "clean": {
+        "reactive_rear_end": 4,
+        "adjacent_merge_sideswipe": 1
+      },
+      "attack": {
+        "reactive_rear_end": 14,
+        "adjacent_merge_sideswipe": 6
+      }
+    },
+    "First-Order CBF + BC": {
+      "clean": {
+        "reactive_rear_end": 4,
+        "adjacent_merge_sideswipe": 1
+      },
+      "attack": {
+        "reactive_rear_end": 13,
+        "adjacent_merge_sideswipe": 7
+      }
+    },
+    "No-Shield Ablation": {
+      "clean": {
+        "reactive_rear_end": 4,
+        "adjacent_merge_sideswipe": 2,
+        "front_rear_end": 1
+      },
+      "attack": {
+        "reactive_rear_end": 17,
+        "adjacent_merge_sideswipe": 14,
+        "front_rear_end": 8
+      }
+    },
+    "TCN-Residual IDS": {
+      "clean": {
+        "adjacent_merge_sideswipe": 1
+      },
+      "attack": {
+        "adjacent_merge_sideswipe": 7,
+        "reactive_rear_end": 7,
+        "front_rear_end": 1
+      }
+    },
+    "Tiny-Transformer IDS": {
+      "clean": {},
+      "attack": {
+        "adjacent_merge_sideswipe": 11,
+        "reactive_rear_end": 4
+      }
+    },
+    "Stateless BC": {
+      "clean": {
+        "reactive_rear_end": 3
+      },
+      "attack": {
+        "reactive_rear_end": 16,
+        "front_rear_end": 2,
+        "adjacent_merge_sideswipe": 7
+      }
+    },
+    "EKF-CUSUM + BC": {
+      "clean": {
+        "reactive_rear_end": 4,
+        "adjacent_merge_sideswipe": 1
+      },
+      "attack": {
+        "reactive_rear_end": 13,
+        "adjacent_merge_sideswipe": 5
+      }
+    },
+    "IDM-ACC + AEB": {
+      "clean": {
+        "adjacent_merge_sideswipe": 4
+      },
+      "attack": {
+        "reactive_rear_end": 15,
+        "adjacent_merge_sideswipe": 6
+      }
+    },
+    "Emergency-Stop": {
+      "clean": {},
+      "attack": {
+        "reactive_rear_end": 15,
+        "adjacent_merge_sideswipe": 8
+      }
+    }
+  }
+}

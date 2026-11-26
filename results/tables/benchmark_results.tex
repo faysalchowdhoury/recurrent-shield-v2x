@@ -1,0 +1,51 @@
+\begin{table*}[t]
+\centering
+\caption{Disjoint Multi-Minute Trajectory-Grounded Evaluation ($N=120$ Attack + $25$ Clean Episodes/Split; US-101 P2 Calibrated)}
+\label{tab:benchmark_results}
+\scriptsize
+\setlength{\tabcolsep}{2.8pt}
+\begin{tabular}{llcccccccc}
+\toprule
+Split & Method & Clean Surv./FPR & AUROC $\uparrow$ & Det.\ Delay (ms) & Miss (\%) & Surv.\ (\%) & Coll.\ (\%) & Dist.\ (m) & Jerk ($\text{m/s}^3$) \\
+\midrule
+US-101 P3 (Disjoint) & RecurrentShield-BC & 100\% / 4\% & 0.982 & 880 & 2.5 & 100.0 & 0.0 & 92.6 & 4.82 \\
+ & RecurrentShield-INT8 & 100\% / 4\% & 0.981 & 911 & 2.5 & 100.0 & 0.0 & 92.2 & 4.80 \\
+ & Onboard-Only (No V2X) & 100\% / -- & -- & -- & -- & 100.0 & 0.0 & 96.5 & 3.74 \\
+ & Shield-Only (No IDS) & 100\% / -- & -- & -- & -- & 100.0 & 0.0 & 67.0 & 7.48 \\
+ & First-Order CBF + BC & 100\% / 4\% & 0.982 & 935 & 1.7 & 100.0 & 0.0 & 91.9 & 4.64 \\
+ & No-Shield Ablation & 80\% / 4\% & 0.971 & 928 & 10.8 & 79.2 & 20.8 & 100.4 & 1.75 \\
+ & TCN-Residual IDS & 100\% / 8\% & 0.947 & 1292 & 5.0 & 100.0 & 0.0 & 103.2 & 5.18 \\
+ & Tiny-Transformer IDS & 100\% / 4\% & 0.958 & 1075 & 2.5 & 99.2 & 0.8 & 118.8 & 5.79 \\
+ & Stateless BC & 96\% / 20\% & 0.975 & 1297 & 1.7 & 99.2 & 0.8 & 41.7 & 3.79 \\
+ & EKF-CUSUM + BC & 100\% / 4\% & 0.979 & 3253 & 0.0 & 99.2 & 0.8 & 75.8 & 5.30 \\
+ & IDM-ACC + AEB & 100\% / -- & -- & -- & -- & 95.0 & 5.0 & 101.8 & 9.66 \\
+ & Emergency-Stop & 100\% / 0\% & 0.978 & 1080 & 5.0 & 98.3 & 1.7 & 68.0 & 6.38 \\
+\midrule
+I-80 (Zero-Shot) & RecurrentShield-BC & 96\% / 0\% & 0.984 & 879 & 5.8 & 94.2 & 5.8 & 83.7 & 4.68 \\
+ & RecurrentShield-INT8 & 96\% / 4\% & 0.984 & 812 & 5.8 & 95.0 & 5.0 & 83.3 & 4.67 \\
+ & Onboard-Only (No V2X) & 96\% / -- & -- & -- & -- & 93.3 & 6.7 & 86.7 & 3.72 \\
+ & Shield-Only (No IDS) & 96\% / -- & -- & -- & -- & 95.0 & 5.0 & 64.6 & 7.30 \\
+ & First-Order CBF + BC & 96\% / 0\% & 0.984 & 874 & 5.8 & 95.0 & 5.0 & 83.6 & 4.50 \\
+ & No-Shield Ablation & 60\% / 0\% & 0.977 & 796 & 13.3 & 62.5 & 37.5 & 88.6 & 1.65 \\
+ & TCN-Residual IDS & 100\% / 8\% & 0.974 & 1367 & 5.8 & 95.0 & 5.0 & 97.3 & 4.90 \\
+ & Tiny-Transformer IDS & 92\% / 0\% & 0.982 & 1235 & 3.3 & 95.0 & 5.0 & 102.5 & 5.29 \\
+ & Stateless BC & 96\% / 12\% & 0.984 & 1334 & 2.5 & 96.7 & 3.3 & 40.2 & 3.81 \\
+ & EKF-CUSUM + BC & 96\% / 0\% & 0.986 & 3368 & 4.2 & 94.2 & 5.8 & 71.9 & 5.22 \\
+ & IDM-ACC + AEB & 80\% / -- & -- & -- & -- & 86.7 & 13.3 & 89.3 & 9.40 \\
+ & Emergency-Stop & 100\% / 0\% & 0.991 & 981 & 5.8 & 91.7 & 8.3 & 60.6 & 6.01 \\
+\midrule
+Lankershim (Zero-Shot) & RecurrentShield-BC & 80\% / 0\% & 0.990 & 794 & 5.8 & 85.0 & 15.0 & 60.8 & 4.66 \\
+ & RecurrentShield-INT8 & 80\% / 0\% & 0.989 & 818 & 6.7 & 84.2 & 15.8 & 60.1 & 4.77 \\
+ & Onboard-Only (No V2X) & 80\% / -- & -- & -- & -- & 85.0 & 15.0 & 63.0 & 3.84 \\
+ & Shield-Only (No IDS) & 80\% / -- & -- & -- & -- & 83.3 & 16.7 & 47.7 & 7.14 \\
+ & First-Order CBF + BC & 80\% / 0\% & 0.990 & 796 & 5.8 & 83.3 & 16.7 & 59.4 & 4.55 \\
+ & No-Shield Ablation & 72\% / 0\% & 0.991 & 804 & 10.8 & 67.5 & 32.5 & 67.5 & 2.02 \\
+ & TCN-Residual IDS & 96\% / 12\% & 0.986 & 1093 & 9.2 & 87.5 & 12.5 & 139.3 & 5.14 \\
+ & Tiny-Transformer IDS & 100\% / 4\% & 0.987 & 1157 & 8.3 & 87.5 & 12.5 & 137.5 & 4.91 \\
+ & Stateless BC & 88\% / 8\% & 0.988 & 1147 & 9.2 & 79.2 & 20.8 & 68.2 & 4.41 \\
+ & EKF-CUSUM + BC & 80\% / 4\% & 0.985 & 3168 & 5.0 & 85.0 & 15.0 & 53.2 & 5.05 \\
+ & IDM-ACC + AEB & 84\% / -- & -- & -- & -- & 82.5 & 17.5 & 130.0 & 10.55 \\
+ & Emergency-Stop & 100\% / 4\% & 0.988 & 757 & 6.7 & 80.8 & 19.2 & 81.8 & 6.22 \\
+\bottomrule
+\end{tabular}
+\end{table*}

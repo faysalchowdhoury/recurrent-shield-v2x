@@ -1,0 +1,75 @@
+{
+  "tertile_cutoffs_veh_per_60m": [
+    28.0,
+    33.0
+  ],
+  "Low_Density_Tertile": {
+    "RecurrentShield-BC": {
+      "n": 57,
+      "survival_pct": 89.47,
+      "collision_pct": 10.53,
+      "distance_m": 78.4,
+      "qp_feasible_pct": 92.85
+    },
+    "EKF-CUSUM + BC": {
+      "n": 57,
+      "survival_pct": 94.74,
+      "collision_pct": 5.26,
+      "distance_m": 85.3,
+      "qp_feasible_pct": 95.56
+    },
+    "Ablation (No DT-CBF)": {
+      "n": 57,
+      "survival_pct": 52.63,
+      "collision_pct": 47.37,
+      "distance_m": 91.6,
+      "qp_feasible_pct": 100.0
+    }
+  },
+  "Medium_Density_Tertile": {
+    "RecurrentShield-BC": {
+      "n": 44,
+      "survival_pct": 81.82,
+      "collision_pct": 18.18,
+      "distance_m": 59.8,
+      "qp_feasible_pct": 92.04
+    },
+    "EKF-CUSUM + BC": {
+      "n": 44,
+      "survival_pct": 81.82,
+      "collision_pct": 18.18,
+      "distance_m": 58.8,
+      "qp_feasible_pct": 91.93
+    },
+    "Ablation (No DT-CBF)": {
+      "n": 44,
+      "survival_pct": 50.0,
+      "collision_pct": 50.0,
+      "distance_m": 73.9,
+      "qp_feasible_pct": 100.0
+    }
+  },
+  "High_Density_Tertile": {
+    "RecurrentShield-BC": {
+      "n": 49,
+      "survival_pct": 83.67,
+      "collision_pct": 16.33,
+      "distance_m": 76.4,
+      "qp_feasible_pct": 94.66
+    },
+    "EKF-CUSUM + BC": {
+      "n": 49,
+      "survival_pct": 85.71,
+      "collision_pct": 14.29,
+      "distance_m": 77.1,
+      "qp_feasible_pct": 94.67
+    },
+    "Ablation (No DT-CBF)": {
+      "n": 49,
+      "survival_pct": 61.22,
+      "collision_pct": 38.78,
+      "distance_m": 94.1,
+      "qp_feasible_pct": 100.0
+    }
+  }
+}

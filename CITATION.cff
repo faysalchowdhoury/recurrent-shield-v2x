@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+title: "RecurrentShield-BC: Non-Oracle V2X/GNSS Quarantine and Nonlinear DT-CBF Safety Filtering in Trajectory-Grounded USDOT Simulation"
+message: "If you use this software or benchmark suite, please cite it using the metadata below."
+type: software
+authors:
+  - given-names: Faysal
+    family-names: Chowdhoury
+repository-code: "https://github.com/faysalchowdhoury/recurrent-shield-v2x"
+license: MIT
+version: "2026.11"
+date-released: "2026-11-26"
+keywords:
+  - connected-automated-vehicles
+  - v2x-cybersecurity
+  - sae-j2735
+  - discrete-time-control-barrier-functions
+  - behavior-cloning
+  - ngsim
