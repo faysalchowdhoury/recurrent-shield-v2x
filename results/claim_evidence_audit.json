@@ -1,0 +1,47 @@
+{
+  "scope": "Claim-to-evidence map for the submitted manuscript.",
+  "claims": [
+    {
+      "id": "C1",
+      "claim": "RecurrentShield-BC has 4.0% clean-FPR on US-101 P3 and 0.0% on I-80/Lankershim.",
+      "section": "Abstract; Section VIII-A",
+      "support": ["results/benchmark_summary.json", "results/fresh_and_v2x_necessary_eval.json"],
+      "limitation": "In-domain calibration and fresh-period domain shift are not interchangeable."
+    },
+    {
+      "id": "C2",
+      "claim": "Direct Raw Norm outperforms RecurrentShield-BC on fresh-period clean-FPR.",
+      "section": "Section VIII-E",
+      "support": ["results/fresh_and_v2x_necessary_eval.json"],
+      "limitation": "The recurrent detector has 100.0% I-80 post-onset recall versus 91.7% for Raw Norm, so no single detector dominates every metric."
+    },
+    {
+      "id": "C3",
+      "claim": "The DT-CBF theorem is conditional on assumptions A1-A5 and on feasible substeps.",
+      "section": "Section V",
+      "support": ["control/dt_cbf_safety_shield.py", "tests/test_recurrent_shield_suite.py"],
+      "limitation": "The proof does not establish continuous-time safety or real-vehicle safety."
+    },
+    {
+      "id": "C4",
+      "claim": "The 200 Hz CBF interval is numerical substep verification, not 200 Hz actuation.",
+      "section": "Section III; control/dt_cbf_safety_shield.py",
+      "support": ["control/dt_cbf_safety_shield.py"],
+      "limitation": "The outer policy/control cycle remains 10 Hz."
+    },
+    {
+      "id": "C5",
+      "claim": "In the selected BLOS22 replay, quarantine preserves 37.9 m versus 24.9 m without IDS filtering.",
+      "section": "Section VIII-F",
+      "support": ["results/fresh_and_v2x_necessary_eval.json", "experiments/run_v2x_necessary_and_fresh_eval.py"],
+      "limitation": "Single initial speed, queue distance, radar range, and ten repeated trials do not establish broad operational prevalence."
+    },
+    {
+      "id": "C6",
+      "claim": "ESP32-S3 cycle, latency, and energy values are analytical projections.",
+      "section": "Section VIII-D",
+      "support": ["results/esp32_edge_profile.json", "edge_deploy/esp32_s3_export.py"],
+      "limitation": "Only serialized weight size and host CPU timing are measured."
+    }
+  ]
+}

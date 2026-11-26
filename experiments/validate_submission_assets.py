@@ -33,6 +33,13 @@ def main() -> None:
     benchmark = json.loads((ROOT / "results" / "benchmark_summary.json").read_text(encoding="utf-8"))
     fresh = json.loads((ROOT / "results" / "fresh_and_v2x_necessary_eval.json").read_text(encoding="utf-8"))
     edge = json.loads((ROOT / "results" / "esp32_edge_profile.json").read_text(encoding="utf-8"))
+    claim_audit = json.loads((ROOT / "results" / "claim_evidence_audit.json").read_text(encoding="utf-8"))
+    require(len(claim_audit.get("claims", [])) == 6, "claim evidence audit must contain six core claims")
+    for claim in claim_audit["claims"]:
+        require(claim.get("id") and claim.get("claim"), "claim evidence audit entry is incomplete")
+        require(claim.get("limitation"), f"{claim['id']} lacks an explicit limitation")
+        for support in claim.get("support", []):
+            require((ROOT / support).exists(), f"{claim['id']} references missing evidence: {support}")
     require(set(benchmark) == {"calibration_means", "clean_baseline", "corridors", "statistical_tests"},
             "benchmark_summary.json must contain only canonical top-level sections")
     require("corridors" in benchmark, "benchmark_summary.json missing corridor results")
