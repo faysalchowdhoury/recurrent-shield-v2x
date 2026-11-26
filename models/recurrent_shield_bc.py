@@ -33,8 +33,8 @@ class RecurrentShieldConfig:
     lstm_hidden: int = LSTM_HIDDEN
     kin_dim: int = KIN_DIM
     act_dim: int = ACT_DIM
-    base_tau: float = 1.90
-    adaptive_k: float = 0.35
+    base_tau: float = 3.0829
+    adaptive_k: float = 0.0
     persistence_steps: int = 2
 
 
@@ -166,8 +166,8 @@ class KinematicResidualQuarantineMonitor:
 
     def __init__(
         self,
-        base_tau: float = 1.90,
-        adaptive_k: float = 0.35,
+        base_tau: float = 3.0829,
+        adaptive_k: float = 0.0,
         persistence_steps: int = 2,
         ema_alpha: float = 0.08,
     ) -> None:

@@ -33,6 +33,8 @@ def main() -> None:
     benchmark = json.loads((ROOT / "results" / "benchmark_summary.json").read_text(encoding="utf-8"))
     fresh = json.loads((ROOT / "results" / "fresh_and_v2x_necessary_eval.json").read_text(encoding="utf-8"))
     edge = json.loads((ROOT / "results" / "esp32_edge_profile.json").read_text(encoding="utf-8"))
+    require(set(benchmark) == {"calibration_means", "clean_baseline", "corridors", "statistical_tests"},
+            "benchmark_summary.json must contain only canonical top-level sections")
     require("corridors" in benchmark, "benchmark_summary.json missing corridor results")
     require("fresh_untouched_splits" in fresh, "fresh evaluation missing untouched splits")
     require("v2x_necessary_occluded_25m" in fresh, "fresh evaluation missing OCC25")

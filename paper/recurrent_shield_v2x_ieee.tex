@@ -45,13 +45,13 @@ We intentionally avoid claiming generic novelty from combining an LSTM monitor w
     \item \textbf{Threshold Calibration, Censoring \& Paired Dependencies:} Unequal ad-hoc baseline scaling, uncensored timeout-as-latency averaging, and ignoring shared corridor trajectories across random seeds distort detector rankings and significance claims.
 \end{itemize}
 
-Against this framing, our paper makes four verified contributions in reproducible trajectory-grounded simulation:
+Against this framing, our paper makes five verified contributions in reproducible trajectory-grounded simulation:
 \begin{enumerate}
     \item \textbf{Matched-Coordinate Non-Oracle Quarantine \& Causal Separation (Sections~IV, VII):} Fixing rectangular swept-lane BSM-vs-radar alignment eliminates cross-corridor clean false positives (4.0\%/0.0\%/0.0\%), while 12-comparator testing across disjoint USDOT periods isolates barrier survival (94.2\%--100.0\% highway), Head~1 phantom-threat mobility preservation ($+27.5\%$--$38.2\%$ over \texttt{Shield-Only}), and honest parity with \texttt{Onboard-Only (No V2X)}.
     \item \textbf{Complete Conditional DT-CBF Proof \& Fallback Analysis (Section~V):} We state exact planar decoupled dynamics, the weighted quadratic projection objective, strict acceleration monotonicity ($\partial h_{\text{long}}/\partial a < 0$), $3.55\times 10^{-5}\,\text{m/s}^2$ bisection optimality, $0.08\,\text{m}$ discretization bounds, and separate conditional fallback behavior when $\mathcal{U}_{\text{safe}}=\emptyset$.
     \item \textbf{Matched-FPR, Failure-Mode \& Contamination Audits (Sections~VI--VIII):} We evaluate detectors at post-hoc matched 4\% in-domain FPR alongside unsupervised adaptation sample/contamination sensitivity ($N=10..40$, 0\%--20\% attack contamination), V2X packet loss/delay (0\%--30\%, 0--200\,ms), sensor noise sweeps, and explicit crash taxonomy (\texttt{vid=67} blinded merge).
     \item \textbf{Post-Freeze Untouched Period Validation \& V2X-Necessary Benchmarks (Sections~VIII-E,~VIII-F):} Three strictly post-freeze USDOT periods (301\,s each, 485--818 vehicles) confirm threshold generalization without re-tuning. A BLOS22 stopped-queue benchmark isolates the operational scenario where IDS quarantine---not the barrier filter alone---prevents ghost-BSM-induced late braking (37.9\,m vs.\ 24.9\,m safe stopping margin for \texttt{Shield-Only}).
-    \item \textbf{Weight-Only INT8 Closed-Loop \& Host Profiling (Section~VIII-D):} We separate measured weight-only INT8 storage (82.6\,KB), closed-loop survival/AUROC fidelity, and desktop CPU step timing (    1.031\,ms) from unmeasured analytical microcontroller cycle estimates.
+    \item \textbf{Weight-Only INT8 Closed-Loop \& Host Profiling (Section~VIII-D):} We separate measured weight-only INT8 storage (82.6\,KB), closed-loop survival/AUROC fidelity, and desktop CPU step timing (1.031\,ms) from unmeasured analytical microcontroller cycle estimates.
 \end{enumerate}
 
 \section{Related Work}
@@ -72,7 +72,7 @@ Work / Baseline & Non-Oracle & Closed-Loop & Conditional & Failure & Weights \\
 VeReMi / AttnGuard~\cite{kamel2020veremi,li2025attentionguard} & Offline/Log & No & No & No & No \\
 Shen~\textit{et al.} / Yang~\textit{et al.}~\cite{shen2020drift,yang2023gps} & Yes & Partial & No & No & No \\
 1st-Order DCBF~\cite{agrawal2017dcbf} & No & Yes (Lin.) & No & No & No \\
-Trust-Aware Event-Triggered CBF~\cite{ahmad2024trustcbf} & Yes & Yes & Trust/Noise & No & SUMO/CARLA \\
+Trust-Aware Event-Triggered CBF~\cite{ahmad2024trustcbf} & Yes & Yes & Trust/Noise & No & No \\
 Stochastic / MR-CBF~\cite{dean2020corl,cosner2023rss} & No & Yes & Bounded Noise & No & No \\
 Embedded CBF~\cite{li2025embedded} & No & Yes & Hardware & No & Analytic \\
 \textbf{RecurrentShield-BC (Ours)} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} & \textbf{INT8 Wt.} \\
@@ -140,6 +140,8 @@ All six discrepancy inputs $y_{\text{ext},t}$ strictly compare untrusted V2X/GNS
 \subsection{Zero-Shot Period-2 Calibration}
 Without ad-hoc per-detector multipliers, every active detector (\texttt{RecurrentShield-BC}, \texttt{TCN-Residual}~\cite{bai2018tcn}, \texttt{Tiny-Transformer}, \texttt{Stateless BC}, and \texttt{EKF-CUSUM}) calibrates to the 96th percentile of clean 2-step-sustained peak scores across $n_{\text{cal}}=40$ US-101 Period~2 episodes (4\% target episode FPR), yielding $\tau_{\text{rec}}=3.0829$, $\tau_{\text{tcn}}=3.4308$, $\tau_{\text{trans}}=3.0926$, $\tau_{\text{stateless}}=3.2694$, and $h_{\text{EKF}}=114.29$ at drift $1.50$.
 
+In the released implementation, \texttt{KinematicResidualQuarantineMonitor} is instantiated with \texttt{base\_tau=$\tau_{\text{rec}}$} and \texttt{adaptive\_k=0.0} for frozen \texttt{RecurrentShield-BC} evaluation. Thus $\tau_{\text{adaptive}}=\tau_{\text{rec}}$ remains constant; the EMA fields are retained for adaptive experiments but do not alter the published benchmarks. The default source-level monitor parameters are synchronized to $\tau_{\text{rec}}=3.0829$ and adaptive gain zero so an out-of-box frozen evaluation cannot silently revert to an EMA-scaled threshold.
+
 \section{Conditional DT-CBF Formulation \& Proofs}
 
 \subsection{Discrete Dynamics \& Weighted Minimum-Deviation Objective}
@@ -153,8 +155,15 @@ u_t^* = \arg\min_{u \in \mathcal{A}} &\;\; \frac{1}{2}(a - a_{\text{nom}})^2 + \
 \end{align}
 where $h_{\text{long}}(x_t) = d_{\text{eff},t} - (d_{\min} + \tau_h v_t + \frac{(v_t^2 - v_{\text{lead}}^2)_+}{2a_{\text{brake}}} + \epsilon_{\text{radar}} + \epsilon_{\text{disc}})$ with $d_{\min}=5.2\,\text{m}$, $\tau_h=1.30\,\text{s}$, $\epsilon_{\text{radar}}\in\{0.85,1.85\}\,\text{m}$, $\epsilon_{\text{disc}}=0.08\,\text{m}$, and $\alpha_{\text{long}}=\alpha_{\text{lat}}=0.35$.
 
+Here $w_y=1$. Because the longitudinal and lateral constraints decouple, any $w_y>0$ gives the same constrained lateral projection, so the numerical choice does not affect $u_t^*$.
+
+The lateral effective clearances are
+$h_{\text{left}}=\min(c_{\text{left}}, \max(0.8\,\text{m},c_{\text{left,veh}}-0.90\,\text{m}))-\epsilon_{\text{lat}}$ and
+$h_{\text{right}}=\min(c_{\text{right}}, \max(0.8\,\text{m},c_{\text{right,veh}}-0.90\,\text{m}))-\epsilon_{\text{lat}}$,
+where $c_{\text{left}}$/$c_{\text{right}}$ are curb clearances and $c_{\text{left,veh}}$/$c_{\text{right,veh}}$ are adjacent-vehicle clearances.
+
 \begin{assumption}[Conditional Operating \& Kinematic Assumptions]
-(A1)~True unblinded gap error $\le 0.85\,\text{m}$ and blinded reachability loss stay bounded by propagated $d_{\text{eff}}$ and $1.85\,\text{m}$; (A2)~unblinded lead-speed drift over $0.1\,\text{s}$ and integration residual remain within $\epsilon_{\text{disc}}=0.08\,\text{m}$; (A3)~local wheel/IMU/curb channels remain uncompromised; (A4)~$h_{\text{long}}(x_0), h_{\text{left}}(x_0), h_{\text{right}}(x_0) \ge 0$; (A5)~straight-corridor planar lane-aligned kinematics apply without coupled tire-slip dynamics.
+(A1)~For nominal unblinded measurements, the modeled gap error is bounded by the $4.25\sigma$ high-probability margin $\epsilon_{\text{radar}}=0.85\,\text{m}$ (not a deterministic worst-case bound), while blinded reachability loss remains bounded by propagated $d_{\text{eff}}$ and $1.85\,\text{m}$; (A2)~unblinded lead-speed drift over $0.1\,\text{s}$ and integration residual remain within $\epsilon_{\text{disc}}=0.08\,\text{m}$; (A3)~local wheel/IMU/curb channels remain uncompromised; (A4)~$h_{\text{long}}(x_0), h_{\text{left}}(x_0), h_{\text{right}}(x_0) \ge 0$; (A5)~straight-corridor planar lane-aligned kinematics apply without coupled tire-slip dynamics.
 \end{assumption}
 
 \subsection{Monotonicity, Bisection Optimality \& Discretization Bounds}
@@ -278,11 +287,11 @@ V2X Comms & US-101 P3 (0\% / 15\% / 30\%) & 0.0 / 0.0 / 0.0\% & 644 / 678 / 700 
 
 \subsection{Post-Freeze Validation on Untouched USDOT Periods}
 \label{sec:fresh}
-To guard against implicit over-fitting to the three original benchmark corridors, we evaluate \textbf{frozen} 58bcc08 geometry and detector thresholds on three strictly non-overlapping USDOT periods that were held out from all training, calibration, and original benchmark construction: \texttt{us-101\_fresh} (frames 3200--6200, 300.1\,s, 801 vehicles), \texttt{i-80\_fresh} (I-80 Period~2 frames 1000--4000, 300.1\,s, 818 vehicles), and \texttt{lankershim\_fresh} (Lankershim Period~2 frames 1000--4000, 300.1\,s, 485 vehicles). Table~\ref{tab:fresh_splits} reports post-onset detection, pre-onset FA, clean FPR, and survival for the four detectors with closed-loop metrics.
+To guard against implicit over-fitting to the three original benchmark corridors, we evaluate \textbf{frozen Period-2-calibrated} geometry and detector thresholds on three strictly non-overlapping USDOT periods that were held out from all training, calibration, and original benchmark construction: \texttt{us-101\_fresh} (frames 3200--6200, 300.1\,s, 801 vehicles), \texttt{i-80\_fresh} (I-80 Period~2 frames 1000--4000, 300.1\,s, 818 vehicles), and \texttt{lankershim\_fresh} (Lankershim Period~2 frames 1000--4000, 300.1\,s, 485 vehicles). Table~\ref{tab:fresh_splits} reports post-onset detection, pre-onset FA, clean FPR, and survival for the four detectors with closed-loop metrics.
 
 \begin{table}[t]
 \centering
-\caption{Post-Freeze Untouched Period Validation (Frozen 58bcc08 Thresholds)}
+\caption{Post-Freeze Untouched Period Validation (Frozen Period-2-Calibrated Thresholds)}
 \label{tab:fresh_splits}
 \scriptsize
 \setlength{\tabcolsep}{1.3pt}
@@ -317,7 +326,7 @@ The key finding from post-freeze evaluation is that \texttt{Direct Raw Norm (No 
 \label{sec:v2x_necessary}
 A core reviewable claim is that V2X quarantine provides incremental safety value over a V2X-free onboard controller. We test this in two scenario classes where V2X range explicitly exceeds onboard radar: (1) a 25\,m radar FOV against 120\,m BSM range (OCC25), and (2) a Beyond-Line-of-Sight (BLOS) stopped-queue at 65\,m with 22\,m radar coverage and ego at 18\,m/s.
 
-\textbf{OCC25 Occluded Regime:} In the I-80 fresh corridor with radar truncated to 25\,m, all V2X-aware methods (RecurrentShield-BC, Direct Raw Norm) achieve 100.0\% attack survival at 71.4\,m vs.\ 69.2\,m stopped distance, while \texttt{Onboard-Only} also achieves 100.0\% attack survival at 73.3\,m with lower jerk (3.04 vs.\ 4.13 rad/s\textsuperscript{3}). Critically, in the Lankershim OCC25 corridor, the red-light violation rate rises to 28.6\% for V2X-fused methods vs.\ 26.4\% for \texttt{Onboard-Only}, indicating that V2X speed profile assistance at occluded intersections can \emph{increase} SPaT-triggered deceleration aggression.
+\textbf{OCC25 Occluded Regime:} In the I-80 fresh corridor with radar truncated to 25\,m, all V2X-aware methods (RecurrentShield-BC, Direct Raw Norm) achieve 100.0\% attack survival at 71.4\,m vs.\ 69.2\,m stopped distance, while \texttt{Onboard-Only} also achieves 100.0\% attack survival at 73.3\,m with lower jerk (3.04 vs.\ 4.13\,m/s\textsuperscript{3}). Critically, in the Lankershim OCC25 corridor, the red-light violation rate rises to 28.6\% for V2X-fused methods vs.\ 26.4\% for \texttt{Onboard-Only}, indicating that V2X speed profile assistance at occluded intersections can \emph{increase} SPaT-triggered deceleration aggression.
 
 \textbf{BLOS22 Stopped-Queue:} In the most informative V2X-advantage scenario (Table~\ref{tab:blos22}), the ego vehicle approaches a stopped queue at 18\,m/s with radar limited to 22\,m (queue at 65\,m). \texttt{RecurrentShield-BC}, \texttt{Direct Raw Norm}, and \texttt{Onboard-Only} all achieve 100.0\% clean and ghost-attack survival at identical 37.9\,m stopping distance. Crucially, the \texttt{Shield-Only} ablation (V2X trusted without IDS) reduces attack stopping distance to 24.9\,m, confirming that IDS quarantine---not V2X fusion alone---prevents the ghost-BSM hazard from causing late emergency braking in beyond-radar scenarios.
 
@@ -344,7 +353,7 @@ Shield-Only (No IDS) & 100.0\% & \textbf{100.0\%} & \underline{24.9\,m} & 7.27 \
 The BLOS22 result isolates the precise contribution of Head~1 quarantine: by rejecting the ghost-BSM spoofed leading vehicle that is not visible to the 22\,m radar, the IDS prevents an early acceleration surge that would reduce stopping margin from 37.9\,m to 24.9\,m. This is the clearest demonstration that non-oracle perception quarantine adds safety value that neither the barrier filter alone (\texttt{Shield-Only}) nor V2X-free control (\texttt{Onboard-Only}) can replicate.
 
 \subsection{Weight-Only INT8 Closed-Loop \& Host Execution Profiling}
-\texttt{RecurrentShield-INT8} implements \textbf{weight-only symmetric per-tensor INT8 quantization} (FP32 activations, LSTM states, and DT-CBF solver), compressing serialized weight tensors fourfold (330.1\,KB FP32 / 329.4\,KB ONNX to 82.6\,KB INT8 in \texttt{model\_weights.cc}) while preserving closed-loop survival (100.0\% / 95.0\% / 84.2\% vs.\ 100.0\% / 94.2\% / 85.0\% FP32) and AUROC (0.981 / 0.984 / 0.989; Table~\ref{tab:edge_profile}, Fig.~\ref{fig:edge}). Measured Python CPU execution latency on desktop x86-64 (PyTorch~2.0.1, Python~3.10.11) for the FP32 model + DT-CBF step is \textbf{1.031\,ms} (0.937\,ms NN + 0.094\,ms DT-CBF). Target ESP32-S3 Xtensa cycles (322,096 INT8 cycles / 1.70\,ms + 3,840 solver cycles / $16.0\,\mu\text{s}$) are unmeasured analytical sizing projections only, not embedded hardware benchmarks.
+\texttt{RecurrentShield-INT8} implements \textbf{weight-only symmetric per-tensor INT8 quantization} (FP32 activations, LSTM states, and DT-CBF solver), compressing serialized weight tensors fourfold (330.1\,KB FP32 / 329.4\,KB ONNX to 82.6\,KB INT8 in \texttt{model\_weights.cc}) while preserving closed-loop survival (100.0\% / 95.0\% / 84.2\% vs.\ 100.0\% / 94.2\% / 85.0\% FP32) and AUROC (0.981 / 0.984 / 0.989; Table~\ref{tab:edge_profile}, Fig.~\ref{fig:edge}). Measured Python CPU execution latency on desktop x86-64 (PyTorch~2.0.1, Python~3.10.11) for the FP32 model + DT-CBF step is \textbf{1.031\,ms} (0.937\,ms NN + 0.094\,ms DT-CBF). Target ESP32-S3 Xtensa cycles (322,096 INT8 cycles / 1.70\,ms + 3,840 solver cycles / $16.0\,\mu\text{s}$) are unmeasured analytical sizing projections only, not embedded hardware benchmarks. Inference-only deployment would omit the training-only critic head (2,081 parameters) and actor log-standard-deviation parameter (2 parameters), reducing the 84,505-parameter exported model footprint by approximately 2.1\,KB in FP32 weight storage.
 
 \begin{table}[t]
 \centering

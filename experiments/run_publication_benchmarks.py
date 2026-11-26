@@ -1016,8 +1016,6 @@ def main() -> None:
                 }
                 for metric, vals in atk_summary_lists[c][m].items()
             }
-        summary[c] = summary["corridors"][c]
-
         raw_p_surv = {
             m: mcnemar_p_value(ep_surv[c]["RecurrentShield-BC"], ep_surv[c][m])
             for m in methods

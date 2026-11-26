@@ -22,7 +22,7 @@ from baselines.tcn_residual_ids import TCNResidualIDS
 from control.dt_cbf_safety_shield import DtCbfConfig, DtCbfSafetyShield
 from data.ngsim_corridor_env import CorridorEnvConfig, NgsimCorridorEnv
 from edge_deploy.esp32_s3_export import build_int8_fake_quantized_model
-from models.recurrent_shield_bc import RecurrentShieldBC
+from models.recurrent_shield_bc import KinematicResidualQuarantineMonitor, RecurrentShieldBC
 from experiments.validate_submission_assets import main as validate_submission_assets
 
 
@@ -153,6 +153,25 @@ def test_reactive_idm_env_and_baselines_offline_safe():
 
 def test_public_submission_assets_are_synchronized():
     validate_submission_assets()
+
+
+def test_frozen_quarantine_threshold_is_static_and_synchronized():
+    monitor = KinematicResidualQuarantineMonitor(
+        base_tau=3.0829,
+        adaptive_k=0.0,
+        persistence_steps=2,
+    )
+    monitor.reset()
+
+    for residual in (1.0, 2.0, 3.0829, 4.0):
+        quarantined, tau = monitor.update(residual)
+        assert abs(tau - 3.0829) < 1e-12
+        assert abs(monitor.base_tau - 3.0829) < 1e-12
+        assert monitor.adaptive_k == 0.0
+
+    default_monitor = KinematicResidualQuarantineMonitor()
+    assert abs(default_monitor.base_tau - 3.0829) < 1e-12
+    assert default_monitor.adaptive_k == 0.0
 
 
 def test_dt_cbf_acceleration_monotonicity_and_grid_invariance():

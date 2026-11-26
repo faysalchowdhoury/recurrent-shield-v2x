@@ -87,7 +87,7 @@ Primary attacks (`6`): `gnss_ramp_spoof`, `ghost_vehicle_fdi`, `spat_phase_inver
 
 ## Post-Freeze Validation on Untouched USDOT Periods
 
-Three strictly post-freeze USDOT periods — never seen during training, calibration, or original benchmark construction — evaluated with **frozen `58bcc08` geometry and detector thresholds** (no re-tuning):
+Three strictly post-freeze USDOT periods — never seen during training, calibration, or original benchmark construction — evaluated with **frozen Period-2-calibrated geometry and detector thresholds** (no re-tuning):
 
 | Split | Method | ClFPR | AUROC | PostDet | PreFA | Surv | Dist |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
