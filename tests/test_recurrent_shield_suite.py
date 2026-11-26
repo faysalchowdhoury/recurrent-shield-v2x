@@ -23,6 +23,7 @@ from control.dt_cbf_safety_shield import DtCbfConfig, DtCbfSafetyShield
 from data.ngsim_corridor_env import CorridorEnvConfig, NgsimCorridorEnv
 from edge_deploy.esp32_s3_export import build_int8_fake_quantized_model
 from models.recurrent_shield_bc import RecurrentShieldBC
+from experiments.validate_submission_assets import main as validate_submission_assets
 
 
 def _make_synthetic_test_dataframe(n_frames: int = 40) -> pd.DataFrame:
@@ -148,3 +149,7 @@ def test_reactive_idm_env_and_baselines_offline_safe():
 
     estop = EmergencyStopBaseline()
     assert estop.act(0.0, 14.0, quarantined=True)[0] < -2.0
+
+
+def test_public_submission_assets_are_synchronized():
+    validate_submission_assets()

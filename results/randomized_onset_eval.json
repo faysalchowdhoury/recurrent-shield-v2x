@@ -1,7 +1,7 @@
 {
   "intermittent_burst": {
     "RecurrentShield-BC": {
-      "quar_surv_pct": 100.0,
+      "quar_surv_pct": 91.67,
       "surv_pct": 100.0,
       "collision_pct": 0.0,
       "miss_pct": 0.0,

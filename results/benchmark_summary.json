@@ -255,8 +255,8 @@
           "std": 0.0
         },
         "quar_surv": {
-          "mean": 97.5,
-          "std": 2.041
+          "mean": 95.0,
+          "std": 1.667
         },
         "collision": {
           "mean": 0.0,
@@ -305,8 +305,8 @@
           "std": 0.0
         },
         "quar_surv": {
-          "mean": 97.5,
-          "std": 2.041
+          "mean": 95.0,
+          "std": 1.667
         },
         "collision": {
           "mean": 0.0,
@@ -455,8 +455,8 @@
           "std": 0.0
         },
         "quar_surv": {
-          "mean": 98.333,
-          "std": 2.041
+          "mean": 96.667,
+          "std": 3.118
         },
         "collision": {
           "mean": 0.0,
@@ -505,8 +505,8 @@
           "std": 15.138
         },
         "quar_surv": {
-          "mean": 75.0,
-          "std": 14.672
+          "mean": 73.333,
+          "std": 13.333
         },
         "collision": {
           "mean": 20.833,
@@ -555,8 +555,8 @@
           "std": 0.0
         },
         "quar_surv": {
-          "mean": 95.0,
-          "std": 1.667
+          "mean": 94.167,
+          "std": 2.041
         },
         "collision": {
           "mean": 0.0,
@@ -605,8 +605,8 @@
           "std": 1.667
         },
         "quar_surv": {
-          "mean": 96.667,
-          "std": 1.667
+          "mean": 95.833,
+          "std": 2.635
         },
         "collision": {
           "mean": 0.833,
@@ -655,8 +655,8 @@
           "std": 1.667
         },
         "quar_surv": {
-          "mean": 97.5,
-          "std": 2.041
+          "mean": 94.167,
+          "std": 5.652
         },
         "collision": {
           "mean": 0.833,
@@ -805,8 +805,8 @@
           "std": 3.333
         },
         "quar_surv": {
-          "mean": 94.167,
-          "std": 3.333
+          "mean": 92.5,
+          "std": 5.528
         },
         "collision": {
           "mean": 1.667,
@@ -857,8 +857,8 @@
           "std": 2.041
         },
         "quar_surv": {
-          "mean": 90.833,
-          "std": 3.118
+          "mean": 89.167,
+          "std": 5.0
         },
         "collision": {
           "mean": 5.833,
@@ -907,8 +907,8 @@
           "std": 1.667
         },
         "quar_surv": {
-          "mean": 91.667,
-          "std": 3.727
+          "mean": 90.0,
+          "std": 5.652
         },
         "collision": {
           "mean": 5.0,
@@ -1057,8 +1057,8 @@
           "std": 1.667
         },
         "quar_surv": {
-          "mean": 91.667,
-          "std": 3.727
+          "mean": 90.0,
+          "std": 5.652
         },
         "collision": {
           "mean": 5.0,
@@ -1107,8 +1107,8 @@
           "std": 21.731
         },
         "quar_surv": {
-          "mean": 58.333,
-          "std": 24.008
+          "mean": 56.667,
+          "std": 24.944
         },
         "collision": {
           "mean": 37.5,
@@ -1157,8 +1157,8 @@
           "std": 4.082
         },
         "quar_surv": {
-          "mean": 92.5,
-          "std": 4.082
+          "mean": 91.667,
+          "std": 2.635
         },
         "collision": {
           "mean": 5.0,
@@ -1207,8 +1207,8 @@
           "std": 3.118
         },
         "quar_surv": {
-          "mean": 92.5,
-          "std": 4.082
+          "mean": 90.833,
+          "std": 5.528
         },
         "collision": {
           "mean": 5.0,
@@ -1257,8 +1257,8 @@
           "std": 4.859
         },
         "quar_surv": {
-          "mean": 95.0,
-          "std": 4.082
+          "mean": 92.5,
+          "std": 4.859
         },
         "collision": {
           "mean": 3.333,
@@ -1459,8 +1459,8 @@
           "std": 9.354
         },
         "quar_surv": {
-          "mean": 80.833,
-          "std": 7.728
+          "mean": 79.167,
+          "std": 7.454
         },
         "collision": {
           "mean": 15.0,
@@ -1509,8 +1509,8 @@
           "std": 8.898
         },
         "quar_surv": {
-          "mean": 80.0,
-          "std": 7.169
+          "mean": 78.333,
+          "std": 6.667
         },
         "collision": {
           "mean": 15.833,
@@ -1659,8 +1659,8 @@
           "std": 9.129
         },
         "quar_surv": {
-          "mean": 79.167,
-          "std": 7.906
+          "mean": 77.5,
+          "std": 7.728
         },
         "collision": {
           "mean": 16.667,
@@ -1709,8 +1709,8 @@
           "std": 11.304
         },
         "quar_surv": {
-          "mean": 64.167,
-          "std": 9.718
+          "mean": 62.5,
+          "std": 9.501
         },
         "collision": {
           "mean": 32.5,
@@ -1859,8 +1859,8 @@
           "std": 10.865
         },
         "quar_surv": {
-          "mean": 74.167,
-          "std": 9.647
+          "mean": 72.5,
+          "std": 10.069
         },
         "collision": {
           "mean": 20.833,
@@ -2069,7 +2069,7 @@
         ],
         "raw_mcnemar_p_surv": 1.0,
         "holm_adjusted_p_surv": 1.0,
-        "holm_adjusted_p": 1.0
+        "holm_adjusted_p": 0.3125
       },
       "Shield-Only (No IDS)": {
         "n_clusters": 20,
@@ -2079,7 +2079,7 @@
         ],
         "raw_mcnemar_p_surv": 1.0,
         "holm_adjusted_p_surv": 1.0,
-        "holm_adjusted_p": 1.0
+        "holm_adjusted_p": 0.3125
       },
       "First-Order CBF + BC": {
         "n_clusters": 20,
@@ -2201,7 +2201,7 @@
         ],
         "raw_mcnemar_p_surv": 1.0,
         "holm_adjusted_p_surv": 1.0,
-        "holm_adjusted_p": 0.625
+        "holm_adjusted_p": 0.15625
       },
       "First-Order CBF + BC": {
         "n_clusters": 20,
@@ -2313,7 +2313,7 @@
         ],
         "raw_mcnemar_p_surv": 1.0,
         "holm_adjusted_p_surv": 1.0,
-        "holm_adjusted_p": 1.0
+        "holm_adjusted_p": 0.39062
       },
       "Shield-Only (No IDS)": {
         "n_clusters": 20,
@@ -2383,7 +2383,7 @@
         ],
         "raw_mcnemar_p_surv": 1.0,
         "holm_adjusted_p_surv": 1.0,
-        "holm_adjusted_p": 1.0
+        "holm_adjusted_p": 0.63281
       },
       "IDM-ACC + AEB": {
         "n_clusters": 20,
@@ -2430,8 +2430,8 @@
         "std": 0.0
       },
       "quar_surv": {
-        "mean": 97.5,
-        "std": 2.041
+        "mean": 95.0,
+        "std": 1.667
       },
       "collision": {
         "mean": 0.0,
@@ -2480,8 +2480,8 @@
         "std": 0.0
       },
       "quar_surv": {
-        "mean": 97.5,
-        "std": 2.041
+        "mean": 95.0,
+        "std": 1.667
       },
       "collision": {
         "mean": 0.0,
@@ -2630,8 +2630,8 @@
         "std": 0.0
       },
       "quar_surv": {
-        "mean": 98.333,
-        "std": 2.041
+        "mean": 96.667,
+        "std": 3.118
       },
       "collision": {
         "mean": 0.0,
@@ -2680,8 +2680,8 @@
         "std": 15.138
       },
       "quar_surv": {
-        "mean": 75.0,
-        "std": 14.672
+        "mean": 73.333,
+        "std": 13.333
       },
       "collision": {
         "mean": 20.833,
@@ -2730,8 +2730,8 @@
         "std": 0.0
       },
       "quar_surv": {
-        "mean": 95.0,
-        "std": 1.667
+        "mean": 94.167,
+        "std": 2.041
       },
       "collision": {
         "mean": 0.0,
@@ -2780,8 +2780,8 @@
         "std": 1.667
       },
       "quar_surv": {
-        "mean": 96.667,
-        "std": 1.667
+        "mean": 95.833,
+        "std": 2.635
       },
       "collision": {
         "mean": 0.833,
@@ -2830,8 +2830,8 @@
         "std": 1.667
       },
       "quar_surv": {
-        "mean": 97.5,
-        "std": 2.041
+        "mean": 94.167,
+        "std": 5.652
       },
       "collision": {
         "mean": 0.833,
@@ -2980,8 +2980,8 @@
         "std": 3.333
       },
       "quar_surv": {
-        "mean": 94.167,
-        "std": 3.333
+        "mean": 92.5,
+        "std": 5.528
       },
       "collision": {
         "mean": 1.667,
@@ -3032,8 +3032,8 @@
         "std": 2.041
       },
       "quar_surv": {
-        "mean": 90.833,
-        "std": 3.118
+        "mean": 89.167,
+        "std": 5.0
       },
       "collision": {
         "mean": 5.833,
@@ -3082,8 +3082,8 @@
         "std": 1.667
       },
       "quar_surv": {
-        "mean": 91.667,
-        "std": 3.727
+        "mean": 90.0,
+        "std": 5.652
       },
       "collision": {
         "mean": 5.0,
@@ -3232,8 +3232,8 @@
         "std": 1.667
       },
       "quar_surv": {
-        "mean": 91.667,
-        "std": 3.727
+        "mean": 90.0,
+        "std": 5.652
       },
       "collision": {
         "mean": 5.0,
@@ -3282,8 +3282,8 @@
         "std": 21.731
       },
       "quar_surv": {
-        "mean": 58.333,
-        "std": 24.008
+        "mean": 56.667,
+        "std": 24.944
       },
       "collision": {
         "mean": 37.5,
@@ -3332,8 +3332,8 @@
         "std": 4.082
       },
       "quar_surv": {
-        "mean": 92.5,
-        "std": 4.082
+        "mean": 91.667,
+        "std": 2.635
       },
       "collision": {
         "mean": 5.0,
@@ -3382,8 +3382,8 @@
         "std": 3.118
       },
       "quar_surv": {
-        "mean": 92.5,
-        "std": 4.082
+        "mean": 90.833,
+        "std": 5.528
       },
       "collision": {
         "mean": 5.0,
@@ -3432,8 +3432,8 @@
         "std": 4.859
       },
       "quar_surv": {
-        "mean": 95.0,
-        "std": 4.082
+        "mean": 92.5,
+        "std": 4.859
       },
       "collision": {
         "mean": 3.333,
@@ -3634,8 +3634,8 @@
         "std": 9.354
       },
       "quar_surv": {
-        "mean": 80.833,
-        "std": 7.728
+        "mean": 79.167,
+        "std": 7.454
       },
       "collision": {
         "mean": 15.0,
@@ -3684,8 +3684,8 @@
         "std": 8.898
       },
       "quar_surv": {
-        "mean": 80.0,
-        "std": 7.169
+        "mean": 78.333,
+        "std": 6.667
       },
       "collision": {
         "mean": 15.833,
@@ -3834,8 +3834,8 @@
         "std": 9.129
       },
       "quar_surv": {
-        "mean": 79.167,
-        "std": 7.906
+        "mean": 77.5,
+        "std": 7.728
       },
       "collision": {
         "mean": 16.667,
@@ -3884,8 +3884,8 @@
         "std": 11.304
       },
       "quar_surv": {
-        "mean": 64.167,
-        "std": 9.718
+        "mean": 62.5,
+        "std": 9.501
       },
       "collision": {
         "mean": 32.5,
@@ -4034,8 +4034,8 @@
         "std": 10.865
       },
       "quar_surv": {
-        "mean": 74.167,
-        "std": 9.647
+        "mean": 72.5,
+        "std": 10.069
       },
       "collision": {
         "mean": 20.833,

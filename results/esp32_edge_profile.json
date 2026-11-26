@@ -3,9 +3,9 @@
   "total_parameters": 84505,
   "macs_per_step": 83360,
   "host_measured": {
-    "nn_fp32_median_ms": 0.9975,
-    "dt_cbf_median_ms": 0.0952,
-    "total_control_step_median_ms": 1.0927
+    "nn_fp32_median_ms": 0.9369,
+    "dt_cbf_median_ms": 0.0938,
+    "total_control_step_median_ms": 1.0307
   },
   "fp32": {
     "weights_kb": 330.1,
@@ -26,7 +26,7 @@
   "dt_cbf_solver": {
     "esp32_cycles": 3840,
     "esp32_latency_us": 16.0,
-    "host_cpu_median_ms": 0.0952
+    "host_cpu_median_ms": 0.0938
   },
   "layers": [
     {

@@ -7,6 +7,8 @@ authors:
     family-names: Chowdhoury
 repository-code: "https://github.com/faysalchowdhoury/recurrent-shield-v2x"
 license: MIT
+version: "2026.11"
+date-released: "2026-11-26"
 keywords:
   - connected-automated-vehicles
   - v2x-cybersecurity

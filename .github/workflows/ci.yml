@@ -21,3 +21,5 @@ jobs:
           pip install numpy==1.24.3 scipy==1.10.1 pandas==1.5.3 matplotlib==3.7.1 requests==2.34.2 onnx==1.15.0 pytest==7.3.1
       - name: Run unit tests
         run: pytest -v
+      - name: Validate public submission assets
+        run: python experiments/validate_submission_assets.py
