@@ -3,8 +3,14 @@ title: "RecurrentShield-BC: Non-Oracle V2X/GNSS Quarantine and Nonlinear DT-CBF 
 message: "If you use this software or benchmark suite, please cite it using the metadata below."
 type: software
 authors:
-  - given-names: Faysal
+  - given-names: Faysal A.
     family-names: Chowdhoury
+    email: smcite@rit.edu
+    affiliation: "Department of Civil Engineering Technology, Environmental Management and Safety, Rochester Institute of Technology, Rochester, NY 14623, USA"
+  - given-names: Lu
+    family-names: Sun
+    email: lxsite@rit.edu
+    affiliation: "Center for Cognitive Science, Personalized Health Technology Research Center of Excellence, Department of Computing and Information Sciences, Department of Civil Engineering Technology, Environmental Management and Safety; Rochester Institute of Technology, Rochester, NY 14623, USA"
 repository-code: "https://github.com/faysalchowdhoury/recurrent-shield-v2x"
 license: MIT
 version: "2026.11"
