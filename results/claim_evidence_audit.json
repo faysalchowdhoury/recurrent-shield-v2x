@@ -1,47 +1,128 @@
 {
-  "scope": "Claim-to-evidence map for the submitted manuscript.",
+  "scope": "Claim-to-evidence verification map for the submitted manuscript.",
+  "evidence_sha256": {
+    "paper/recurrent_shield_v2x_ieee.pdf": "acb977bc33fa04a8cadc3c2f761f44452f73e737cd95ba10e91179ac14599c12",
+    "paper/recurrent_shield_v2x_ieee.tex": "380286c074da9657db245825f89c6daa8b96e896ea34f8fd9c659f48a0adc22b",
+    "results/benchmark_summary.json": "14299b3db491d2df55a2f346cf6c77dc2b21cada6b6e285f978630f7762a2e0f",
+    "results/fresh_and_v2x_necessary_eval.json": "475896a624cca69b51f7956ae1affb1b7c42f9ab6c703cd685d044c82d59476f",
+    "results/esp32_edge_profile.json": "8e9a621a1a85b88d47c645a865127077ed3fdc2ca54548e07ac6b20b3aabe575",
+    "control/dt_cbf_safety_shield.py": "b7183c5a2a1f3397355893bd06dddaa1582a0d7426ceea14c7ca8833b56a4f90",
+    "experiments/run_v2x_necessary_and_fresh_eval.py": "5672f1aa37cb1936522f705c26f19a197610a0ec1f78a892c0b6cad958c6c3a3",
+    "tests/test_recurrent_shield_suite.py": "42c975aea9b85ceee0942568ea9779f06082bd0dd52b7458883186f61c3d6cc1"
+  },
   "claims": [
     {
       "id": "C1",
       "claim": "RecurrentShield-BC has 4.0% clean-FPR on US-101 P3 and 0.0% on I-80/Lankershim.",
-      "section": "Abstract; Section VIII-A",
-      "support": ["results/benchmark_summary.json", "results/fresh_and_v2x_necessary_eval.json"],
-      "limitation": "In-domain calibration and fresh-period domain shift are not interchangeable."
+      "verification_status": "verified",
+      "manuscript": {
+        "section": "Abstract; Section VIII-A",
+        "paragraph": "coordinate-alignment result"
+      },
+      "support": [
+        "results/benchmark_summary.json",
+        "results/fresh_and_v2x_necessary_eval.json"
+      ],
+      "expected_values": {
+        "benchmark_summary.json": {
+          "clean_baseline.us-101_test.RecurrentShield-BC.fpr_pct": 4.0,
+          "clean_baseline.i-80.RecurrentShield-BC.fpr_pct": 0.0,
+          "clean_baseline.lankershim.RecurrentShield-BC.fpr_pct": 0.0
+        }
+      },
+      "limitation": "These are in-domain/zero-shot simulated episode-FPR values, not real-traffic estimates."
     },
     {
       "id": "C2",
-      "claim": "Direct Raw Norm outperforms RecurrentShield-BC on fresh-period clean-FPR.",
-      "section": "Section VIII-E",
-      "support": ["results/fresh_and_v2x_necessary_eval.json"],
-      "limitation": "The recurrent detector has 100.0% I-80 post-onset recall versus 91.7% for Raw Norm, so no single detector dominates every metric."
+      "claim": "Direct Raw Norm has 0.0% fresh-period clean-FPR and RecurrentShield-BC has 5.6%/16.7% on US-101/I-80 fresh.",
+      "verification_status": "verified",
+      "manuscript": {
+        "section": "Abstract; Section VIII-E",
+        "paragraph": "fresh-period detector tradeoff"
+      },
+      "support": [
+        "results/fresh_and_v2x_necessary_eval.json"
+      ],
+      "expected_values": {
+        "fresh_and_v2x_necessary_eval.json": {
+          "fresh_untouched_splits.us-101_fresh.Direct Raw Norm (No LSTM).clean_fpr_pct": 0.0,
+          "fresh_untouched_splits.i-80_fresh.Direct Raw Norm (No LSTM).clean_fpr_pct": 0.0,
+          "fresh_untouched_splits.lankershim_fresh.Direct Raw Norm (No LSTM).clean_fpr_pct": 0.0,
+          "fresh_untouched_splits.us-101_fresh.RecurrentShield-BC.clean_fpr_pct": 5.6,
+          "fresh_untouched_splits.i-80_fresh.RecurrentShield-BC.clean_fpr_pct": 16.7
+        }
+      },
+      "limitation": "Raw Norm is not uniformly superior; RecurrentShield-BC reports higher I-80 fresh post-onset recall."
     },
     {
       "id": "C3",
-      "claim": "The DT-CBF theorem is conditional on assumptions A1-A5 and on feasible substeps.",
-      "section": "Section V",
-      "support": ["control/dt_cbf_safety_shield.py", "tests/test_recurrent_shield_suite.py"],
-      "limitation": "The proof does not establish continuous-time safety or real-vehicle safety."
+      "claim": "The DT-CBF theorem is conditional on assumptions A1-A5 and feasible substeps.",
+      "verification_status": "verified",
+      "manuscript": {
+        "section": "Section V-A through V-C",
+        "paragraph": "assumptions, theorem, and infeasible fallback"
+      },
+      "support": [
+        "control/dt_cbf_safety_shield.py",
+        "tests/test_recurrent_shield_suite.py"
+      ],
+      "expected_values": {},
+      "limitation": "The theorem establishes only conditional discrete-step invariance in the stated model."
     },
     {
       "id": "C4",
       "claim": "The 200 Hz CBF interval is numerical substep verification, not 200 Hz actuation.",
-      "section": "Section III; control/dt_cbf_safety_shield.py",
-      "support": ["control/dt_cbf_safety_shield.py"],
+      "verification_status": "verified",
+      "manuscript": {
+        "section": "Section III; Section V-A",
+        "paragraph": "timing clarification"
+      },
+      "support": [
+        "control/dt_cbf_safety_shield.py"
+      ],
+      "expected_values": {},
       "limitation": "The outer policy/control cycle remains 10 Hz."
     },
     {
       "id": "C5",
       "claim": "In the selected BLOS22 replay, quarantine preserves 37.9 m versus 24.9 m without IDS filtering.",
-      "section": "Section VIII-F",
-      "support": ["results/fresh_and_v2x_necessary_eval.json", "experiments/run_v2x_necessary_and_fresh_eval.py"],
-      "limitation": "Single initial speed, queue distance, radar range, and ten repeated trials do not establish broad operational prevalence."
+      "verification_status": "verified",
+      "manuscript": {
+        "section": "Section VIII-F",
+        "paragraph": "BLOS22 stopped-queue replay"
+      },
+      "support": [
+        "results/fresh_and_v2x_necessary_eval.json",
+        "experiments/run_v2x_necessary_and_fresh_eval.py"
+      ],
+      "expected_values": {
+        "fresh_and_v2x_necessary_eval.json": {
+          "blos_occluded_stopped_queue_22m.RecurrentShield-BC.ghost_atk_dist_m": 37.9,
+          "blos_occluded_stopped_queue_22m.Shield-Only (No IDS).ghost_atk_dist_m": 24.9
+        }
+      },
+      "limitation": "Single initial speed, queue distance, radar range, and ten repeated trials do not establish broad prevalence."
     },
     {
       "id": "C6",
       "claim": "ESP32-S3 cycle, latency, and energy values are analytical projections.",
-      "section": "Section VIII-D",
-      "support": ["results/esp32_edge_profile.json", "edge_deploy/esp32_s3_export.py"],
-      "limitation": "Only serialized weight size and host CPU timing are measured."
+      "verification_status": "verified",
+      "manuscript": {
+        "section": "Section VIII-D",
+        "paragraph": "host timing and embedded projections"
+      },
+      "support": [
+        "results/esp32_edge_profile.json",
+        "edge_deploy/esp32_s3_export.py"
+      ],
+      "expected_values": {
+        "esp32_edge_profile.json": {
+          "host_measured.total_control_step_median_ms": 1.0307,
+          "int8.esp32_latency_ms": 1.7,
+          "fp32.esp32_latency_ms": 4.71
+        }
+      },
+      "limitation": "Only serialized weight size and host CPU timing are measured; ESP32-S3 values are analytical."
     }
   ]
 }

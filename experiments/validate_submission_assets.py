@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import sys
 from pathlib import Path
 
@@ -13,6 +14,19 @@ ROOT = Path(__file__).resolve().parents[1]
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise AssertionError(message)
+
+
+def sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def resolve_json_path(data: dict, dotted_path: str) -> object:
+    value = data
+    for component in dotted_path.split("."):
+        require(isinstance(value, dict) and component in value,
+                f"missing JSON path: {dotted_path}")
+        value = value[component]
+    return value
 
 
 def main() -> None:
@@ -35,11 +49,29 @@ def main() -> None:
     edge = json.loads((ROOT / "results" / "esp32_edge_profile.json").read_text(encoding="utf-8"))
     claim_audit = json.loads((ROOT / "results" / "claim_evidence_audit.json").read_text(encoding="utf-8"))
     require(len(claim_audit.get("claims", [])) == 6, "claim evidence audit must contain six core claims")
+    evidence_hashes = claim_audit.get("evidence_sha256", {})
+    require(isinstance(evidence_hashes, dict) and len(evidence_hashes) >= 6,
+            "claim evidence audit lacks evidence hashes")
+    for relative_path, expected_hash in evidence_hashes.items():
+        evidence_path = ROOT / relative_path
+        require(evidence_path.exists(), f"evidence hash target missing: {relative_path}")
+        require(sha256_file(evidence_path) == expected_hash.lower(),
+                f"evidence changed: {relative_path}")
     for claim in claim_audit["claims"]:
         require(claim.get("id") and claim.get("claim"), "claim evidence audit entry is incomplete")
         require(claim.get("limitation"), f"{claim['id']} lacks an explicit limitation")
+        require(claim.get("verification_status") in {"verified", "partially_verified", "not_verified"},
+                f"{claim['id']} has invalid verification status")
         for support in claim.get("support", []):
             require((ROOT / support).exists(), f"{claim['id']} references missing evidence: {support}")
+        for evidence_name, expected_values in claim.get("expected_values", {}).items():
+            evidence_data = json.loads((ROOT / "results" / evidence_name).read_text(encoding="utf-8")) if evidence_name.endswith(".json") else None
+            if evidence_data is None:
+                continue
+            for json_path, expected in expected_values.items():
+                actual = resolve_json_path(evidence_data, json_path)
+                require(actual == expected,
+                        f"{claim['id']} numerical mismatch at {json_path}: {actual} != {expected}")
     require(set(benchmark) == {"calibration_means", "clean_baseline", "corridors", "statistical_tests"},
             "benchmark_summary.json must contain only canonical top-level sections")
     require("corridors" in benchmark, "benchmark_summary.json missing corridor results")
@@ -78,6 +110,10 @@ def main() -> None:
     require(host_text in readme or f"{host_ms:.3f}\u002c" in readme, "README host timing disagrees with edge profile")
     require("1.093" not in readme and "1.093" not in paper, "obsolete host timing remains in public artifacts")
     require("Python~3.10.11" in paper, "manuscript host runtime does not match the measured Python 3.10.11 environment")
+    require("Controlled ablations indicate" in paper, "manuscript still uses stronger causal wording")
+    require("16.7\\%" in paper, "manuscript missing fresh I-80 FPR")
+    require("illustrative" in paper.lower() or "selected" in paper.lower(),
+            "manuscript does not scope BLOS22 to a replay scenario")
 
     print(
         f"Submission assets validated: {len(corridors)} datasets, "
